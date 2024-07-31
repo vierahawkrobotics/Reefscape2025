@@ -8,20 +8,22 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystemExample.ExampleSubsystem;
-import frc.robot.Testing.*;
-import frc.robot.Match.*;
+import frc.robot.testing.*;
+import frc.robot.match.*;
+import frc.robot.components.*;
 
 public class Robot extends TimedRobot {
   public static ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
-
   @Override
   public void robotInit() {
     GUI.initialize();
+    ComponentManager.Initialize();
   }
 
   @Override
   public void robotPeriodic() {
     GUI.periodic();
+    ComponentManager.Periodic();
     CommandScheduler.getInstance().run();
   }
 

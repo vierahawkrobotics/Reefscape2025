@@ -1,7 +1,9 @@
-package frc.robot.State;
+package frc.robot.match;
 
 public class TeleopState {
-    public static void initialize() {}
+    public static void initialize() {
+        //controls
+    }
     public static void periodic() {}
     public static void exit() {}
 }
