@@ -1,4 +1,4 @@
-package frc.robot.testing;
+package frc.robot.Testing;
 
 import edu.wpi.first.wpilibj.shuffleboard.*;
 

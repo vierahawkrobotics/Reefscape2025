@@ -1,4 +1,4 @@
-package frc.robot.match;
+package frc.robot.Match;
 
 import edu.wpi.first.wpilibj.shuffleboard.*;
 

@@ -1,4 +1,4 @@
-package frc.robot.subsystemExample;
+package frc.robot.SubsystemExample;
 
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;

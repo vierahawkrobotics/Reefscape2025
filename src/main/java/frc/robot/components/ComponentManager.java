@@ -1,4 +1,4 @@
-package frc.robot.components;
+package frc.robot.Components;
 
 public class ComponentManager {
     public static void Initialize() {

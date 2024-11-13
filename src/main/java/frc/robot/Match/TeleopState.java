@@ -1,4 +1,4 @@
-package frc.robot.match;
+package frc.robot.Match;
 
 public class TeleopState {
     public static void initialize() {

@@ -1,4 +1,4 @@
-package frc.robot.subsystemExample;
+package frc.robot.SubsystemExample;
 import edu.wpi.first.wpilibj2.command.Command;
 public class ExampleActionCommand extends Command {
     

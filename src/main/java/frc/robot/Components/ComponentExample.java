@@ -1,4 +1,4 @@
-package frc.robot.components;
+package frc.robot.Components;
 
 //use name of class as sensor name/type.
 public class ComponentExample {
