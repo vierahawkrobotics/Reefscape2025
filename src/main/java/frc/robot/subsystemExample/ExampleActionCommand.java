@@ -1,8 +1,11 @@
-package frc.robot.SubsystemExample;
+package frc.robot.subsystemExample;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Robot;
 public class ExampleActionCommand extends Command {
     
-    public ExampleActionCommand() {}
+    public ExampleActionCommand() {
+        addRequirements(Robot.instance.exampleSubsystem);
+    }
 
     @Override
     public void initialize() {}

@@ -9,15 +9,19 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Components.*;
 import frc.robot.Match.*;
-import frc.robot.SubsystemExample.ExampleSubsystem;
+import frc.robot.subsystemExample.ExampleSubsystem;
 import frc.robot.Testing.*;
 
 public class Robot extends TimedRobot {
-  public static ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
+  public static Robot instance;
+  public ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
   @Override
   public void robotInit() {
     GUI.initialize();
     ComponentManager.Initialize();
+    instance = this;
+
+    RobotState.Initialize();
   }
 
   @Override
@@ -25,6 +29,7 @@ public class Robot extends TimedRobot {
     GUI.periodic();
     ComponentManager.Periodic();
     CommandScheduler.getInstance().run();
+    RobotState.Periodic();
   }
 
   @Override
@@ -57,17 +62,17 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    TeleopState.initialize();
+    
   }
 
   @Override
   public void teleopPeriodic() {
-    TeleopState.periodic();
+    
   }
 
   @Override
   public void teleopExit() {
-    TeleopState.exit();
+    
   }
 
   @Override
