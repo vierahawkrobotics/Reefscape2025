@@ -10,6 +10,5 @@ public class GUI {
         tab.add("myValueGUI", 12);
     }
 
-    public static void periodic() {
-    }
+    public static void periodic() {}
 }

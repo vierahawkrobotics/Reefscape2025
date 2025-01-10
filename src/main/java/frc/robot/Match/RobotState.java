@@ -8,7 +8,7 @@ public class RobotState {
     public static XboxController controller;
     public static void Initialize() {
         controller = new XboxController(0);
-        new JoystickButton(controller, XboxController.Button.kA.value).onTrue(null);
+        // new JoystickButton(controller, XboxController.Button.kA.value).onTrue(null);
     }
     public static void Periodic() {}
 }
