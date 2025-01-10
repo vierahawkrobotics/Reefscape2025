@@ -1,8 +1,11 @@
 package frc.robot.ArmSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
+import com.revrobotics.spark.SparkFlex;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+
 public class ElevatorUpDownActionCommand extends Command {
-    
+
     public ElevatorUpDownActionCommand() {
         addRequirements(Robot.instance.exampleSubsystem);
     }
