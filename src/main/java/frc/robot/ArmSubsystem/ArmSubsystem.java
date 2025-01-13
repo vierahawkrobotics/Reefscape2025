@@ -12,43 +12,58 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 enum ArmState {
     ResetHeight,
-    NormalOper,
+    NormalOper
 }
 
 public class ArmSubsystem extends SubsystemBase {
     private ShuffleboardTab tab;
+    private ArmState state = ArmState.NormalOper;
     private SparkFlex elevator;
     private SparkFlex elevatorFollower;
-    private float targetHeight;
+    private double targetHeight;
+    private double curHeight = 0;
     PIDController elevatorPID = new PIDController(ArmConstants.p, ArmConstants.i, ArmConstants.d);
     
     public ArmSubsystem() {
-        tab = Shuffleboard.getTab("example subsystem");
+        tab = Shuffleboard.getTab("Arm Subsystem");
 
         elevator = new SparkFlex(ArmConstants.elevatorMotorID,MotorType.kBrushless);
         elevatorFollower = new SparkFlex(ArmConstants.elevatorFollowMotorID,MotorType.kBrushless);
-        elevator.getEncoder().setPosition(0);
+        elevator.getExternalEncoder().setPosition(0);
         SparkBaseConfig elevatorFollowerConfig = new SparkFlexConfig();
         elevatorFollowerConfig.follow(elevator);
         elevatorFollower.configure(elevatorFollowerConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kNoPersistParameters);
     }
 
-    //setTargetHeight(float targetHeight) set targetHeight variable
-    //have constraints to prevent illegal input
+    private void setTargetHeight(double targetHeight) {}
 
-    //float getHeight()
+    double getHeight() {
+        return curHeight;
+    }
 
-    //RecallibrateHeight()
+    boolean atTargetHeight() {}
+
+    private void RecallibrateHeight() {
+        elevator.set(ArmConstants.neutralMotorBias + ArmConstants.resetHeightModeBias);
+        if(atTargetHeight()) {
+            elevator.getExternalEncoder().setPosition(0);
+            state = ArmState.NormalOper;
+        }
+    }
+    
     @Override
     public void periodic() {
-
-        //reset height state:
-        //  move arm slowly down until limit switch hit
-        //  elevator.getEncoder().setPosition(0);
-        //  set state to normal oper
-        //normal oper state
-        elevator.set(elevatorPID.calculate(target, current));
-
+        // Calculating current height of robot
+        curHeight = elevator.getExternalEncoder().getPosition()*2*Math.PI*ArmConstants.radius;
+        setTargetHeight(targetHeight);
+        switch (state) {
+            case ResetHeight:
+                RecallibrateHeight();
+                break;
+            case NormalOper:
+                elevator.set(elevatorPID.calculate(getHeight(),targetHeight));
+                break;
+        }
     }
     @Override
     public void simulationPeriodic() {}
