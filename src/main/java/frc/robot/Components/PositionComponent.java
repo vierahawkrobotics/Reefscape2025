@@ -1,14 +1,26 @@
 package frc.robot.Components;
 
-//use name of class as sensor name/type.
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
+import edu.wpi.first.math.geometry.Pose2d;
+
+/**
+ * @todo: 
+ * @author:
+ */
 public class PositionComponent {
-    private static double mySensorValue = 0;
-    public static void Initialize() {
-        //initialize camera, sensor, etc.
+    private static SwerveDrivePoseEstimator poseEstimator;
+
+    public PositionComponent(Pose2d initialPose) {
+        poseEstimator = new SwerveDrivePoseEstimator(null, null, null, initialPose);
     }
 
-    public static double getDistance() {
-        //return a value from sensor
-        return mySensorValue;
+    public static Pose2d getRobotPose() {
+        return poseEstimator.getEstimatedPosition();
+    }
+    public static void updatePose(){
+        poseEstimator.addVisionMeasurement(null, 0);
+    }
+    public static void perodic(){
+        poseEstimator.update();
     }
 }
