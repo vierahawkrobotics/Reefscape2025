@@ -16,7 +16,6 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Drivetrain extends SubsystemBase {
-  XboxController controller = new XboxController(DrivetrainConstants.usbPortController);
   //TO DO: this can be changed later for area effects etc, note it must be meters/second
   double maxSpeed = 4;
   //this should ALWAYS be front left, front right, back left, and then back right
@@ -40,6 +39,12 @@ public class Drivetrain extends SubsystemBase {
   public static double rotationSensitivityDefault = .9;
   
   public GenericEntry rotSens;
+
+  //double velX,velY;
+  //double velR;
+  //double posX, posY;
+  //double posR;
+
   
   //Code to make sure Drivetrain only has one instance, please use getInstance to get an instance of Drivetrain
   private static final Drivetrain drivetrain = new Drivetrain();
@@ -61,6 +66,24 @@ public class Drivetrain extends SubsystemBase {
     // This method will be called once per scheduler run\
     // rotationSensitivity isn't upating
     rotationSensitivity = rotSens.getDouble(rotationSensitivityDefault);
+
+    //switch xyState:
+    //velocity:
+    //  DriveVelocity(velX,velY);
+    //  break;
+    //position:
+    //  DrivePosition(posX,posY);
+    //  break;
+
+    //switch rotState:
+    //velocity:
+    //  DriveVelocityRot(velR);
+    //  break;
+    //position:
+    //  DrivePositionRot(posR);
+    //  break;
+
+    //velX,velY,velR = 0;
   }
 
   @Override
@@ -68,6 +91,7 @@ public class Drivetrain extends SubsystemBase {
     // This method will be called once per scheduler run during simulation
   }
   
+  //remove these
   public double getControllerX(){
     double controllerX = (controller.getLeftX() < 0) ? Math.pow(controller.getLeftX(),2)*(-1): Math.pow(controller.getLeftX(),2);
     controllerX = (controllerX< DrivetrainConstants.inputDeadband)?controllerX=0: controllerX*maxSpeed;
@@ -89,6 +113,9 @@ public class Drivetrain extends SubsystemBase {
     return controllerRot;
   }
 
+  //make currentRotation a variable within the function not a parameter
+  //should be private
+  //rename to DriveVelocity
   public void setDrivetrain(double desiredX, double desiredY, double desiredRot, Rotation2d currentRotation){
     ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(desiredX, desiredY, desiredRot, currentRotation);
 
@@ -103,6 +130,21 @@ public class Drivetrain extends SubsystemBase {
     Drivetrain.getInstance().setDesiredStates(moduleStates);
   }
 
+  //private void DrivePosition(posX,posY)
+  //private void DriveVelocityRot(velR)
+  //private void DrivePositionRot(posR)
+
+  //public void setTargetVel()
+  //  change state
+  //public void setTargetPos()
+  //  change state
+
+  //public void setTargetVelRot()
+  //  change state
+  //public void setTargetPosRot()
+  //  change state
+
+  //use this ONLY for initialization
   private void setDesiredStates(SwerveModuleState[] desiredStates){
     for(int i = 0; i< 4; i++){
        maxSwerveModules[i].turningPIDController.setReference(desiredStates[i].angle.getRadians(), ControlType.kPosition);
