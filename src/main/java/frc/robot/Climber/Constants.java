@@ -9,5 +9,7 @@ public class Constants {
     public static double Rotation = Math.PI/2;    
     public static int MotorIdOne = -1;
     public static int MotorId2 = -1;
-
+    final public static double p = 1;
+    final public static double i = 0;
+    final public static double d = 0;
 }
