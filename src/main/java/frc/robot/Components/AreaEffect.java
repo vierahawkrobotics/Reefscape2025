@@ -3,11 +3,13 @@ package frc.robot.Components;
 import java.util.List;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class AreaEffect{
-    // Simple abstraction so I don't have to create an 8-parameter method
+    /**
+     * A simple class that represents a 2 dimensional point
+     * @author Darren Ringer
+     */
     public class Point{
         public double x;
         public double y;
@@ -16,10 +18,29 @@ public class AreaEffect{
             this.y = y;
         }
     }
+
+    /**
+     * The generic superclass for trigger object types used by area effects
+     * Contains a command, trigger type, and trigger state
+     * @param cmd The command to be triggered
+     * @param triggerType The trigger type enum
+     * @author Darren Ringer
+     */
     public class TriggerObject{
         public Command cmd;
         public boolean triggered;
         public triggerCondition triggerType;
+        /**
+         * The generic superclass for trigger object types used by area effects<p>
+         * Contains a command, trigger type, and trigger state
+         * @param cmd The command to be triggered
+         * @param triggerType The trigger type enum
+         * @author Darren Ringer
+         */
+        public TriggerObject(Command command, triggerCondition triggerType){
+            this.cmd = command;
+            this.triggerType = triggerType;
+        }
         public boolean check(Point t){
             return true;
         }
@@ -27,72 +48,91 @@ public class AreaEffect{
             cmd.schedule();
         }
     }
+    /**
+     * A trigger object that extends the TriggerObject<p>
+     * It uses a polygon to decide whether to trigger the command or not
+     */
     public class TriggerObjectPolygon extends TriggerObject{
-        private Point[] pointList;
 
-        public TriggerObjectPolygon(Command command, Point[] pointList){
-            cmd = command;
+        private Point[] pointList;
+        
+        /**
+         * A trigger object that extends the TriggerObject<p>
+         * It uses a polygon to decide whether to trigger the command or not
+         * @param command The command to execute 
+         * @param triggerType The trigger condition to execute the command on
+         * @param pointList The list of points that define the polygon
+         * @author Darren Ringer
+         */
+        public TriggerObjectPolygon(Command command, triggerCondition triggerType, Point[] pointList){
+            super(command, triggerType);
             this.pointList = pointList;
         }
 
-        public TriggerObjectPolygon(Command command, double[] xList, double[] yList){
-            cmd = command;
+        public TriggerObjectPolygon(Command command, triggerCondition triggerType, double[] xList, double[] yList){
+            super(command, triggerType);
             this.pointList = new Point[xList.length];
             for(int i=0;i<xList.length;i++){
                 this.pointList[i] = new Point(xList[i], yList[i]);
             }
         }
-
-        // Use slopes to determine whether the points 
-        private boolean ccw(Point A, Point B, Point C){
-            return ((C.y-A.y)*(B.x-A.x) > (B.y-A.y)*(C.x-A.x));
-            
-        }
-        private boolean vectorIntersects(Point p1, Point p2, Point p3, Point p4){
-            
-            return ccw(p1,p3,p4) != ccw(p2,p3,p4) && ccw(p1,p2,p3) != ccw(p1,p2,p4);
-        }
-        private boolean onVector(Point p1, Point p2, Point p3){
-            return ((p2.y - p1.y) * (p3.x - p1.x) == (p3.y - p1.y) * (p2.x - p1.x) && p3.x >= Math.min(p1.x,p2.x) && p3.x <= Math.min(p1.x,p2.x));
-        }
+        
         @Override
+        /**
+         * A method that checks whether the trigger object's polygon contains a given point implementing
+         * the winding number algorithm
+         * @param point The point to check if it is interior to (robot pose)
+         * @return Boolean as whether to trigger the command
+         * @author Darren Ringer
+         */
         public boolean check(Point point){
             double x = point.x;
             double y = point.y;
 
-            double minX = pointList[0].x, maxX = pointList[0].x, minY = pointList[0].y, maxY = pointList[0].y;
-            for(int i=1; i<pointList.length;i++){
-                if(pointList[i].x > maxX) maxX = pointList[i].x;
-                if(pointList[i].x < minX) minX = pointList[i].x;
-                if(pointList[i].y > maxY) maxY = pointList[i].y;
-                if(pointList[i].y < minY) maxY = pointList[i].y;
-            }
-
-            if(x > maxX || x < minX || y > maxY || y < minY){
-                return false;
-            }
-
-            int intersections = 0;
-            Point checkPoint = new Point(minX-0.1, minY-0.1);
+            int windingNumber = 0;
+            Point v1, v2;
+            double xIntersect;
             for(int i=0;i<pointList.length;i++){
-                if(!onVector(point, checkPoint, pointList[i])){
-                    intersections += vectorIntersects(pointList[i], pointList[(i+1) % pointList.length], checkPoint, point) ? 1 : 0;
+                v1 = pointList[i];
+                v2 = pointList[(i+1) % pointList.length];
+
+                if(Math.min(v1.y, v2.y) < y && Math.max(v1.y, v2.y) > y){
+                    xIntersect = v1.x + (y-v1.y)*(v1.x-v2.x)/(v1.y-v2.y);
+                    if(xIntersect < x){
+                        if(v1.y > v2.y) windingNumber++;
+                        else windingNumber--;
+                    }
                 }
             }
-            return intersections % 2 == 1;
+            return windingNumber != 0;
         }
     }
-    public class TriggerObjectRadius extends TriggerObject{
-        private Command cmd;
+    /**
+     * The circle brand of trigger objects (now 50% more calcium!1!!11)
+     * @author Darren Ringer
+     */
+    public class TriggerObjectCircle extends TriggerObject{
         private double r;
         private Point center;
 
-        public TriggerObjectRadius(Command command, double r, Point center){
-            this.cmd = command;
+        /**
+         * The circle brand of trigger objects (now 50% more calcium!1!!11)
+         * @param command Command to trigger
+         * @param triggerType Triggering mode
+         * @param r Radius of circle
+         * @param center Center of circle
+         */
+        public TriggerObjectCircle(Command command, triggerCondition triggerType, double r, Point center){
+            super(command, triggerType);
             this.r = r;
             this.center = center;
         }
-
+        /**
+         * A method that checks whether a point is interior to the trigger's circle
+         * @param point The point to check if it is interior to (robot pose)
+         * @return Boolean as whether to trigger the command
+         * @author Darren Ringer
+         */
         @Override
         public boolean check(Point t){
             return Math.sqrt((t.x - center.x) * (t.x - center.x) + (t.y - center.y) * (t.y - center.y)) <= r;
@@ -100,11 +140,27 @@ public class AreaEffect{
         }
     }
 
+    // The list of triggers
     private static List<TriggerObject> triggers;
     
     public AreaEffect(TriggerObject trigger){
+        triggers.add(trigger); 
+    }
+    /**
+     * Adds a trigger object to the list of area effect triggers
+     * @param trigger The trigger object to add
+     * @author Darren Ringer
+     */
+    public void addTrigger(TriggerObject trigger){
         triggers.add(trigger);
     }
+    
+    /**
+     * The periodic method of the area effects<p>
+     * Itterates through all the commands, tests if they should be triggered, and schedules them
+     * based on their triggering behavior and state
+     * @author Darren Ringer
+     */
     public void periodic(){
         Pose2d currentPose = PositionComponent.getRobotPose();
         Point currentPoint = new Point(currentPose.getX(), currentPose.getY());
@@ -114,14 +170,11 @@ public class AreaEffect{
             if(currentTrigger.check(currentPoint)){
                 if(currentTrigger.triggerType == triggerCondition.onEnter && !currentTrigger.triggered){
                     currentTrigger.trigger();
-                } else if(currentTrigger.triggerType == triggerCondition.whileIn){
-                    currentTrigger.trigger();
+
                 }
                 currentTrigger.triggered = true;
             } else {
                 if(currentTrigger.triggerType == triggerCondition.onLeave && currentTrigger.triggered){
-                    currentTrigger.trigger();
-                } else if(currentTrigger.triggerType == triggerCondition.whileOut){
                     currentTrigger.trigger();
                 }
                 currentTrigger.triggered = false;
@@ -131,9 +184,7 @@ public class AreaEffect{
 
     public enum triggerCondition{
         onEnter,
-        onLeave,
-        whileIn,
-        whileOut
+        onLeave
     }
     /**
      * Triggers a command if the robot is in a particular area
