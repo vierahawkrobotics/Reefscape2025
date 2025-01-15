@@ -1,4 +1,4 @@
-package frc.robot.climber;
+package frc.robot.Climber;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -13,7 +13,7 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.SparkBase.ResetMode;
 
-public class climbersub {
+public class climbersub extends TimedRobot{
     private Joystick m_stick;
     private static final int deviceID = 1;
     private SparkLowLevel m_motor;
