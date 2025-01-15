@@ -7,5 +7,7 @@ public class Constants {
     public static double LiftSpeed = 12;    
     public static double LiftSpeedEnd = 0;    
     public static double Rotation = Math.PI/2;    
+    public static int MotorIdOne = -1;
+    public static int MotorId2 = -1;
 
 }
