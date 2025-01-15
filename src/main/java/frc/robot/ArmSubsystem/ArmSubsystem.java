@@ -16,7 +16,7 @@ enum ArmState {
 }
 
 public class ArmSubsystem extends SubsystemBase {
-    private ShuffleboardTab tab;
+    private ShuffleboardTab armTab;
     private ArmState state = ArmState.NormalOper;
     private SparkFlex elevator;
     private SparkFlex elevatorFollower;
@@ -25,7 +25,7 @@ public class ArmSubsystem extends SubsystemBase {
     PIDController elevatorPID = new PIDController(ArmConstants.p, ArmConstants.i, ArmConstants.d);
     
     public ArmSubsystem() {
-        tab = Shuffleboard.getTab("Arm Subsystem");
+        armTab = Shuffleboard.getTab("Arm Subsystem");
 
         elevator = new SparkFlex(ArmConstants.elevatorMotorID,MotorType.kBrushless);
         elevatorFollower = new SparkFlex(ArmConstants.elevatorFollowMotorID,MotorType.kBrushless);
@@ -35,13 +35,21 @@ public class ArmSubsystem extends SubsystemBase {
         elevatorFollower.configure(elevatorFollowerConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kNoPersistParameters);
     }
 
-    private void setTargetHeight(double targetHeight) {}
+    private void setTargetHeight(double newTargetHeight) {
+        targetHeight = newTargetHeight;
+    }
 
     double getHeight() {
         return curHeight;
     }
 
-    boolean atTargetHeight() {}
+    boolean atTargetHeight() {
+        if (targetHeight == elevator.getExternalEncoder().getPosition()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     private void RecallibrateHeight() {
         elevator.set(ArmConstants.neutralMotorBias + ArmConstants.resetHeightModeBias);
@@ -53,7 +61,6 @@ public class ArmSubsystem extends SubsystemBase {
     
     @Override
     public void periodic() {
-        // Calculating current height of robot
         curHeight = elevator.getExternalEncoder().getPosition()*2*Math.PI*ArmConstants.radius;
         setTargetHeight(targetHeight);
         switch (state) {
