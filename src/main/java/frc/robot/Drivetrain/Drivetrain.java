@@ -21,14 +21,14 @@ public class Drivetrain extends SubsystemBase {
   public Rotation2d currentRobotAngle = new Rotation2d();
   
   //this should ALWAYS be front left, front right, back left, and then back right
-  public static SwerveDriveKinematics kinematics = new SwerveDriveKinematics(
+  private static SwerveDriveKinematics kinematics = new SwerveDriveKinematics(
   DrivetrainConstants.frontLeftLocation, 
   DrivetrainConstants.frontRightLocation, 
   DrivetrainConstants.backLeftLocation, 
   DrivetrainConstants.backRightLocation
   );
 
-  public static MAXSwerveModule[] maxSwerveModules = {
+  private static MAXSwerveModule[] maxSwerveModules = {
     new MAXSwerveModule(DrivetrainConstants.flDrivingID, DrivetrainConstants.flTurningID),
     new MAXSwerveModule(DrivetrainConstants.frDrivingID,DrivetrainConstants.frTurningID),
     new MAXSwerveModule(DrivetrainConstants.blDrivingID,DrivetrainConstants.blTurningID),
@@ -39,37 +39,43 @@ public class Drivetrain extends SubsystemBase {
 
   public double rotationSensitivity;
   
-
-  //double velX,velY;
-  //double velR;
-  //double posX, posY;
-  //double posR;
-
+  enum TranslateState{
+    velocity,
+    position
+  }
+  enum RotState{
+    velocity,
+    position
+  }
+  TranslateState translateState = TranslateState.velocity;
+  RotState rotState = RotState.velocity;
+  
+  private double velX;
+  private double velY;
+  private double velR;
+  private double posX;
+  private double posY;
+  private double posR;
   
   public Drivetrain() {
   }
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run\
 
-    //switch xyState:
-    //velocity:
-    //  DriveVelocity(velX,velY);
-    //  break;
-    //position:
-    //  DrivePosition(posX,posY);
-    //  break;
+    if (translateState == TranslateState.position){
+      //  DrivePosition(posX,posY);
+    }
 
-    //switch rotState:
-    //velocity:
-    //  DriveVelocityRot(velR);
-    //  break;
-    //position:
-    //  DrivePositionRot(posR);
-    //  break;
+    if (rotState == RotState.position){
+      //  DrivePositionRot(posR);
+    }
 
-    //velX,velY,velR = 0;
+    DriveVelocity(velX, velY, velR);
+    
+    velX = 0;
+    velY = 0;
+    velR = 0;
   }
 
   @Override
@@ -77,15 +83,9 @@ public class Drivetrain extends SubsystemBase {
     // This method will be called once per scheduler run during simulation
   }
 
-  public void setDrive3d(double vx, double vy, double vr){
-    //THis will get replaced with setting the velocities that get checked and 
-    //used in the periodic function
-    DriveVelocity(vx, vy, vr);
-  }
-
-  private void DriveVelocity(double desiredvX, double desiredvY, double desiredRot){
+  private void DriveVelocity(double desiredvX, double desiredvY, double desiredvRot){
     Rotation2d currentRotation = currentRobotAngle;
-    ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(desiredvX, desiredvY, desiredRot, currentRotation);
+    ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(desiredvX, desiredvY, desiredvRot, currentRotation);
 
     SwerveModuleState[] moduleStates = Drivetrain.kinematics.toSwerveModuleStates(speeds);
     
@@ -96,21 +96,35 @@ public class Drivetrain extends SubsystemBase {
     }
 
     Robot.instance.drivetrain.setDesiredStates(moduleStates);
+
   }
 
-  //private void DrivePosition(posX,posY)
-  //private void DriveVelocityRot(velR)
-  //private void DrivePositionRot(posR)
+  //private void DrivePosition()
+  //  sets the translation velocities based on the desired position and current pos
+  //private void DrivePositionRot()
+  //  rotation version of DrivePosition
 
-  //public void setTargetVel()
-  //  change state
-  //public void setTargetPos()
-  //  change state
+  public void setTargetVel(double vx, double vy){
+    velX = vx;
+    velY = vy;
+    translateState = TranslateState.velocity;
+  }
 
-  //public void setTargetVelRot()
-  //  change state
-  //public void setTargetPosRot()
-  //  change state
+  public void setTargetPos(double pX, double pY){
+    posX = pX;
+    posY = pY;
+    translateState = TranslateState.position;
+  }
+
+  public void setTargetVelRot(double vr){
+    velR = vr;
+    rotState = RotState.velocity;
+  }
+
+  public void setTargetPosRot(double pR){
+    posR = pR;
+    rotState = RotState.position;
+  }
 
   //use this ONLY for initialization
   private void setDesiredStates(SwerveModuleState[] desiredStates){
