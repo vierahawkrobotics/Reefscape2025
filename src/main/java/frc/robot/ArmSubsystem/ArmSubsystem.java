@@ -35,25 +35,25 @@ public class ArmSubsystem extends SubsystemBase {
         elevatorFollower.configure(elevatorFollowerConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kNoPersistParameters);
     }
 
-    private void setTargetHeight(double newTargetHeight) {
+    public void setTargetHeight(double newTargetHeight) {
         targetHeight = newTargetHeight;
     }
 
-    double getHeight() {
+    public double getHeight() {
         return curHeight;
     }
 
-    boolean atTargetHeight() {
-        if (targetHeight == elevator.getExternalEncoder().getPosition()) {
+    public boolean atTargetHeight() {
+        if ((targetHeight - elevator.getExternalEncoder().getPosition()) < ArmConstants.epsilon) {
             return true;
         } else {
             return false;
         }
     }
 
-    private void RecallibrateHeight() {
+    public void RecallibrateHeight() {
         elevator.set(ArmConstants.neutralMotorBias + ArmConstants.resetHeightModeBias);
-        if(atTargetHeight()) {
+        if(elevator.getForwardLimitSwitch().isPressed()) {
             elevator.getExternalEncoder().setPosition(0);
             state = ArmState.NormalOper;
         }
@@ -61,14 +61,14 @@ public class ArmSubsystem extends SubsystemBase {
     
     @Override
     public void periodic() {
-        curHeight = elevator.getExternalEncoder().getPosition()*2*Math.PI*ArmConstants.radius;
+        curHeight = elevator.getExternalEncoder().getPosition()*2*Math.PI*ArmConstants.gearRadius;
         setTargetHeight(targetHeight);
         switch (state) {
             case ResetHeight:
                 RecallibrateHeight();
                 break;
             case NormalOper:
-                elevator.set(elevatorPID.calculate(getHeight(),targetHeight));
+                elevator.set(elevatorPID.calculate(getHeight(),targetHeight)+ArmConstants.pidCoefficient);
                 break;
         }
     }
