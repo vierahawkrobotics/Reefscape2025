@@ -11,23 +11,31 @@ enum RemoveAlgaeState {
     EjectPeriodic,
     End
 }
-
+enum heightState{
+    High,
+    Low
+}
 public class RemoveAlgaeCommand extends Command {
     private RemoveAlgaeState state = RemoveAlgaeState.SetupInit;
-    int y;
-    public RemoveAlgaeCommand(int y) {
+    private heightState heightState;
+    public RemoveAlgaeCommand(heightState targetHeight) {
         addRequirements(Robot.instance.armSubsystem);
         addRequirements(Robot.instance.drivetrainSubsystem);
-        this.y = y;
+        this.heightState = heightState;
     }
 
     @Override
     public void initialize() {
+
+    }
+    @Override
+    public void execute() {
         switch(state) {
             case SetupInit:
                 Robot.instance.armSubsystem.setPosition(y);
                 //set robot position
                 Robot.instance.drivetrainSubsystem.setPosition(TriggerEffect.getAlgeaPose(y));
+                state = RemoveAlgaeState.SetupPeriodic;
                 break;
             case SetupPeriodic:
                 if(drivetrain.isAtTargetPose() && arm.isAtTargetHeight())
@@ -48,18 +56,21 @@ public class RemoveAlgaeCommand extends Command {
             case EjectPeriodic:
                 // (move robot back a foot) Robot.instance.drivetrainSubsystem.
                 //arm.ejectAlgae()
-                //rotat4e eject wheels and move arm up
+                //rotate eject wheels and move arm up
                 //robot move back a foot
-                
-
-        }
+                if(ArmSubsystem.isFinished){
+                    state = RemoveAlgaeState.End;
+                }
+                break;
+        }            
     }
-    @Override
-    public void execute() {}
     @Override
     public void end(boolean interrupted) {}
     @Override
     public boolean isFinished() {
-        return false;
+        if(state == RemoveAlgaeState.End){
+            return true;
+        }
+
     }
-} 
+}
