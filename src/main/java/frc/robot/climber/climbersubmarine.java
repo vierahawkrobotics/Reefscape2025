@@ -1,32 +1,15 @@
 package frc.robot.climber;
 
-import edu.wpi.first.math.filter.Debouncer;
-import edu.wpi.first.math.filter.Debouncer.DebounceType;
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.event.BooleanEvent;
-import edu.wpi.first.wpilibj.event.EventLoop;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
- 
+
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkFlex;
-import com.revrobotics.spark.SparkLimitSwitch;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.config.SparkFlexConfig;
 import edu.wpi.first.math.controller.PIDController;
-import java.lang.Math;
 
 enum climberstate {
     Close,
     Open,
-    Stop,
 }
 
 public class climbersubmarine extends SubsystemBase{
@@ -56,17 +39,19 @@ public class climbersubmarine extends SubsystemBase{
                 roborobotLeft.set(pidl.calculate(posl,Constants.CloseTarget));
                 break;
             case Open:
-                if (posr>Constants.OpenLimit && posl>Constants.OpenLimit) {
+                if (posr > Constants.OpenLimit) {
                     roborobotRight.set(pidr.calculate(posr,Constants.OpenTarget));
+                } else {
+                    roborobotRight.set(0);
+                }
+                if (posl > Constants.OpenLimit) {
                     roborobotLeft.set(pidl.calculate(posl,Constants.OpenTarget));
                 } else {
-                    state = climberstate.Stop;
+                    roborobotLeft.set(0);
                 }
                 break;
-
-            case Stop:
-                roborobotRight.set(0);
-                roborobotLeft.set(0);
+                
+                
         }
     }
     public void setState(climberstate newstate) {
