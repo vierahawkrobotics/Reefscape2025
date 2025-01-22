@@ -2,6 +2,7 @@ package frc.robot.Drivetrain;
 
 import com.revrobotics.spark.SparkBase.ControlType;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -19,7 +20,9 @@ public class Drivetrain extends SubsystemBase {
 
   //TO DO: replace all uses of this variable with the angle from the position subsystem in future
   public Rotation2d currentRobotAngle = new Rotation2d();
-  
+  //TO DO: same as above but for position
+  public Pose2d currentRobotPosition = new Pose2d();
+
   //this should ALWAYS be front left, front right, back left, and then back right
   private static SwerveDriveKinematics kinematics = new SwerveDriveKinematics(
   DrivetrainConstants.frontLeftLocation, 
@@ -99,7 +102,13 @@ public class Drivetrain extends SubsystemBase {
 
   }
 
-  //private void DrivePosition()
+  private void DrivePosition(Pose2d desiredPosition){
+    Vector R = new Vector(currentRobotPosition.getX(), currentRobotPosition.getY());
+    Vector T = new Vector(desiredPosition.getX(), desiredPosition.getY());
+
+    Vector V = T.subtract(R).normalize();
+    
+  }
   //  sets the translation velocities based on the desired position and current pos
   //private void DrivePositionRot()
   //  rotation version of DrivePosition
