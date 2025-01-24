@@ -1,3 +1,5 @@
+package frc.robot.Components;
+
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.spline.CubicHermiteSpline;
