@@ -10,12 +10,12 @@ public class Drive2D extends Command {
     //TO DO: this should be taken from the position subsystem
     double robotAngle = 45.0;
     
-    Supplier<Float> vx;
-    Supplier<Float> vy;
-    Supplier<Float> vr;
+    Supplier<Double> vx;
+    Supplier<Double> vy;
+    Supplier<Double> vr;
 
 
-    private Drive2D(Supplier<Float> vxInput, Supplier<Float> vyInput) {
+    private Drive2D(Supplier<Double> vxInput, Supplier<Double> vyInput) {
         addRequirements(Robot.instance.drivetrain);
         vx = vxInput;
         vy = vyInput;
