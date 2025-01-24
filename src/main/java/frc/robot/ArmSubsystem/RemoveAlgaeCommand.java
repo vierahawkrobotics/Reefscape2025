@@ -17,11 +17,11 @@ enum heightState{
 }
 public class RemoveAlgaeCommand extends Command {
     private RemoveAlgaeState state = RemoveAlgaeState.SetupInit;
-    private heightState heightState;
+    private heightState hState;
     public RemoveAlgaeCommand(heightState targetHeight) {
         addRequirements(Robot.instance.armSubsystem);
         addRequirements(Robot.instance.drivetrainSubsystem);
-        this.heightState = heightState;
+        this.hState = targetHeight;
     }
 
     @Override
@@ -32,13 +32,13 @@ public class RemoveAlgaeCommand extends Command {
     public void execute() {
         switch(state) {
             case SetupInit:
-                Robot.instance.armSubsystem.setPosition(y);
+                Robot.instance.armSubsystem.setPosition(this.hState);
                 //set robot position
-                Robot.instance.drivetrainSubsystem.setPosition(TriggerEffect.getAlgeaPose(y));
+                Robot.instance.drivetrainSubsystem.setPosition(TriggerEffect.getAlgeaPose(this.hState));
                 state = RemoveAlgaeState.SetupPeriodic;
                 break;
             case SetupPeriodic:
-                if(drivetrain.isAtTargetPose() && arm.isAtTargetHeight())
+                if(drivetrain.isAtTargetPose() && Robot.instance.armSubsystem.atTargetHeight())
                     state = RemoveAlgaeState.ExtendInit;
                 break;
             case ExtendInit:
@@ -58,7 +58,7 @@ public class RemoveAlgaeCommand extends Command {
                 //arm.ejectAlgae()
                 //rotate eject wheels and move arm up
                 //robot move back a foot
-                if(ArmSubsystem.isFinished){
+                if(IsFinished()){
                     state = RemoveAlgaeState.End;
                 }
                 break;
@@ -67,7 +67,7 @@ public class RemoveAlgaeCommand extends Command {
     @Override
     public void end(boolean interrupted) {}
     @Override
-    public boolean isFinished() {
+    public boolean IsFinished() {
         if(state == RemoveAlgaeState.End){
             return true;
         }
