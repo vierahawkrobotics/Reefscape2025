@@ -55,6 +55,11 @@ public class DrivetrainConstants {
 
     public static int drivingMotorCurrentLimit = 80; // amps
     public static int turningMotorCurrentLimit = 20; // amps
+
+    //the range at which the robot is considered to have reached the set point in DrivePosition()
+    public static double pointTolerance = 0.01;
+    //the rotation version of what's above
+    public static double rotTolerance = 0.04;
 }
 
 

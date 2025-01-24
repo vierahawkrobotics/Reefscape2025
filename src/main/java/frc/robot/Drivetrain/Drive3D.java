@@ -14,11 +14,11 @@ public  class Drive3D extends Command {
   //TO DO: this should be taken from the position subsystem
   double robotAngle = 45.0;
   
-  Supplier<Float> vx;
-  Supplier<Float> vy;
-  Supplier<Float> vr;
+  Supplier<Double> vx;
+  Supplier<Double> vy;
+  Supplier<Double> vr;
 
-  private Drive3D(Supplier<Float> vxInput, Supplier<Float> vyInput, Supplier<Float> vrInput) {
+  private Drive3D(Supplier<Double> vxInput, Supplier<Double> vyInput, Supplier<Double> vrInput) {
     vx = vxInput;
     vy = vyInput;
     vr = vrInput;

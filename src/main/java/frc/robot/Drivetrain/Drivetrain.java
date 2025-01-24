@@ -59,7 +59,7 @@ public class Drivetrain extends SubsystemBase {
   private double posX;
   private double posY;
   private double posR;
-  
+
   public Drivetrain() {
   }
 
@@ -67,11 +67,11 @@ public class Drivetrain extends SubsystemBase {
   public void periodic() {
 
     if (translateState == TranslateState.position){
-      //  DrivePosition(posX,posY);
+      DrivePosition();
     }
 
     if (rotState == RotState.position){
-      //  DrivePositionRot(posR);
+      DrivePositionRot();
     }
 
     DriveVelocity(velX, velY, velR);
@@ -102,15 +102,26 @@ public class Drivetrain extends SubsystemBase {
 
   }
 
-  private void DrivePosition(Pose2d desiredPosition){
+  private void DrivePosition(){
+    
     Vector R = new Vector(currentRobotPosition.getX(), currentRobotPosition.getY());
-    Vector T = new Vector(desiredPosition.getX(), desiredPosition.getY());
+    Vector T = new Vector(posX, posY);
+
+    double d = 
+    Math.sqrt(
+    Math.pow(currentRobotPosition.getX() - posX,2) +
+    Math.pow(currentRobotPosition.getY() - posY, 2));
 
     Vector V = T.subtract(R).normalize();
-    
+    double scaleFactor = d>DrivetrainConstants.pointTolerance? 1: d/DrivetrainConstants.pointTolerance;
+    velX = V.x*scaleFactor;
+    velY = V.y*scaleFactor;
   }
-  //  sets the translation velocities based on the desired position and current pos
-  //private void DrivePositionRot()
+  private void DrivePositionRot(){
+    double angle = currentRobotAngle.getRadians();
+    double d = angle - posR > 0? posR-angle: angle- posR;
+    velR = d>DrivetrainConstants.rotTolerance? 1: d/DrivetrainConstants.rotTolerance;
+  }
   //  rotation version of DrivePosition
 
   public void setTargetVel(double vx, double vy){
