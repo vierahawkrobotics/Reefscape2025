@@ -32,10 +32,10 @@ public  class Drive3D extends Command {
   public void execute() {
     //apply input deadband, input squaring, and scale input by the speed for x, y, and r
     double vxVal = (vx.get() < 0) ? Math.pow(vx.get(),2)*(-1): Math.pow(vx.get(),2);
-    vxVal = (vxVal< DrivetrainConstants.inputDeadband)?vxVal=0: vxVal*maxSpeed;
+    vxVal = (vxVal< DrivetrainConstants.inputDeadband)?vxVal=0: vxVal;
 
     double vyVal = (vy.get() < 0) ? Math.pow(vy.get(),2)*(-1): Math.pow(vy.get(),2);
-    vyVal = (vyVal < DrivetrainConstants.inputDeadband) ? vyVal =0: vyVal*maxSpeed;
+    vyVal = (vyVal < DrivetrainConstants.inputDeadband) ? vyVal =0: vyVal;
 
     double vrVal = vr.get();
     vrVal = (vrVal< DrivetrainConstants.inputDeadband)?vrVal=0: vrVal*Robot.instance.drivetrain.rotationSensitivity;

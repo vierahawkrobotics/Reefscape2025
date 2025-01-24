@@ -122,11 +122,11 @@ public class Drivetrain extends SubsystemBase {
     double d = angle - posR > 0? posR-angle: angle- posR;
     velR = d>DrivetrainConstants.rotTolerance? 1: d/DrivetrainConstants.rotTolerance;
   }
-  //  rotation version of DrivePosition
 
+  //vx and vy should be from 0 to 1
   public void setTargetVel(double vx, double vy){
-    velX = vx;
-    velY = vy;
+    velX = vx*maxSpeed;
+    velY = vy*maxSpeed;
     translateState = TranslateState.velocity;
   }
 
