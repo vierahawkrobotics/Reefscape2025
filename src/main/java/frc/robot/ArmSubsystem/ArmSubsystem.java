@@ -2,9 +2,10 @@ package frc.robot.ArmSubsystem;
 
 import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkFlex;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkFlexConfig;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -20,6 +21,8 @@ public class ArmSubsystem extends SubsystemBase {
     private ArmState state = ArmState.NormalOper;
     private SparkFlex elevator;
     private SparkFlex elevatorFollower;
+    private SparkFlex container;
+    private SparkFlex containerFollower;
     private double targetHeight;
     private double curHeight = 0;
     PIDController elevatorPID = new PIDController(ArmConstants.p, ArmConstants.i, ArmConstants.d);
@@ -33,6 +36,14 @@ public class ArmSubsystem extends SubsystemBase {
         SparkBaseConfig elevatorFollowerConfig = new SparkFlexConfig();
         elevatorFollowerConfig.follow(elevator);
         elevatorFollower.configure(elevatorFollowerConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kNoPersistParameters);
+
+        container = new SparkFlex(ArmConstants.elevatorMotorID,MotorType.kBrushless);
+        containerFollower = new SparkFlex(ArmConstants.elevatorFollowMotorID,MotorType.kBrushless);
+        container.getExternalEncoder().setPosition(0);
+        SparkBaseConfig containerFollowerConfig = new SparkFlexConfig();
+        containerFollowerConfig.follow(container);
+        containerFollowerConfig.inverted(true);
+        containerFollower.configure(containerFollowerConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kNoPersistParameters);
     }
 
     public void SetTargetHeight(double newTargetHeight) {
