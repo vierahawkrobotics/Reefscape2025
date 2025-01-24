@@ -11,4 +11,11 @@ public class ArmConstants {
     final public static double epsilon = 0.02; // In meters
     final public static double neutralMotorBias = 0;
     final public static double resetHeightModeBias = -0.05;
+
+    // Heights
+    final public static double ground = 0;
+    final public static double coralLow = 1;
+    final public static double coralHigh = 2;
+    final public static double algaeLow = 1;
+    final public static double algaeHigh = 2;
 }

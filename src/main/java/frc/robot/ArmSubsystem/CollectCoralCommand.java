@@ -1,11 +1,8 @@
 package frc.robot.ArmSubsystem;
-import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 public class CollectCoralCommand extends Command {
-    
-    private SparkMax motor;
 
     public CollectCoralCommand() {
         addRequirements(Robot.instance.exampleSubsystem);
@@ -13,7 +10,6 @@ public class CollectCoralCommand extends Command {
 
     @Override
     public void initialize() {
-        motor = new SparkMax(0, null);
     }
 
     @Override
