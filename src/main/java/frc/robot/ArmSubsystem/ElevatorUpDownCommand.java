@@ -1,6 +1,5 @@
-
 package frc.robot.ArmSubsystem;
-import edu.wpi.first.wpilibj.XboxController;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 
@@ -11,10 +10,13 @@ enum heightState {
 }
 
 public class ElevatorUpDownCommand extends Command {
-    public XboxController control = new XboxController(0); // temp
-    public heightState
-    public ElevatorUpDownCommand() {
+    private heightState state = heightState.Ground;
+    private boolean up;
+    private boolean down;
+    public ElevatorUpDownCommand(boolean up, boolean down) {
         addRequirements(Robot.instance.exampleSubsystem);
+        this.up = up;
+        this.down = down;
     }
 
     @Override
@@ -22,10 +24,33 @@ public class ElevatorUpDownCommand extends Command {
 
     @Override
     public void execute() {
-        if ()
-        // Button for going up
-
-        // Button for going down
+        if (up) { // Check go up
+            switch (state) {
+                case Ground: // Go up and set state to Low
+                    Robot.instance.armSubsystem.SetTargetHeight(ArmConstants.coralLow);
+                    state = heightState.Low;
+                    break;
+                case Low: // Go up and set state to High
+                    Robot.instance.armSubsystem.SetTargetHeight(ArmConstants.coralHigh);
+                    state = heightState.High;
+                    break;
+                case High: // Do nothing
+                    break;
+            }
+        } else if (down) { // Check go down
+            switch (state) {
+                case Ground: // Do nothing
+                    break;
+                case Low: // Go down and set state to Ground
+                    Robot.instance.armSubsystem.SetTargetHeight(ArmConstants.ground);
+                    state = heightState.Ground;
+                    break;
+                case High: // Go down and set state to Low
+                    Robot.instance.armSubsystem.SetTargetHeight(ArmConstants.algaeLow);
+                    state = heightState.Low;
+                    break;
+            }
+        }
     }
 
     @Override
