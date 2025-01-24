@@ -1,9 +1,9 @@
 package frc.robot.ArmSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
-public class TemplateActionCommand extends Command {
+public class TemplateCommand extends Command {
     
-    public TemplateActionCommand() {
+    public TemplateCommand() {
         addRequirements(Robot.instance.exampleSubsystem);
     }
 

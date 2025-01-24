@@ -1,9 +1,13 @@
 package frc.robot.ArmSubsystem;
+import com.revrobotics.spark.SparkMax;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
-public class GrabDropActionCommand extends Command {
+public class GrabDropCommand extends Command {
     
-    public GrabDropActionCommand() {
+    private SparkMax motor;
+
+    public GrabDropCommand() {
         addRequirements(Robot.instance.exampleSubsystem);
     }
 
