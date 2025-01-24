@@ -12,10 +12,11 @@ public class ArmConstants {
     final public static double neutralMotorBias = 0;
     final public static double resetHeightModeBias = -0.05;
 
-    // Heights
-    final public static double ground = 0;
-    final public static double coralLow = 1;
-    final public static double coralHigh = 2;
-    final public static double algaeLow = 1;
-    final public static double algaeHigh = 2;
+    // Heights in meters
+    final public static double armHeight = -1; // Arm bottom distance from ground
+    final public static double maxHeight = 100; // Arm max extension length
+    final public static double ground = 0; // Arm lowest height (L1)
+    final public static double low = 0.81; // L2
+    final public static double high = 1.83; // L3
+    final public static double algaeOffset = 0.1;
 }

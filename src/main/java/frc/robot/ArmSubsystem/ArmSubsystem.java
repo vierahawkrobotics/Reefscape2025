@@ -37,10 +37,11 @@ public class ArmSubsystem extends SubsystemBase {
 
     public void SetTargetHeight(double newTargetHeight) {
         targetHeight = newTargetHeight;
+        targetHeight = Math.min(Math.max(targetHeight,ArmConstants.armHeight),ArmConstants.maxHeight);
     }
 
     public double GetHeight() {
-        return curHeight;
+        return curHeight + ArmConstants.armHeight;
     }
 
     public boolean AtTargetHeight() {
@@ -62,7 +63,6 @@ public class ArmSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         curHeight = elevator.getExternalEncoder().getPosition()*2*Math.PI*ArmConstants.gearRadius;
-        SetTargetHeight(targetHeight);
         switch (state) {
             case ResetHeight:
                 RecallibrateHeight();

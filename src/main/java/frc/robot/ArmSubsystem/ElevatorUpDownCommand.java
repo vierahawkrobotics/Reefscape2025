@@ -27,11 +27,11 @@ public class ElevatorUpDownCommand extends Command {
         if (up) { // Check go up
             switch (state) {
                 case Ground: // Go up and set state to Low
-                    Robot.instance.armSubsystem.SetTargetHeight(ArmConstants.coralLow);
+                    Robot.instance.armSubsystem.SetTargetHeight(ArmConstants.low);
                     state = heightState.Low;
                     break;
                 case Low: // Go up and set state to High
-                    Robot.instance.armSubsystem.SetTargetHeight(ArmConstants.coralHigh);
+                    Robot.instance.armSubsystem.SetTargetHeight(ArmConstants.high);
                     state = heightState.High;
                     break;
                 case High: // Do nothing
@@ -46,7 +46,7 @@ public class ElevatorUpDownCommand extends Command {
                     state = heightState.Ground;
                     break;
                 case High: // Go down and set state to Low
-                    Robot.instance.armSubsystem.SetTargetHeight(ArmConstants.algaeLow);
+                    Robot.instance.armSubsystem.SetTargetHeight(ArmConstants.low);
                     state = heightState.Low;
                     break;
             }
