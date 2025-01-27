@@ -11,6 +11,7 @@ enum climberstate {
     Close,
     Open,
 }
+// defines the possible states of the climber subsystem
 
 public class climbersubmarine extends SubsystemBase{
     private SparkFlex roborobotLeft;
@@ -22,6 +23,7 @@ public class climbersubmarine extends SubsystemBase{
     private PIDController pidr = new PIDController(Constants.p, Constants.i, Constants.d);
     private PIDController pidl = new PIDController(Constants.p2, Constants.i2, Constants.d2);
     private climberstate state = climberstate.Open;
+    // defines motors, pids, positions, and state variables
 
 
 
@@ -32,6 +34,7 @@ public class climbersubmarine extends SubsystemBase{
         encoder = roborobotRight.getEncoder();
         encoder2 = roborobotLeft.getEncoder();
     }
+    //initializing
     public void periodic() {
         System.out.println("Periodic");
         calcPos();
@@ -56,6 +59,7 @@ public class climbersubmarine extends SubsystemBase{
                 
         }
     }
+    //periodically runs
     public void setState(climberstate newstate) {
         if (newstate == climberstate.Close){
             System.out.println("Closing");
@@ -65,9 +69,11 @@ public class climbersubmarine extends SubsystemBase{
         System.out.println("State set");
         state = newstate;
     }
+    //function to set state of the climber
     private void calcPos(){
         System.out.println("Periodic Position Calculated");
         posr = encoder.getPosition()*Constants.rotToRad;
         posl = -encoder2.getPosition()*Constants.rotToRad;
     }
+    //calculates the position of the climber arms
 }
