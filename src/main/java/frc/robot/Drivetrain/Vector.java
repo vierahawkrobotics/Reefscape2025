@@ -8,15 +8,10 @@ public class Vector {
         this.y=y;
     }
     public Vector subtract(Vector v2){
-        x = x-v2.x;
-        y = y-v2.y;
-        return new Vector(x, y);
+        return new Vector(this.x - v2.x, this.y-v2.y);
     }
     public Vector normalize(){
-        x = x/getDistance(this);
-        y = y/getDistance(this);
-
-        return new Vector(x, y);
+        return new Vector(this.x/getDistance(this), this.y/getDistance(this));
     }
     public double getDistance(Vector v){
         return Math.sqrt(Math.pow(v.x,2) + Math.pow(v.y,2));

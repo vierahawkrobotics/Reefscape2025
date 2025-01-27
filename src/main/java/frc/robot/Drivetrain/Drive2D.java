@@ -5,8 +5,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 public class Drive2D extends Command {
     
-    //TO DO: this can be changed later for area effects etc, note it must be meters/second
-    double maxSpeed = 4;
     //TO DO: this should be taken from the position subsystem
     double robotAngle = 45.0;
     
@@ -15,10 +13,11 @@ public class Drive2D extends Command {
     Supplier<Double> vr;
 
 
-    private Drive2D(Supplier<Double> vxInput, Supplier<Double> vyInput) {
+    private Drive2D(Supplier<Double> vxInput, Supplier<Double> vyInput, Supplier<Double> vrInput) {
         addRequirements(Robot.instance.drivetrain);
         vx = vxInput;
         vy = vyInput;
+        vr = vrInput;
     }
 
     @Override
@@ -27,21 +26,24 @@ public class Drive2D extends Command {
     public void execute() {
         //apply input deadband, input squaring, and scale input by the speed for x, y, and r
         double vxVal = (vx.get() < 0) ? Math.pow(vx.get(),2)*(-1): Math.pow(vx.get(),2);
-        vxVal = (vxVal< DrivetrainConstants.inputDeadband)?vxVal=0: vxVal*maxSpeed;
+        vxVal = (vxVal< DrivetrainConstants.inputDeadband)?vxVal=0: vxVal;
 
         double vyVal = (vy.get() < 0) ? Math.pow(vy.get(),2)*(-1): Math.pow(vy.get(),2);
-        vyVal = (vyVal < DrivetrainConstants.inputDeadband) ? vyVal =0: vyVal*maxSpeed;
+        vyVal = (vyVal < DrivetrainConstants.inputDeadband) ? vyVal =0: vyVal;
 
-        double vrVal = vr.get();
+        double vrVal;
         //set vrVal based on area effects
         // areaPose = Robot.instance.position.AreaEffectHandler.getPose();
         // if (areaPose == null){
-        //  vrVal = (vrVal< DrivetrainConstants.inputDeadband)?vrVal=0: vrVal*Robot.instance.drivetrain.rotationSensitivity;
+        //  vrVal = (vr.get()< DrivetrainConstants.inputDeadband)?0: vr.get();
+        //  Robot.instance.drivetrain.setTargetVelRot(vrVal);
         // }
-        // else{vrVal = areaPose.getRotation();}
+        // else{
+        //     vrVal = areaPose.getRotation();
+        //     Robot.instance.drivetrain.setTargetPosRot(vrVal);
+        // }
         
         Robot.instance.drivetrain.setTargetVel(vxVal, vyVal);
-        Robot.instance.drivetrain.setTargetPosRot(vrVal);
     }
     @Override
     public void end(boolean interrupted) {}

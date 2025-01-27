@@ -15,13 +15,17 @@ import frc.robot.Robot;
 
 public class Drivetrain extends SubsystemBase {
   //TO DO: this can be changed later for area effects etc, note it must be meters/second
-  double maxSpeed = 4;
+  private double maxSpeed = 3;
+  private double maxRotSpeed = 5.5;
   XboxController controller = Robot.instance.controller;
 
   //TO DO: replace all uses of this variable with the angle from the position subsystem in future
   public Rotation2d currentRobotAngle = new Rotation2d();
   //TO DO: same as above but for position
   public Pose2d currentRobotPosition = new Pose2d();
+
+  public double distance;
+  public double rotDistance;
 
   //this should ALWAYS be front left, front right, back left, and then back right
   private static SwerveDriveKinematics kinematics = new SwerveDriveKinematics(
@@ -39,8 +43,6 @@ public class Drivetrain extends SubsystemBase {
   };
 
   public static ShuffleboardTab drivetrainTab = Shuffleboard.getTab("Drivetrain");
-
-  public double rotationSensitivity;
   
   enum TranslateState{
     velocity,
@@ -87,8 +89,7 @@ public class Drivetrain extends SubsystemBase {
   }
 
   private void DriveVelocity(double desiredvX, double desiredvY, double desiredvRot){
-    Rotation2d currentRotation = currentRobotAngle;
-    ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(desiredvX, desiredvY, desiredvRot, currentRotation);
+    ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(desiredvX, desiredvY, desiredvRot, currentRobotAngle);
 
     SwerveModuleState[] moduleStates = Drivetrain.kinematics.toSwerveModuleStates(speeds);
     
@@ -107,26 +108,30 @@ public class Drivetrain extends SubsystemBase {
     Vector R = new Vector(currentRobotPosition.getX(), currentRobotPosition.getY());
     Vector T = new Vector(posX, posY);
 
-    double d = 
+    distance = 
     Math.sqrt(
     Math.pow(currentRobotPosition.getX() - posX,2) +
     Math.pow(currentRobotPosition.getY() - posY, 2));
 
     Vector V = T.subtract(R).normalize();
-    double scaleFactor = d>DrivetrainConstants.pointTolerance? 1: d/DrivetrainConstants.pointTolerance;
-    velX = V.x*scaleFactor;
-    velY = V.y*scaleFactor;
+    double scaleFactor = distance >DrivetrainConstants.pointTolerance? 1: distance/DrivetrainConstants.pointTolerance;
+
+    setTargetVel(V.x*scaleFactor, V.y*scaleFactor);
   }
   private void DrivePositionRot(){
     double angle = currentRobotAngle.getRadians();
-    double d = angle - posR > 0? posR-angle: angle- posR;
-    velR = d>DrivetrainConstants.rotTolerance? 1: d/DrivetrainConstants.rotTolerance;
+
+    double absDiff = Math.abs(angle-posR);
+    rotDistance = absDiff>Math.PI? 2*Math.PI - absDiff: absDiff;
+
+    velR = rotDistance>DrivetrainConstants.rotTolerance? 1: rotDistance/DrivetrainConstants.rotTolerance;
+    if((posR - angle + Math.PI*2) % (Math.PI*2)< Math.PI){velR*=-1;}
   }
 
   //vx and vy should be from 0 to 1
   public void setTargetVel(double vx, double vy){
-    velX = vx*maxSpeed;
-    velY = vy*maxSpeed;
+    velX = (vx<1) && (vx >-1)? vx*maxSpeed: maxSpeed;
+    velY = (vy<1) && (vx >-1)? vy*maxSpeed: maxSpeed;
     translateState = TranslateState.velocity;
   }
 
@@ -137,7 +142,7 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public void setTargetVelRot(double vr){
-    velR = vr;
+    velR = (vr<1) && (vr>-1)? vr*maxRotSpeed: maxRotSpeed;
     rotState = RotState.velocity;
   }
 
@@ -146,6 +151,13 @@ public class Drivetrain extends SubsystemBase {
     rotState = RotState.position;
   }
 
+  public void setMaxSpeed(double desiredSpeed){
+    maxSpeed = (desiredSpeed < DrivetrainConstants.physicalSpeedLimit) && (desiredSpeed > 0)? desiredSpeed: DrivetrainConstants.physicalSpeedLimit;
+  }
+
+  public void setMaxRotSpeed(double desiredSpeed){
+    maxRotSpeed = (desiredSpeed < DrivetrainConstants.physicalRotSpeedLimit) && (desiredSpeed > 0)? desiredSpeed: DrivetrainConstants.physicalRotSpeedLimit;
+  }
   //use this ONLY for initialization
   private void setDesiredStates(SwerveModuleState[] desiredStates){
     for(int i = 0; i< 4; i++){
