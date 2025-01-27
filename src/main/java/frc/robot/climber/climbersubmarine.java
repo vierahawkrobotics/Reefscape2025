@@ -26,12 +26,14 @@ public class climbersubmarine extends SubsystemBase{
 
 
     public climbersubmarine(){
+        System.out.println("Climber submarine initialized");
         roborobotLeft = new SparkFlex(Constants.MotorIdOne, MotorType.kBrushless);
         roborobotRight = new SparkFlex(Constants.MotorId2, MotorType.kBrushless);
         encoder = roborobotRight.getEncoder();
         encoder2 = roborobotLeft.getEncoder();
     }
     public void periodic() {
+        System.out.println("Periodic");
         calcPos();
         switch (state) {
             case Close:
@@ -55,9 +57,16 @@ public class climbersubmarine extends SubsystemBase{
         }
     }
     public void setState(climberstate newstate) {
+        if (newstate == climberstate.Close){
+            System.out.println("Closing");
+        } else if (newstate == climberstate.Open) {
+            System.out.println("Opening");
+        }
+        System.out.println("State set");
         state = newstate;
     }
     private void calcPos(){
+        System.out.println("Periodic Position Calculated");
         posr = encoder.getPosition()*Constants.rotToRad;
         posl = -encoder2.getPosition()*Constants.rotToRad;
     }
