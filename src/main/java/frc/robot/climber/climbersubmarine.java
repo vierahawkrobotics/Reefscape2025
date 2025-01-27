@@ -73,7 +73,9 @@ public class climbersubmarine extends SubsystemBase{
     private void calcPos(){
         System.out.println("Periodic Position Calculated");
         posr = encoder.getPosition()*Constants.rotToRad;
+        System.out.printf("Posr: %d",posr);
         posl = -encoder2.getPosition()*Constants.rotToRad;
+        System.out.printf("Posl: %d", posl);
     }
     //calculates the position of the climber arms
 }
