@@ -21,8 +21,8 @@ public class ArmSubsystem extends SubsystemBase {
     private ArmState state = ArmState.NormalOper;
     private SparkFlex elevator;
     private SparkFlex elevatorFollower;
-    private SparkFlex container;
-    private SparkFlex containerFollower;
+    public static SparkFlex container;
+    public static SparkFlex containerFollower;
     private double targetHeight;
     private double curHeight = 0;
     PIDController elevatorPID = new PIDController(ArmConstants.p, ArmConstants.i, ArmConstants.d);
@@ -37,6 +37,7 @@ public class ArmSubsystem extends SubsystemBase {
         elevatorFollowerConfig.follow(elevator);
         elevatorFollower.configure(elevatorFollowerConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kNoPersistParameters);
 
+        // Create and setup motors for Drop and Collect
         container = new SparkFlex(ArmConstants.elevatorMotorID,MotorType.kBrushless);
         containerFollower = new SparkFlex(ArmConstants.elevatorFollowMotorID,MotorType.kBrushless);
         container.getExternalEncoder().setPosition(0);
@@ -46,16 +47,15 @@ public class ArmSubsystem extends SubsystemBase {
         containerFollower.configure(containerFollowerConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kNoPersistParameters);
     }
 
-    public void SetTargetHeight(double newTargetHeight) {
-        targetHeight = newTargetHeight;
+    public void SetTargetHeight(double targetHeight) { // Set target height
         targetHeight = Math.min(Math.max(targetHeight,ArmConstants.armHeight),ArmConstants.maxHeight);
     }
 
-    public double GetHeight() {
+    public double GetHeight() { // Get current height
         return curHeight + ArmConstants.armHeight;
     }
 
-    public boolean AtTargetHeight() {
+    public boolean AtTargetHeight() { // Check if at target height
         if ((targetHeight - elevator.getExternalEncoder().getPosition()) < ArmConstants.epsilon) {
             return true;
         } else {

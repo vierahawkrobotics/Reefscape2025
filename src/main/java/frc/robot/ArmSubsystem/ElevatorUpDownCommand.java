@@ -1,5 +1,7 @@
 package frc.robot.ArmSubsystem;
 
+import java.security.PublicKey;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 
@@ -10,7 +12,7 @@ enum heightState {
 }
 
 public class ElevatorUpDownCommand extends Command {
-    private heightState state = heightState.Ground;
+    public heightState state = heightState.Ground;
     private boolean up;
     private boolean down;
     public ElevatorUpDownCommand(boolean up, boolean down) {

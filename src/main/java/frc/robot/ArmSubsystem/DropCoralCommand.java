@@ -3,29 +3,23 @@ package frc.robot.ArmSubsystem;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
-public class CollectCoralCommand extends Command {
+
+public class DropCoralCommand extends Command {
     private double startTime;
-    public CollectCoralCommand() {
+    public DropCoralCommand() {
         addRequirements(Robot.instance.exampleSubsystem);
     }
 
     @Override
-    public void initialize() {
-        ArmSubsystem.container.set(1);
-        ArmSubsystem.containerFollower.set(1);
-        startTime = Timer.getFPGATimestamp();
-    }
-
+    public void initialize() {}
     @Override
     public void execute() {
-
+        ArmSubsystem.container.set(-1);
+        ArmSubsystem.containerFollower.set(-1);
+        startTime = Timer.getFPGATimestamp();
     }
-
     @Override
-    public void end(boolean interrupted) {
-
-    }
-
+    public void end(boolean interrupted) {}
     @Override
     public boolean isFinished() {
         if (Timer.getFPGATimestamp()-startTime == ArmConstants.dropCollectTime) {
