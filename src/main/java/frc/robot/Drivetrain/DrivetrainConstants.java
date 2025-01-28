@@ -30,7 +30,7 @@ public class DrivetrainConstants {
     public static int brDrivingID = 1;
     public static int brTurningID = 5;
 
-    public static final double wheelDiameterMeters = 6;
+    public static final double wheelDiameterMeters = 0.074;
     public static final int drivingMotorPinionTeeth = 14;
     public static final int drivingMotorSpurTeeth = 21;
     public static final double wheelCircumferenceMeters = wheelDiameterMeters * Math.PI;
