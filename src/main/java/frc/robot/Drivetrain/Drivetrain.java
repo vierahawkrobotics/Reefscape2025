@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -28,18 +29,18 @@ public class Drivetrain extends SubsystemBase {
   public double rotDistance;
 
   //this should ALWAYS be front left, front right, back left, and then back right
-  private static SwerveDriveKinematics kinematics = new SwerveDriveKinematics(
+  public static SwerveDriveKinematics kinematics = new SwerveDriveKinematics(
   DrivetrainConstants.frontLeftLocation, 
   DrivetrainConstants.frontRightLocation, 
   DrivetrainConstants.backLeftLocation, 
   DrivetrainConstants.backRightLocation
   );
 
-  private static MAXSwerveModule[] maxSwerveModules = {
-    new MAXSwerveModule(DrivetrainConstants.flDrivingID, DrivetrainConstants.flTurningID),
-    new MAXSwerveModule(DrivetrainConstants.frDrivingID,DrivetrainConstants.frTurningID),
-    new MAXSwerveModule(DrivetrainConstants.blDrivingID,DrivetrainConstants.blTurningID),
-    new MAXSwerveModule(DrivetrainConstants.brDrivingID,DrivetrainConstants.brTurningID)
+  public static MAXSwerveModule[] maxSwerveModules = {
+    new MAXSwerveModule(DrivetrainConstants.flDrivingID,DrivetrainConstants.flTurningID,DrivetrainConstants.flChassisAngularOffset),
+    new MAXSwerveModule(DrivetrainConstants.frDrivingID,DrivetrainConstants.frTurningID,DrivetrainConstants.frChassisAngularOffset),
+    new MAXSwerveModule(DrivetrainConstants.blDrivingID,DrivetrainConstants.blTurningID,DrivetrainConstants.blChassisAngularOffset),
+    new MAXSwerveModule(DrivetrainConstants.brDrivingID,DrivetrainConstants.brTurningID,DrivetrainConstants.brChassisAngularOffset)
   };
 
   public static ShuffleboardTab drivetrainTab = Shuffleboard.getTab("Drivetrain");
@@ -164,6 +165,17 @@ public class Drivetrain extends SubsystemBase {
        maxSwerveModules[i].turningPIDController.setReference(desiredStates[i].angle.getRadians(), ControlType.kPosition);
        maxSwerveModules[i].drivingPIDController.setReference(desiredStates[i].speedMetersPerSecond, ControlType.kVelocity);
      }
+    }
+  
+    public static SwerveModulePosition[] getSwerveModulePositions(){
+      SwerveModulePosition[] swerveModulePositionList = {
+        maxSwerveModules[0].getPosition(),
+        maxSwerveModules[1].getPosition(),
+        maxSwerveModules[2].getPosition(),
+        maxSwerveModules[3].getPosition(),
+      };
+
+      return swerveModulePositionList;
     }
   
 }
