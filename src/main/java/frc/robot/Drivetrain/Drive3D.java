@@ -30,7 +30,7 @@ public  class Drive3D extends Command {
 
   @Override
   public void execute() {
-    //apply input deadband, input squaring, and scale input by the speed for x, y, and r
+    //apply input deadband, input squaring,
     double vxVal = (vx.get() < 0) ? Math.pow(vx.get(),2)*(-1): Math.pow(vx.get(),2);
     vxVal = (vxVal< DrivetrainConstants.inputDeadband)?vxVal=0: vxVal;
 
@@ -38,7 +38,7 @@ public  class Drive3D extends Command {
     vyVal = (vyVal < DrivetrainConstants.inputDeadband) ? vyVal =0: vyVal;
 
     double vrVal = vr.get();
-    vrVal = (vrVal< DrivetrainConstants.inputDeadband)?vrVal=0: vrVal*Robot.instance.drivetrain.rotationSensitivity;
+    vrVal = (vrVal< DrivetrainConstants.inputDeadband)?vrVal=0: vrVal;
     
     Robot.instance.drivetrain.setTargetVel(vxVal, vyVal);
     Robot.instance.drivetrain.setTargetVelRot(vrVal);

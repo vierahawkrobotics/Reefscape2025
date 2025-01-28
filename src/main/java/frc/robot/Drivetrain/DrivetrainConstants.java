@@ -8,6 +8,12 @@ import edu.wpi.first.math.geometry.Translation2d;
 public class DrivetrainConstants {
     public static int usbPortController = 0;
     public static double inputDeadband = 0.02;
+    public static double physicalSpeedLimit = 3.5;
+    public static double physicalRotSpeedLimit = 6;
+
+    //The range at which the robot is considered to have reached a position
+    public static double validRange = 0.03; //translation in meters
+    public static double validRotDiff = 0.07; //rotation in radians
     // Locations for the swerve drive modules relative to the robot center.
     public static Translation2d frontLeftLocation = new Translation2d(0.381, 0.381);
     public static Translation2d frontRightLocation = new Translation2d(0.381, -0.381);
@@ -24,7 +30,7 @@ public class DrivetrainConstants {
     public static int brDrivingID = 1;
     public static int brTurningID = 5;
 
-    public static final double wheelDiameterMeters = 6;
+    public static final double wheelDiameterMeters = 0.074;
     public static final int drivingMotorPinionTeeth = 14;
     public static final int drivingMotorSpurTeeth = 21;
     public static final double wheelCircumferenceMeters = wheelDiameterMeters * Math.PI;
@@ -56,10 +62,10 @@ public class DrivetrainConstants {
     public static int drivingMotorCurrentLimit = 80; // amps
     public static int turningMotorCurrentLimit = 20; // amps
 
-    //the range at which the robot is considered to have reached the set point in DrivePosition()
-    public static double pointTolerance = 0.01;
+    //the range at which the robot starts to slow down in DrivePosition
+    public static double pointTolerance = 0.1;
     //the rotation version of what's above
-    public static double rotTolerance = 0.04;
+    public static double rotTolerance = 0.17;
 }
 
 
