@@ -1,10 +1,8 @@
 package frc.robot.ArmSubsystem;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 public class CollectCoralCommand extends Command {
-    private double startTime;
     public CollectCoralCommand() {
         addRequirements(Robot.instance.exampleSubsystem);
     }
@@ -13,7 +11,6 @@ public class CollectCoralCommand extends Command {
     public void initialize() {
         ArmSubsystem.container.set(1);
         ArmSubsystem.containerFollower.set(1);
-        startTime = Timer.getFPGATimestamp();
     }
 
     @Override
