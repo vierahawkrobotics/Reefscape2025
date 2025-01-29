@@ -20,7 +20,7 @@ public class PositionComponent {
 
     public PositionComponent(Pose2d initialPose) {
         gryoObject = new AHRS(SerialPort.Port.kMXP);
-        poseEstimator = new SwerveDrivePoseEstimator(Drivetrain.kinematics, Rotation2d.fromDegrees(gryoObject.getAngle()), Drivetrain.getSwerveModulePositions(), initialPose); // Fix kinematics and modulePositions parameter
+        poseEstimator = new SwerveDrivePoseEstimator(Drivetrain.kinematics, Rotation2d.fromDegrees(gryoObject.getAngle()), Drivetrain.getSwerveModulePositions(), initialPose);
     }
 
     public static Pose2d getRobotPose() {
@@ -28,7 +28,7 @@ public class PositionComponent {
     }
 
     public static void updatePose(){
-        poseEstimator.addVisionMeasurement(null, edu.wpi.first.wpilibj.Timer.getFPGATimestamp()); // Fix visionRobotPoseMeters
+        poseEstimator.addVisionMeasurement(getRobotPose(), edu.wpi.first.wpilibj.Timer.getFPGATimestamp());
     }
 
     public static void perodic(){
