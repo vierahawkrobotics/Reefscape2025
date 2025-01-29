@@ -28,7 +28,7 @@ public class CollectCoralCommand extends Command {
 
     @Override
     public boolean isFinished() {
-        if (Timer.getFPGATimestamp()-startTime == ArmConstants.dropCollectTime) {
+        if (ArmSubsystem.container.getForwardLimitSwitch().isPressed()) {
             return true;
         } else {
             return false;

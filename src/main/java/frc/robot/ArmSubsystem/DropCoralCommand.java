@@ -22,7 +22,7 @@ public class DropCoralCommand extends Command {
     public void end(boolean interrupted) {}
     @Override
     public boolean isFinished() {
-        if (Timer.getFPGATimestamp()-startTime == ArmConstants.dropCollectTime) {
+        if (Timer.getFPGATimestamp()-startTime == ArmConstants.dropTime) {
             return true;
         } else {
             return false;
