@@ -74,6 +74,10 @@ public class Drivetrain extends SubsystemBase {
 
   public void exampleMethodCommand() {}
   
+  public void setGoal(float v) {
+    m_controller.setGoal(v);
+  }
+
   @Override
   public void periodic() {
     if (m_joystick.getRawButtonPressed(2)) {
@@ -85,6 +89,8 @@ public class Drivetrain extends SubsystemBase {
       m_controller.calculate(m_encoder.getRadians) + m_feedforward.calculate(m_controller.getSetpoint().velocity)
     );
     }
+
+
   //ALEKS: ^ Hopefully completed     
     // This method will be called once per scheduler run\
     // rotationSensitivity isn't upating
