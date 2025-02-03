@@ -3,6 +3,10 @@ package frc.robot.ArmSubsystem;
 public class ArmConstants { // All heights in meters
     final public static int elevatorMotorID = -1;
     final public static int elevatorFollowMotorID = -1;
+    final public static int containerMotorID = -1;
+    final public static int containerFollowMotorID = -1;
+    final public static double containerMotorSpeed = 0.5;
+
     final public static double p = 1;
     final public static double i = 0;
     final public static double d = 0;
@@ -14,9 +18,15 @@ public class ArmConstants { // All heights in meters
     final public static double dropTime = 5; // Seconds
 
     final public static double armHeight = -1; // Arm bottom distance from ground
+    final public static double armDistance = 1; // Arm distance from center of robot
     final public static double maxHeight = 100; // Arm max extension length
     final public static double ground = 0; // Arm lowest height (L1)
     final public static double low = 0.81; // L2
     final public static double high = 1.83; // L3
     final public static double algaeOffset = 0.1;
+
+    final public static double farLeftIntakeChannel = -1;
+    final public static double middleLeftIntakeChannel = -0.5;
+    final public static double middleRightIntakeChannel = 0.5;
+    final public static double farRightIntakeChannel = 1;
 }
