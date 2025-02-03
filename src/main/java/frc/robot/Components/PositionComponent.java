@@ -20,22 +20,23 @@ public class PositionComponent {
 
     public PositionComponent(Pose2d initialPose) {
         gryoObject = new AHRS(SerialPort.Port.kMXP);
-        poseEstimator = new SwerveDrivePoseEstimator(Drivetrain.kinematics, Rotation2d.fromDegrees(gryoObject.getAngle()), Drivetrain.getSwerveModulePositions(), initialPose); // Fix kinematics and modulePositions parameter
+        poseEstimator = new SwerveDrivePoseEstimator(Drivetrain.kinematics, Rotation2d.fromDegrees(gryoObject.getAngle()), Drivetrain.getSwerveModulePositions(), initialPose);
     }
 
     public static Pose2d getRobotPose() {
         return poseEstimator.getEstimatedPosition();
     }
 
-    public static void updatePose(){
-        poseEstimator.addVisionMeasurement(null, edu.wpi.first.wpilibj.Timer.getFPGATimestamp()); // Fix visionRobotPoseMeters
+    public static void updatePose(Pose2d pose){
+        poseEstimator.addVisionMeasurement(pose, edu.wpi.first.wpilibj.Timer.getFPGATimestamp());
     }
 
     public static void perodic(){
         poseEstimator.update(Rotation2d.fromDegrees(gryoObject.getAngle()), Drivetrain.getSwerveModulePositions());
 
-        if(LimelightComponent.calcAprilTag() != null){
-            updatePose();
+        Pose2d pose = LimelightComponent.calcAprilTag();
+        if(pose != null){
+            updatePose(pose);
         }        
     }
 }
