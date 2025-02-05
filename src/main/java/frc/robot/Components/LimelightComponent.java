@@ -1,17 +1,15 @@
 package frc.robot.Components;
 
-import frc.robot.LimelightHelpers;
 import edu.wpi.first.math.geometry.Pose2d;
 
 public class LimelightComponent {
     public static Pose2d calcAprilTag() {
-        boolean hasTarget = LimelightHelpers.getTV("");
-
+        boolean hasTarget = false; // Fix to status
+        
         if(hasTarget){
-            LimelightHelpers.PoseEstimate limelightMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue("");
-            return(limelightMeasurement.pose); // Could be relative position (Eli thinks that it is absolute)
+            return new Pose2d(); // Fix to pose2d based on april tag positioning
         }else{
-            return(null);
+            return null; // No valid target, return null
         }
     }
 }

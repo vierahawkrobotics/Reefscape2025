@@ -27,16 +27,21 @@ public class PositionComponent {
         return poseEstimator.getEstimatedPosition();
     }
 
-    public static void updatePose(Pose2d pose){
-        poseEstimator.addVisionMeasurement(pose, edu.wpi.first.wpilibj.Timer.getFPGATimestamp());
+    public static Pose2d getPoseTranslated(Pose2d offset){
+        double x = getRobotPose().getX();
+        double y = getRobotPose().getY();
+        Rotation2d theta = getRobotPose().getRotation();
+        return new Pose2d(x*theta.getCos()-y*theta.getSin(), y*theta.getCos()+x*theta.getSin(), theta.plus(offset.getRotation()));
     }
 
+    public static void updatePose(){
+        poseEstimator.addVisionMeasurement(getRobotPose(), edu.wpi.first.wpilibj.Timer.getFPGATimestamp());
+    }
     public static void perodic(){
         poseEstimator.update(Rotation2d.fromDegrees(gryoObject.getAngle()), Drivetrain.getSwerveModulePositions());
 
-        Pose2d pose = LimelightComponent.calcAprilTag();
-        if(pose != null){
-            updatePose(pose);
+        if(LimelightComponent.calcAprilTag() != null){
+            updatePose();
         }        
     }
 }
