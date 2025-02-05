@@ -16,40 +16,33 @@ public class DropCoralCommand extends Command {
     @Override
     public void execute() {
         switch(state) {
-            case SetupInit:
-                Robot.instance.armSubsystem.setPosition(this.hState);
-                //set robot position
-                Robot.instance.drivetrainSubsystem.setPosition(TriggerEffect.getAlgeaPose(this.hState));
+            case SetupInit: // Set robot position
+                // drivetrain function move in front of place coral (include ArmConstants.armDistance)
                 state = DropState.SetupPeriodic;
                 break;
             case SetupPeriodic:
-                if(drivetrain.isAtTargetPose() && Robot.instance.armSubsystem.atTargetHeight())
-                    state = DropState.ExtendInit;
+                // if at target (drivetrain function)
+                //    state = DropState.AlignInit;
                 break;
-            case ExtendInit:
-                //move robot forward
-                state = DropState.ExtendPeriodic;
+            case AlignInit:
+                // drivetrain function align center to place coral
+                state = DropState.AlignPeriodic;
                 break;
-            case ExtendPeriodic:
-                if(drivetrain.isAtTargetPose())
-                    state = DropState.EjectInit;
+            case AlignPeriodic:
+                // if aligned (drivetrain function)
+                //    state = DropState.DropInit;
                 break;
             case DropInit:
-                Robot.instance.armSubsystem.ejectAlgae();
-                state = DropState.EjectPeriodic;
+                ArmSubsystem.setIntakeState(ArmSubsystem.IntakeState.Drop);
+                startTime = Timer.getFPGATimestamp();
+                state = DropState.DropPeriodic;
                 break;
             case DropPeriodic:
-                // (move robot back a foot) Robot.instance.drivetrainSubsystem.
-                //arm.ejectAlgae()
-                //rotate eject wheels and move arm up
-                //robot move back a foot
-                if(IsFinished()){
+                if(isFinished()){
                     state = DropState.End;
                 }
                 break;
         }
-        startTime = Timer.getFPGATimestamp();
-        ArmSubsystem.setIntakeState(ArmSubsystem.IntakeState.Drop);
     }
     @Override
     public void end(boolean interrupted) {}
@@ -65,8 +58,8 @@ public class DropCoralCommand extends Command {
     enum DropState {
         SetupInit,
         SetupPeriodic,
-        ExtendInit,
-        ExtendPeriodic,
+        AlignInit,
+        AlignPeriodic,
         DropInit,
         DropPeriodic,
         End

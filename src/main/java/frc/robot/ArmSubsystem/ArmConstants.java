@@ -20,6 +20,7 @@ public class ArmConstants { // All heights in meters
     final public static double armHeight = -1; // Arm bottom distance from ground
     final public static double armDistance = 1; // Arm distance from center of robot
     final public static double maxHeight = 100; // Arm max extension length
+    final public static double collectHeight = 1; // Height to intake from collecetion area
     final public static double ground = 0; // Arm lowest height (L1)
     final public static double low = 0.81; // L2
     final public static double high = 1.83; // L3

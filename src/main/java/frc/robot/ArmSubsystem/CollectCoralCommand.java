@@ -10,6 +10,7 @@ public class CollectCoralCommand extends Command {
 
     @Override
     public void initialize() {
+        ArmSubsystem.SetTargetHeight(ArmConstants.collectHeight);
         ArmSubsystem.setIntakeState(ArmSubsystem.IntakeState.Collect);
     }
 
