@@ -18,11 +18,11 @@ public class ArmSubsystem extends SubsystemBase {
     private ShuffleboardTab armTab;
     private ArmState state = ArmState.NormalOper;
     private static IntakeState intakeState = IntakeState.Rest;
-    private SparkFlex elevator;
-    private SparkFlex elevatorFollower;
+    private static SparkFlex elevator;
+    private static SparkFlex elevatorFollower;
     public static SparkFlex container;
     public static SparkFlex containerFollower;
-    private double targetHeight;
+    private static double targetHeight;
     private double curHeight = 0;
     PIDController elevatorPID = new PIDController(ArmConstants.p, ArmConstants.i, ArmConstants.d);
     private double limitSwitchOffset;
@@ -74,7 +74,7 @@ public class ArmSubsystem extends SubsystemBase {
         return intakeState;
     }
 
-    public void SetTargetHeight(double targetHeight) { // Set target height
+    public static void SetTargetHeight(double targetHeight) { // Set target height
         targetHeight = Math.min(Math.max(targetHeight,ArmConstants.armHeight),ArmConstants.maxHeight);
     }
 
@@ -82,7 +82,7 @@ public class ArmSubsystem extends SubsystemBase {
         return curHeight + ArmConstants.armHeight;
     }
 
-    public boolean AtTargetHeight() { // Check if at target height
+    public static boolean AtTargetHeight() { // Check if at target height
         if ((targetHeight - elevator.getExternalEncoder().getPosition()) < ArmConstants.epsilon) {
             return true;
         } else {

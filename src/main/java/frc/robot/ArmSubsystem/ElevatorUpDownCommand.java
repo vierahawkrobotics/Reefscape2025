@@ -27,12 +27,16 @@ public class ElevatorUpDownCommand extends Command {
         if (up) { // Check go up
             switch (state) {
                 case Ground: // Go up and set state to Low
-                    Robot.instance.armSubsystem.SetTargetHeight(ArmConstants.low);
-                    state = heightState.Low;
+                    ArmSubsystem.SetTargetHeight(ArmConstants.low);
+                    if (ArmSubsystem.AtTargetHeight()) {
+                        state = heightState.Low;
+                    }
                     break;
                 case Low: // Go up and set state to High
-                    Robot.instance.armSubsystem.SetTargetHeight(ArmConstants.high);
-                    state = heightState.High;
+                    ArmSubsystem.SetTargetHeight(ArmConstants.high);
+                    if (ArmSubsystem.AtTargetHeight()) {
+                        state = heightState.High;
+                    }
                     break;
                 case High: // Do nothing
                     break;
@@ -42,12 +46,16 @@ public class ElevatorUpDownCommand extends Command {
                 case Ground: // Do nothing
                     break;
                 case Low: // Go down and set state to Ground
-                    Robot.instance.armSubsystem.SetTargetHeight(ArmConstants.ground);
-                    state = heightState.Ground;
+                    ArmSubsystem.SetTargetHeight(ArmConstants.ground);
+                    if (ArmSubsystem.AtTargetHeight()) {
+                        state = heightState.Ground;
+                    }
                     break;
                 case High: // Go down and set state to Low
-                    Robot.instance.armSubsystem.SetTargetHeight(ArmConstants.low);
-                    state = heightState.Low;
+                    ArmSubsystem.SetTargetHeight(ArmConstants.low);
+                    if (ArmSubsystem.AtTargetHeight()) {
+                        state = heightState.Low;
+                    }
                     break;
             }
         }
