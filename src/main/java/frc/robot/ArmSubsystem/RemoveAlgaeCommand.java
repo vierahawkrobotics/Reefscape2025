@@ -42,29 +42,29 @@ public class RemoveAlgaeCommand extends Command {
     @Override
     public void execute() {
         switch(state) {
-            case SetupInit:
+            case SetupInit://initialize arm and robot position
                 ArmSubsystem.SetTargetHeight(hState.getHeight());
                 //set robot position
                 ///Robot.instance.drivetrainSubsystem.setPosition(TriggerEffect.getAlgeaPose(this.hState));
                 state = RemoveAlgaeState.SetupPeriodic;
                 break;
-            case SetupPeriodic:
+            case SetupPeriodic://check if at target pose
                 ///if(drivetrain.isAtTargetPose() && Robot.instance.armSubsystem.atTargetHeight())
                     state = RemoveAlgaeState.ExtendInit;
                 break;
-            case ExtendInit:
+            case ExtendInit://extend arm
                 //move robot forward
                 state = RemoveAlgaeState.ExtendPeriodic;
                 break;
-            case ExtendPeriodic:
+            case ExtendPeriodic://check if at target pose
                 ///if(drivetrain.isAtTargetPose())
                     state = RemoveAlgaeState.EjectInit;
                 break;
-            case EjectInit:
+            case EjectInit://eject algae
                 Robot.instance.armSubsystem.ejectAlgae();
                 state = RemoveAlgaeState.EjectPeriodic;
                 break;
-            case EjectPeriodic:
+            case EjectPeriodic://check if at target height
                 // (move robot back a foot) Robot.instance.drivetrainSubsystem.
                 //arm.ejectAlgae()
                 //rotate eject wheels and move arm up
