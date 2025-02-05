@@ -27,7 +27,7 @@ public class DrivePoseBased extends Command{
 
     @Override
     public boolean isFinished() {
-        if(Robot.instance.drivetrain.distance< DrivetrainConstants.validRange && Robot.instance.drivetrain.rotDistance < DrivetrainConstants.validRotDiff){
+        if(Robot.instance.drivetrain.distance < DrivetrainConstants.validRange && Robot.instance.drivetrain.rotDistance < DrivetrainConstants.validRotDiff){
         return true;
         }
         return false;

@@ -8,21 +8,21 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
+import frc.robot.Components.PositionComponent;
 
 public class Drivetrain extends SubsystemBase {
   //TO DO: this can be changed later for area effects etc, note it must be meters/second
-  double maxSpeed = 4;
+  double maxSpeed = 0.5;
   XboxController controller = Robot.instance.controller;
-
-  //TO DO: replace all uses of this variable with the angle from the position subsystem in future
-  public Rotation2d currentRobotAngle = new Rotation2d();
-  //TO DO: same as above but for position
-  public Pose2d currentRobotPosition = new Pose2d();
+  double distance;
+  double rotDistance;
 
   //this should ALWAYS be front left, front right, back left, and then back right
   public static SwerveDriveKinematics kinematics = new SwerveDriveKinematics(
@@ -53,6 +53,9 @@ public class Drivetrain extends SubsystemBase {
   }
   TranslateState translateState = TranslateState.velocity;
   RotState rotState = RotState.velocity;
+
+  StructArrayPublisher<SwerveModuleState> publisher = NetworkTableInstance.getDefault()
+.getStructArrayTopic("MyStates", SwerveModuleState.struct).publish();
   
   private double velX;
   private double velY;
@@ -77,6 +80,7 @@ public class Drivetrain extends SubsystemBase {
 
     DriveVelocity(velX, velY, velR);
     
+    
     velX = 0;
     velY = 0;
     velR = 0;
@@ -88,7 +92,7 @@ public class Drivetrain extends SubsystemBase {
   }
 
   private void DriveVelocity(double desiredvX, double desiredvY, double desiredvRot){
-    Rotation2d currentRotation = currentRobotAngle;
+    Rotation2d currentRotation = PositionComponent.getRobotPose().getRotation();
     ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(desiredvX, desiredvY, desiredvRot, currentRotation);
 
     SwerveModuleState[] moduleStates = Drivetrain.kinematics.toSwerveModuleStates(speeds);
@@ -104,24 +108,24 @@ public class Drivetrain extends SubsystemBase {
   }
 
   private void DrivePosition(){
-    
+    Pose2d currentRobotPosition = PositionComponent.getRobotPose();
     Vector R = new Vector(currentRobotPosition.getX(), currentRobotPosition.getY());
     Vector T = new Vector(posX, posY);
 
-    double d = 
+    distance = 
     Math.sqrt(
     Math.pow(currentRobotPosition.getX() - posX,2) +
     Math.pow(currentRobotPosition.getY() - posY, 2));
 
     Vector V = T.subtract(R).normalize();
-    double scaleFactor = d>DrivetrainConstants.pointTolerance? 1: d/DrivetrainConstants.pointTolerance;
+    double scaleFactor = distance>DrivetrainConstants.pointTolerance? 1: distance/DrivetrainConstants.pointTolerance;
     velX = V.x*scaleFactor;
     velY = V.y*scaleFactor;
   }
   private void DrivePositionRot(){
-    double angle = currentRobotAngle.getRadians();
-    double d = angle - posR > 0? posR-angle: angle- posR;
-    velR = d>DrivetrainConstants.rotTolerance? 1: d/DrivetrainConstants.rotTolerance;
+    double angle = PositionComponent.getRobotPose().getRotation().getRadians();
+    rotDistance = angle - posR > 0? posR-angle: angle- posR;
+    velR = rotDistance>DrivetrainConstants.rotTolerance? 1: rotDistance/DrivetrainConstants.rotTolerance;
   }
 
   //vx and vy should be from 0 to 1
@@ -153,8 +157,9 @@ public class Drivetrain extends SubsystemBase {
        maxSwerveModules[i].turningPIDController.setReference(desiredStates[i].angle.getRadians(), ControlType.kPosition);
        maxSwerveModules[i].drivingPIDController.setReference(desiredStates[i].speedMetersPerSecond, ControlType.kVelocity);
      }
+    publisher.set(desiredStates);
     }
-  
+    
     public static SwerveModulePosition[] getSwerveModulePositions(){
       SwerveModulePosition[] swerveModulePositionList = {
         maxSwerveModules[0].getPosition(),

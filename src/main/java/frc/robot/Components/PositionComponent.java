@@ -1,11 +1,13 @@
 package frc.robot.Components;
 
+import com.studica.frc.AHRS;
+import com.studica.frc.AHRS.NavXComType;
+
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
-import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SerialPort;
 import frc.robot.Drivetrain.Drivetrain;
 
@@ -19,8 +21,9 @@ public class PositionComponent {
     private static AHRS gryoObject;
 
     public PositionComponent(Pose2d initialPose) {
-        gryoObject = new AHRS(SerialPort.Port.kMXP);
-        poseEstimator = new SwerveDrivePoseEstimator(Drivetrain.kinematics, Rotation2d.fromDegrees(gryoObject.getAngle()), Drivetrain.getSwerveModulePositions(), initialPose); // Fix kinematics and modulePositions parameter
+        gryoObject = new AHRS(NavXComType.kMXP_SPI);
+        Rotation2d initialRot = Rotation2d.fromDegrees(gryoObject.getAngle());
+        poseEstimator = new SwerveDrivePoseEstimator(Drivetrain.kinematics, initialRot, Drivetrain.getSwerveModulePositions(), initialPose); // Fix kinematics and modulePositions parameter
     }
 
     public static Pose2d getRobotPose() {
@@ -34,8 +37,8 @@ public class PositionComponent {
     public static void perodic(){
         poseEstimator.update(Rotation2d.fromDegrees(gryoObject.getAngle()), Drivetrain.getSwerveModulePositions());
 
-        if(LimelightComponent.calcAprilTag() != null){
-            updatePose();
-        }        
+        // if(LimelightComponent.calcAprilTag() != null){
+        //     updatePose();
+        // }        
     }
 }
