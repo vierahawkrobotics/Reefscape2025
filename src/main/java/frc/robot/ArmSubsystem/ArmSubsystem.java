@@ -16,11 +16,11 @@ public class ArmSubsystem extends SubsystemBase {
     private ShuffleboardTab armTab;
     private ArmState state = ArmState.NormalOper;
     private static IntakeState intakeState = IntakeState.Rest;
-    private SparkFlex elevator;
-    private SparkFlex elevatorFollower;
+    private static SparkFlex elevator;
+    private static SparkFlex elevatorFollower;
     public static SparkFlex container;
     public static SparkFlex containerFollower;
-    private double targetHeight;
+    private static double targetHeight;
     private double curHeight = 0;
     PIDController elevatorPID = new PIDController(ArmConstants.p, ArmConstants.i, ArmConstants.d);
     private double limitSwitchOffset;
