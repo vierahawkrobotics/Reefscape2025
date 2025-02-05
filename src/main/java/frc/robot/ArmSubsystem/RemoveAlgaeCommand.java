@@ -1,4 +1,6 @@
 package frc.robot.ArmSubsystem;
+import javax.lang.model.util.ElementScanner14;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 
@@ -13,7 +15,17 @@ enum RemoveAlgaeState {
 }
 enum heightState{
     High,
-    Low
+    Low;
+    double getHeight() {
+        switch(this){
+            case High:
+                return 1.83;
+            case Low:
+                return 0.81;
+            default:
+                return 0;
+        }
+    }
 }
 public class RemoveAlgaeCommand extends Command {
     private RemoveAlgaeState state = RemoveAlgaeState.SetupInit;
@@ -32,13 +44,13 @@ public class RemoveAlgaeCommand extends Command {
     public void execute() {
         switch(state) {
             case SetupInit:
-                Robot.instance.armSubsystem.setPosition(this.hState);
+                Robot.instance.armSubsystem.SetTargetHeight(hState.getHeight());
                 //set robot position
-                Robot.instance.drivetrainSubsystem.setPosition(TriggerEffect.getAlgeaPose(this.hState));
+                ///Robot.instance.drivetrainSubsystem.setPosition(TriggerEffect.getAlgeaPose(this.hState));
                 state = RemoveAlgaeState.SetupPeriodic;
                 break;
             case SetupPeriodic:
-                if(drivetrain.isAtTargetPose() && Robot.instance.armSubsystem.atTargetHeight())
+                ///if(drivetrain.isAtTargetPose() && Robot.instance.armSubsystem.atTargetHeight())
                     state = RemoveAlgaeState.ExtendInit;
                 break;
             case ExtendInit:
@@ -46,7 +58,7 @@ public class RemoveAlgaeCommand extends Command {
                 state = RemoveAlgaeState.ExtendPeriodic;
                 break;
             case ExtendPeriodic:
-                if(drivetrain.isAtTargetPose())
+                ///if(drivetrain.isAtTargetPose())
                     state = RemoveAlgaeState.EjectInit;
                 break;
             case EjectInit:
@@ -58,7 +70,7 @@ public class RemoveAlgaeCommand extends Command {
                 //arm.ejectAlgae()
                 //rotate eject wheels and move arm up
                 //robot move back a foot
-                if(IsFinished()){
+                if(isFinished()){
                     state = RemoveAlgaeState.End;
                 }
                 break;
@@ -67,9 +79,12 @@ public class RemoveAlgaeCommand extends Command {
     @Override
     public void end(boolean interrupted) {}
     @Override
-    public boolean IsFinished() {
-        if(state == RemoveAlgaeState.End){
+    public boolean isFinished() {
+        if(ArmSubsystem.AtTargetHeight() == true){
             return true;
+        }
+        else{
+            return false;
         }
 
     }

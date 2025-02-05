@@ -1,5 +1,7 @@
 package frc.robot.ArmSubsystem;
 
+import java.util.Queue;
+
 import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -28,16 +30,17 @@ public class ArmSubsystem extends SubsystemBase {
     public ArmSubsystem() {
         armTab = Shuffleboard.getTab("Arm Subsystem");
 
-        elevator = new SparkFlex(ArmConstants.elevatorMotorID,MotorType.kBrushless);
-        elevatorFollower = new SparkFlex(ArmConstants.elevatorFollowMotorID,MotorType.kBrushless);
+        // Create and setup motors for Elevator
+        elevator = new SparkFlex(ArmConstants.elevatorMotorID, MotorType.kBrushless);
+        elevatorFollower = new SparkFlex(ArmConstants.elevatorFollowMotorID, MotorType.kBrushless);
         elevator.getExternalEncoder().setPosition(0);
         SparkBaseConfig elevatorFollowerConfig = new SparkFlexConfig();
         elevatorFollowerConfig.follow(elevator);
         elevatorFollower.configure(elevatorFollowerConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kNoPersistParameters);
 
         // Create and setup motors for Drop and Collect
-        container = new SparkFlex(ArmConstants.containerMotorID,MotorType.kBrushless);
-        containerFollower = new SparkFlex(ArmConstants.containerFollowMotorID,MotorType.kBrushless);
+        container = new SparkFlex(ArmConstants.containerMotorID, MotorType.kBrushless);
+        containerFollower = new SparkFlex(ArmConstants.containerFollowMotorID, MotorType.kBrushless);
         container.getExternalEncoder().setPosition(0);
         SparkBaseConfig containerFollowerConfig = new SparkFlexConfig();
         containerFollowerConfig.follow(container);
@@ -45,14 +48,18 @@ public class ArmSubsystem extends SubsystemBase {
         containerFollower.configure(containerFollowerConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kNoPersistParameters);
     }
 
+    public void ejectAlgae(){
+        SetTargetHeight(GetHeight()-ArmConstants.algaeOffset);
+    }
+
     public double isLimitSwitchPressed() { // return number based on limit switch pressed
-        if (container.getForwardLimitSwitch().isPressed()) { // far left pressed
+        if (container.getForwardLimitSwitch().isPressed()) { // far left channel pressed
             return ArmConstants.farLeftIntakeChannel;
-        } else if (container.getReverseLimitSwitch().isPressed()) { // middle left pressed
+        } else if (container.getReverseLimitSwitch().isPressed()) { // middle left channel pressed
             return ArmConstants.middleLeftIntakeChannel;
-        } else if (containerFollower.getForwardLimitSwitch().isPressed()) { // middle right pressed
+        } else if (containerFollower.getForwardLimitSwitch().isPressed()) { // middle right channel pressed
             return ArmConstants.middleRightIntakeChannel;
-        } else if (containerFollower.getReverseLimitSwitch().isPressed()) { // far right pressed
+        } else if (containerFollower.getReverseLimitSwitch().isPressed()) { // far right channel pressed
             return ArmConstants.farRightIntakeChannel;
         } else { // none pressed
             return 0;
@@ -98,12 +105,14 @@ public class ArmSubsystem extends SubsystemBase {
                 container.set(0);
                 break;
             case Collect:
+                container.set(ArmConstants.containerMotorSpeed);
                 limitSwitchOffset = isLimitSwitchPressed();
                 if (limitSwitchOffset != 0) {
                     intakeState = IntakeState.Rest;
                 }
                 break;
             case Drop:
+                container.set(-ArmConstants.containerMotorSpeed);
                 if (Timer.getFPGATimestamp()-DropCoralCommand.startTime == ArmConstants.dropTime) {
                     intakeState = IntakeState.Rest;
                 }
