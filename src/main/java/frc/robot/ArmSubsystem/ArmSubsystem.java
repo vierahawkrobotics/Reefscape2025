@@ -46,18 +46,18 @@ public class ArmSubsystem extends SubsystemBase {
         containerFollower.configure(containerFollowerConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kNoPersistParameters);
     }
 
-    public void ejectAlgae(){
+    public void ejectAlgae() { // Move elevator arm up to eject algae
         SetTargetHeight(GetHeight()-ArmConstants.algaeOffset);
     }
 
-    public double isLimitSwitchPressed() { // return number based on limit switch pressed
-        if (container.getForwardLimitSwitch().isPressed()) { // far left channel pressed
+    public double isLimitSwitchPressed() { // Return number based on limit switch pressed
+        if (container.getForwardLimitSwitch().isPressed()) { // Far left channel pressed
             return ArmConstants.farLeftIntakeChannel;
-        } else if (container.getReverseLimitSwitch().isPressed()) { // middle left channel pressed
+        } else if (container.getReverseLimitSwitch().isPressed()) { // Middle left channel pressed
             return ArmConstants.middleLeftIntakeChannel;
-        } else if (containerFollower.getForwardLimitSwitch().isPressed()) { // middle right channel pressed
+        } else if (containerFollower.getForwardLimitSwitch().isPressed()) { // Middle right channel pressed
             return ArmConstants.middleRightIntakeChannel;
-        } else if (containerFollower.getReverseLimitSwitch().isPressed()) { // far right channel pressed
+        } else if (containerFollower.getReverseLimitSwitch().isPressed()) { // Far right channel pressed
             return ArmConstants.farRightIntakeChannel;
         } else { // none pressed
             return 0;
@@ -88,7 +88,7 @@ public class ArmSubsystem extends SubsystemBase {
         }
     }
 
-    public void RecallibrateHeight() {
+    public void RecallibrateHeight() { // Reset heght to 0
         elevator.set(ArmConstants.neutralMotorBias + ArmConstants.resetHeightModeBias);
         if(elevator.getForwardLimitSwitch().isPressed()) {
             elevator.getExternalEncoder().setPosition(0);
@@ -98,7 +98,7 @@ public class ArmSubsystem extends SubsystemBase {
     
     @Override
     public void periodic() {
-        switch (intakeState) {
+        switch (intakeState) { // Periodic for Collect and Drop commands
             case Rest:
                 container.set(0);
                 break;
@@ -118,7 +118,7 @@ public class ArmSubsystem extends SubsystemBase {
         }
 
         curHeight = elevator.getExternalEncoder().getPosition()*2*Math.PI*ArmConstants.gearRadius;
-        switch (state) {
+        switch (state) { // Elevator height periodic
             case ResetHeight:
                 RecallibrateHeight();
                 break;
