@@ -4,6 +4,16 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 
+enum DropState {
+    MoveInit,
+    MovePeriodic,
+    AlignInit,
+    AlignPeriodic,
+    DropInit,
+    DropPeriodic,
+    End
+}
+
 public class DropCoralCommand extends Command {
     public static double startTime;
     private DropState state = DropState.MoveInit;
@@ -53,15 +63,5 @@ public class DropCoralCommand extends Command {
         } else {
             return false;
         }
-    }
-
-    enum DropState {
-        MoveInit,
-        MovePeriodic,
-        AlignInit,
-        AlignPeriodic,
-        DropInit,
-        DropPeriodic,
-        End
     }
 }

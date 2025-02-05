@@ -12,6 +12,11 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+enum ArmState {
+    ResetHeight,
+    NormalOper
+}
+
 public class ArmSubsystem extends SubsystemBase {
     private ShuffleboardTab armTab;
     private ArmState state = ArmState.NormalOper;
@@ -134,11 +139,6 @@ public class ArmSubsystem extends SubsystemBase {
         Rest,
         Collect,
         Drop,
-    }
-
-    enum ArmState {
-        ResetHeight,
-        NormalOper
     }
 }
  

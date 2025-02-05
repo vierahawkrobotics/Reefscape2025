@@ -13,6 +13,7 @@ enum RemoveAlgaeState {
     EjectPeriodic,
     End
 }
+
 enum heightState{
     High,
     Low;
@@ -27,6 +28,7 @@ enum heightState{
         }
     }
 }
+
 public class RemoveAlgaeCommand extends Command {
     private RemoveAlgaeState state = RemoveAlgaeState.SetupInit;
     private heightState hState;
