@@ -1,7 +1,5 @@
 package frc.robot.ArmSubsystem;
 
-import java.util.Queue;
-
 import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;

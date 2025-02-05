@@ -19,11 +19,11 @@ enum heightState{
     double getHeight() {
         switch(this){
             case High:
-                return 1.83;
+                return ArmConstants.high;
             case Low:
-                return 0.81;
+                return ArmConstants.low;
             default:
-                return 0;
+                return ArmConstants.ground;
         }
     }
 }
@@ -37,14 +37,13 @@ public class RemoveAlgaeCommand extends Command {
     }
 
     @Override
-    public void initialize() {
-
-    }
+    public void initialize() {}
+    
     @Override
     public void execute() {
         switch(state) {
             case SetupInit:
-                Robot.instance.armSubsystem.SetTargetHeight(hState.getHeight());
+                ArmSubsystem.SetTargetHeight(hState.getHeight());
                 //set robot position
                 ///Robot.instance.drivetrainSubsystem.setPosition(TriggerEffect.getAlgeaPose(this.hState));
                 state = RemoveAlgaeState.SetupPeriodic;

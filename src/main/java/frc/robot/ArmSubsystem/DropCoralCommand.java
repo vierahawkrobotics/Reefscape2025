@@ -6,7 +6,7 @@ import frc.robot.Robot;
 
 public class DropCoralCommand extends Command {
     public static double startTime;
-    private DropState state;
+    private DropState state = DropState.MoveInit;
     public DropCoralCommand() {
         addRequirements(Robot.instance.exampleSubsystem);
     }
@@ -16,28 +16,28 @@ public class DropCoralCommand extends Command {
     @Override
     public void execute() {
         switch(state) {
-            case SetupInit: // Set robot position
+            case MoveInit: // Set robot position
                 // drivetrain function move in front of place coral (include ArmConstants.armDistance)
-                state = DropState.SetupPeriodic;
+                state = DropState.MovePeriodic;
                 break;
-            case SetupPeriodic:
+            case MovePeriodic: // Check in front of coral placement
                 // if at target (drivetrain function)
                 //    state = DropState.AlignInit;
                 break;
-            case AlignInit:
-                // drivetrain function align center to place coral
+            case AlignInit: // Align placement to reef
+                // drivetrain function align place coral
                 state = DropState.AlignPeriodic;
                 break;
-            case AlignPeriodic:
+            case AlignPeriodic: // Check alignment
                 // if aligned (drivetrain function)
                 //    state = DropState.DropInit;
                 break;
-            case DropInit:
+            case DropInit: // Begin dropping
                 ArmSubsystem.setIntakeState(ArmSubsystem.IntakeState.Drop);
                 startTime = Timer.getFPGATimestamp();
                 state = DropState.DropPeriodic;
                 break;
-            case DropPeriodic:
+            case DropPeriodic: // Check done dropping
                 if(isFinished()){
                     state = DropState.End;
                 }
@@ -56,8 +56,8 @@ public class DropCoralCommand extends Command {
     }
 
     enum DropState {
-        SetupInit,
-        SetupPeriodic,
+        MoveInit,
+        MovePeriodic,
         AlignInit,
         AlignPeriodic,
         DropInit,
