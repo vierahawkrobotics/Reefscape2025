@@ -14,28 +14,13 @@ enum RemoveAlgaeState {
     End
 }
 
-enum heightState{
-    High,
-    Low;
-    double getHeight() {
-        switch(this){
-            case High:
-                return ArmConstants.high;
-            case Low:
-                return ArmConstants.low;
-            default:
-                return ArmConstants.ground;
-        }
-    }
-}
-
 public class RemoveAlgaeCommand extends Command {
     private RemoveAlgaeState state = RemoveAlgaeState.SetupInit;
-    private heightState hState;
-    public RemoveAlgaeCommand(heightState targetHeight) {
+    ArmConstants.AlgaeDropState target;
+    public RemoveAlgaeCommand(ArmConstants.AlgaeDropState target) {
         addRequirements(Robot.instance.armSubsystem);
         addRequirements(Robot.instance.drivetrainSubsystem);
-        this.hState = targetHeight;
+        this.target = target;
     }
 
     @Override
@@ -44,8 +29,8 @@ public class RemoveAlgaeCommand extends Command {
     @Override
     public void execute() {
         switch(state) {
+            default:
             case SetupInit://initialize arm and robot position
-                ArmSubsystem.SetTargetHeight(hState.getHeight());
                 //set robot position
                 ///Robot.instance.drivetrainSubsystem.setPosition(TriggerEffect.getAlgeaPose(this.hState));
                 state = RemoveAlgaeState.SetupPeriodic;
@@ -63,7 +48,7 @@ public class RemoveAlgaeCommand extends Command {
                     state = RemoveAlgaeState.EjectInit;
                 break;
             case EjectInit://eject algae
-                Robot.instance.armSubsystem.ejectAlgae();
+                Robot.instance.armSubsystem.setHeightState(target.getHeight());
                 state = RemoveAlgaeState.EjectPeriodic;
                 break;
             case EjectPeriodic://check if at target height
@@ -71,22 +56,18 @@ public class RemoveAlgaeCommand extends Command {
                 //arm.ejectAlgae()
                 //rotate eject wheels and move arm up
                 //robot move back a foot
-                if(isFinished()){
+                if(Robot.instance.armSubsystem.AtTargetHeight()){
                     state = RemoveAlgaeState.End;
                 }
                 break;
         }            
     }
     @Override
-    public void end(boolean interrupted) {}
+    public void end(boolean interrupted) {
+        Robot.instance.armSubsystem.setHeightState(ArmConstants.HeightState.Ground);
+    }
     @Override
     public boolean isFinished() {
-        if(ArmSubsystem.AtTargetHeight() == true){
-            return true;
-        }
-        else{
-            return false;
-        }
-
+        return state == RemoveAlgaeState.End;
     }
 }

@@ -5,6 +5,7 @@ import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkFlexConfig;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Timer;
@@ -19,16 +20,17 @@ enum ArmState {
 
 public class ArmSubsystem extends SubsystemBase {
     private ShuffleboardTab armTab;
-    private ArmState state = ArmState.NormalOper;
-    private static IntakeState intakeState = IntakeState.Rest;
-    private static SparkFlex elevator;
-    private static SparkFlex elevatorFollower;
-    public static SparkFlex container;
-    public static SparkFlex containerFollower;
-    private static double targetHeight;
+    private ArmState state = ArmState.ResetHeight; // Immediately reset height
+    private ArmConstants.IntakeState intakeState = ArmConstants.IntakeState.Rest;
+    private SparkFlex elevator;
+    private SparkFlex elevatorFollower;
+    public SparkFlex container;
+    public SparkFlex containerFollower;
+    private double targetHeight = ArmConstants.ground;
     private double curHeight = 0;
-    PIDController elevatorPID = new PIDController(ArmConstants.p, ArmConstants.i, ArmConstants.d);
+    PIDController elevatorPID = new PIDController(ArmConstants.elevatorP, ArmConstants.elevatorI, ArmConstants.elevatorD);
     private double limitSwitchOffset;
+    public double startTime;
 
     public ArmSubsystem() {
         armTab = Shuffleboard.getTab("Arm Subsystem");
@@ -36,65 +38,117 @@ public class ArmSubsystem extends SubsystemBase {
         // Create and setup motors for Elevator
         elevator = new SparkFlex(ArmConstants.elevatorMotorID, MotorType.kBrushless);
         elevatorFollower = new SparkFlex(ArmConstants.elevatorFollowMotorID, MotorType.kBrushless);
-        elevator.getExternalEncoder().setPosition(0);
+        SparkBaseConfig elevatorConfig = new SparkFlexConfig();
+        elevatorConfig.idleMode(IdleMode.kBrake);
+        elevator.configure(elevatorConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kNoPersistParameters);
         SparkBaseConfig elevatorFollowerConfig = new SparkFlexConfig();
         elevatorFollowerConfig.follow(elevator);
+        elevatorFollowerConfig.idleMode(IdleMode.kBrake);
         elevatorFollower.configure(elevatorFollowerConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kNoPersistParameters);
 
         // Create and setup motors for Drop and Collect
         container = new SparkFlex(ArmConstants.containerMotorID, MotorType.kBrushless);
         containerFollower = new SparkFlex(ArmConstants.containerFollowMotorID, MotorType.kBrushless);
-        container.getExternalEncoder().setPosition(0);
+        SparkBaseConfig containerConfig = new SparkFlexConfig();
+        containerConfig.idleMode(IdleMode.kBrake);
+        container.configure(containerConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kNoPersistParameters);
         SparkBaseConfig containerFollowerConfig = new SparkFlexConfig();
         containerFollowerConfig.follow(container);
         containerFollowerConfig.inverted(true);
+        containerFollowerConfig.idleMode(IdleMode.kBrake);
         containerFollower.configure(containerFollowerConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kNoPersistParameters);
     }
 
-    public void ejectAlgae() { // Move elevator arm up to eject algae
-        SetTargetHeight(GetHeight()-ArmConstants.algaeOffset);
+    /**
+     * Move elevator arm up to eject algae
+     */
+    public void setHeightState(ArmConstants.HeightState height) {
+        SetTargetHeight(height.getHeight());
     }
 
-    public double isLimitSwitchPressed() { // Return number based on limit switch pressed
-        if (container.getForwardLimitSwitch().isPressed()) { // Far left channel pressed
+    /**
+     * @return left/right offset in meters based on limit switch pressed (0 if none pressed)
+     */
+    public double isLimitSwitchPressed() {
+        int press = 0;
+        if(container.getForwardLimitSwitch().isPressed()) {
+            // print indentifiers
+            press = 1;
+        }
+        if(container.getReverseLimitSwitch().isPressed()) {
+            if(press != 0) System.out.println("ArmSubsystem.isLimitSwitchPressed - multiple limit switches pressed");
+            press = 2;
+        }
+        if(containerFollower.getForwardLimitSwitch().isPressed()) {
+            if(press != 0) System.out.println("ArmSubsystem.isLimitSwitchPressed - multiple limit switches pressed");
+            press = 3;
+        }
+        if(containerFollower.getReverseLimitSwitch().isPressed()) {
+            if(press != 0) System.out.println("ArmSubsystem.isLimitSwitchPressed - multiple limit switches pressed");
+            press = 4;
+        }
+        if (press == 1) { // Far left channel pressed
             return ArmConstants.farLeftIntakeChannel;
-        } else if (container.getReverseLimitSwitch().isPressed()) { // Middle left channel pressed
+        } else if (press == 2) { // Middle left channel pressed
             return ArmConstants.middleLeftIntakeChannel;
-        } else if (containerFollower.getForwardLimitSwitch().isPressed()) { // Middle right channel pressed
+        } else if (press == 3) { // Middle right channel pressed
             return ArmConstants.middleRightIntakeChannel;
-        } else if (containerFollower.getReverseLimitSwitch().isPressed()) { // Far right channel pressed
+        } else if (press == 4) { // Far right channel pressed
             return ArmConstants.farRightIntakeChannel;
         } else { // none pressed
             return 0;
         }
     }
 
-    public static void setIntakeState(IntakeState state) { // Change current intake state
+    /**
+     * Change current intake state
+     */
+    public void setIntakeState(ArmConstants.IntakeState state) {
+        if(state == ArmConstants.IntakeState.Drop && intakeState != ArmConstants.IntakeState.Drop) {
+            startTime = Timer.getFPGATimestamp();
+        }
         intakeState = state;
     }
 
-    public static IntakeState getIntakeState() { // Return current intake state
+    /**
+     * @return current intake state
+     */
+    public ArmConstants.IntakeState getIntakeState() {
         return intakeState;
     }
 
-    public static void SetTargetHeight(double targetHeight) { // Set target height
+    /**
+     * Set target height
+     */
+    public void SetTargetHeight(double targetHeight) {
         targetHeight = Math.min(Math.max(targetHeight,ArmConstants.armHeight),ArmConstants.maxHeight);
     }
 
-    public double GetHeight() { // Get current height
-        return curHeight + ArmConstants.armHeight;
+    /**
+     * @return current height
+     */
+    public double getHeight() {
+        return curHeight;
+    }
+    /**
+     * @return current target height
+     */
+    public double getTargetHeight() {
+        return targetHeight;
     }
 
-    public static boolean AtTargetHeight() { // Check if at target height
-        if ((targetHeight - elevator.getExternalEncoder().getPosition()) < ArmConstants.epsilon) {
-            return true;
-        } else {
-            return false;
-        }
+    /**
+     * @return if at target height
+     */
+    public boolean AtTargetHeight() {
+        return Math.abs(targetHeight - elevator.getExternalEncoder().getPosition()) < ArmConstants.epsilon;
     }
 
-    public void RecallibrateHeight() { // Reset heght to 0
-        elevator.set(ArmConstants.neutralMotorBias + ArmConstants.resetHeightModeBias);
+    /**
+     * Reset height to 0
+     */
+    private void RecallibrateHeight() {
+        elevator.set(ArmConstants.resetHeightModeBias);
         if(elevator.getForwardLimitSwitch().isPressed()) {
             elevator.getExternalEncoder().setPosition(0);
             state = ArmState.NormalOper;
@@ -103,42 +157,42 @@ public class ArmSubsystem extends SubsystemBase {
     
     @Override
     public void periodic() {
+        curHeight = elevator.getExternalEncoder().getPosition()*2*Math.PI*ArmConstants.gearRadius + ArmConstants.armHeight;
         switch (intakeState) { // Periodic for Collect and Drop commands
             case Rest:
                 container.set(0);
                 break;
             case Collect:
-                container.set(ArmConstants.containerMotorSpeed);
                 limitSwitchOffset = isLimitSwitchPressed();
                 if (limitSwitchOffset != 0) {
-                    intakeState = IntakeState.Rest;
+                    intakeState = ArmConstants.IntakeState.Rest;
+                    container.set(0);
+                }
+                else {
+                    container.set(ArmConstants.containerMotorSpeed);
                 }
                 break;
             case Drop:
-                container.set(-ArmConstants.containerMotorSpeed);
-                if (Timer.getFPGATimestamp()-DropCoralCommand.startTime == ArmConstants.dropTime) {
-                    intakeState = IntakeState.Rest;
+                if (Timer.getFPGATimestamp()-startTime >= ArmConstants.containerDropTime) {
+                    intakeState = ArmConstants.IntakeState.Rest;
+                    container.set(0);
+                }
+                else {
+                    container.set(-ArmConstants.containerMotorSpeed);
                 }
                 break;
         }
 
-        curHeight = elevator.getExternalEncoder().getPosition()*2*Math.PI*ArmConstants.gearRadius;
         switch (state) { // Elevator height periodic
             case ResetHeight:
                 RecallibrateHeight();
                 break;
             case NormalOper:
-                elevator.set(elevatorPID.calculate(GetHeight(),targetHeight)+ArmConstants.pidCoefficient);
+                elevator.set(elevatorPID.calculate(getHeight(),targetHeight)+ArmConstants.elevatorMotorBias);
                 break;
         }
     }
     @Override
     public void simulationPeriodic() {}
-
-    public enum IntakeState {
-        Rest,
-        Collect,
-        Drop,
-    }
 }
  

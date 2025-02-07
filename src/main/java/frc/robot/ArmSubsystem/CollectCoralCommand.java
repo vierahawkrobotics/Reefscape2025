@@ -5,27 +5,26 @@ import frc.robot.Robot;
 
 public class CollectCoralCommand extends Command {
     public CollectCoralCommand() {
-        addRequirements(Robot.instance.exampleSubsystem);
+        addRequirements(Robot.instance.armSubsystem);
     }
 
     @Override
-    public void initialize() { // Function names self explanatory
-        ArmSubsystem.SetTargetHeight(ArmConstants.collectHeight);
-        ArmSubsystem.setIntakeState(ArmSubsystem.IntakeState.Collect);
+    public void initialize() {
+        Robot.instance.armSubsystem.setHeightState(ArmConstants.HeightState.Collect);
+        Robot.instance.armSubsystem.setIntakeState(ArmConstants.IntakeState.Collect);
     }
 
     @Override
     public void execute() {}
 
     @Override
-    public void end(boolean interrupted) {}
+    public void end(boolean interrupted) {
+        Robot.instance.armSubsystem.setHeightState(ArmConstants.HeightState.Ground);
+        Robot.instance.armSubsystem.setIntakeState(ArmConstants.IntakeState.Rest);
+    }
 
     @Override
     public boolean isFinished() {
-        if (ArmSubsystem.getIntakeState() == ArmSubsystem.IntakeState.Rest) {
-            return true;
-        } else {
-            return false;
-        }
+        return Robot.instance.armSubsystem.getIntakeState() == ArmConstants.IntakeState.Rest;
     }
 }

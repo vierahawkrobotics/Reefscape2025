@@ -3,18 +3,11 @@ package frc.robot.ArmSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 
-enum heightState {
-    Ground,
-    Low,
-    High
-}
-
 public class ElevatorUpDownCommand extends Command {
-    public heightState state = heightState.Ground;
     private boolean up;
     private boolean down;
     public ElevatorUpDownCommand(boolean up, boolean down) {
-        addRequirements(Robot.instance.exampleSubsystem);
+        addRequirements(Robot.instance.armSubsystem);
         this.up = up;
         this.down = down;
     }
@@ -24,39 +17,32 @@ public class ElevatorUpDownCommand extends Command {
 
     @Override
     public void execute() {
+        double height = Robot.instance.armSubsystem.getTargetHeight();
         if (up) { // Check go up
-            switch (state) {
-                case Ground: // Go up and set state to Low
-                    ArmSubsystem.SetTargetHeight(ArmConstants.low);
-                    if (ArmSubsystem.AtTargetHeight()) {
-                        state = heightState.Low;
-                    }
-                    break;
-                case Low: // Go up and set state to High
-                    ArmSubsystem.SetTargetHeight(ArmConstants.high);
-                    if (ArmSubsystem.AtTargetHeight()) {
-                        state = heightState.High;
-                    }
-                    break;
-                case High: // Do nothing
-                    break;
+            if(height == ArmConstants.HeightState.CoralHigh.getHeight()) {
+                Robot.instance.armSubsystem.setHeightState(ArmConstants.HeightState.AlgaeHigh);
+            }
+            else if(height == ArmConstants.HeightState.AlgaeLow.getHeight()) {
+                Robot.instance.armSubsystem.setHeightState(ArmConstants.HeightState.CoralHigh);
+            }
+            else if(height == ArmConstants.HeightState.CoralLow.getHeight()) {
+                Robot.instance.armSubsystem.setHeightState(ArmConstants.HeightState.AlgaeLow);
+            }
+            else { //error or ground
+                Robot.instance.armSubsystem.setHeightState(ArmConstants.HeightState.CoralLow);
             }
         } else if (down) { // Check go down
-            switch (state) {
-                case Ground: // Do nothing
-                    break;
-                case Low: // Go down and set state to Ground
-                    ArmSubsystem.SetTargetHeight(ArmConstants.ground);
-                    if (ArmSubsystem.AtTargetHeight()) {
-                        state = heightState.Ground;
-                    }
-                    break;
-                case High: // Go down and set state to Low
-                    ArmSubsystem.SetTargetHeight(ArmConstants.low);
-                    if (ArmSubsystem.AtTargetHeight()) {
-                        state = heightState.Low;
-                    }
-                    break;
+            if(height == ArmConstants.HeightState.CoralLow.getHeight()) {
+                Robot.instance.armSubsystem.setHeightState(ArmConstants.HeightState.Ground);
+            }
+            else if(height == ArmConstants.HeightState.AlgaeLow.getHeight()) {
+                Robot.instance.armSubsystem.setHeightState(ArmConstants.HeightState.CoralLow);
+            }
+            else if(height == ArmConstants.HeightState.CoralHigh.getHeight()) {
+                Robot.instance.armSubsystem.setHeightState(ArmConstants.HeightState.AlgaeLow);
+            }
+            else { //error or algaehigh
+                Robot.instance.armSubsystem.setHeightState(ArmConstants.HeightState.AlgaeHigh);
             }
         }
     }
@@ -66,6 +52,6 @@ public class ElevatorUpDownCommand extends Command {
     
     @Override
     public boolean isFinished() {
-        return false;
+        return true;
     }
 }
