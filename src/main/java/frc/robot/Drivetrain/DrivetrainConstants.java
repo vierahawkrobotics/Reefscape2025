@@ -6,14 +6,13 @@ import com.revrobotics.spark.SparkBase.PersistMode;
 import edu.wpi.first.math.geometry.Translation2d;
 
 public class DrivetrainConstants {
-    public static int usbPortController = 0;
     public static double inputDeadband = 0.02;
-    public static double physicalSpeedLimit = 3.5;
-    public static double physicalRotSpeedLimit = 6;
+    public static double physicalSpeedLimit = 3.5; // meters per second
+    public static double physicalRotSpeedLimit = 6; // rad per second
 
     //The range at which the robot is considered to have reached a position
-    public static double validRange = 0.03; //translation in meters
-    public static double validRotDiff = 0.07; //rotation in radians
+    public static double validRange = 0.05; //translation in meters
+    public static double validRotDiff = 0.14; //rotation in radians
     // Locations for the swerve drive modules relative to the robot center.
     public static Translation2d frontLeftLocation = new Translation2d(0.381, 0.381);
     public static Translation2d frontRightLocation = new Translation2d(0.381, -0.381);
@@ -52,6 +51,7 @@ public class DrivetrainConstants {
     public static double turningP = 1.75;
     public static double turningI = 0;
     public static double turningD = 0;
+    //sets wrapping for the PIDController
     public static double turningPIDMinInput = 0; // radians
     public static double turningPIDMaxInput = turningEncoderPositionFactor; // radians
     public static double turningMinOutput = -1;
@@ -67,7 +67,7 @@ public class DrivetrainConstants {
     public static final double blChassisAngularOffset = Math.PI;
     public static final double brChassisAngularOffset = Math.PI / 2;
 
-    //the range at which the robot is considered to have reached the set point in DrivePosition()
+    //the range at which the robot begins to slow down in DrivePosition()
     public static double pointTolerance = 0.01;
     //the rotation version of what's above
     public static double rotTolerance = 0.17;

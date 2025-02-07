@@ -1,5 +1,7 @@
 package frc.robot.Drivetrain;
 
+import java.util.function.Supplier;
+
 import com.revrobotics.spark.SparkBase.ControlType;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -45,12 +47,18 @@ public class Drivetrain extends SubsystemBase {
   
   enum TranslateState{
     velocity,
-    position
+    position,
+    path
   }
+
   enum RotState{
     velocity,
-    position
+    position,
+    path
   }
+
+  boolean isPathFinished;
+
   TranslateState translateState = TranslateState.velocity;
   RotState rotState = RotState.velocity;
 
@@ -63,6 +71,8 @@ public class Drivetrain extends SubsystemBase {
   private double posX;
   private double posY;
   private double posR;
+  private double[][] path;
+  int pathIndex = 0;
 
   public Drivetrain() {
   }
@@ -72,6 +82,26 @@ public class Drivetrain extends SubsystemBase {
 
     if (translateState == TranslateState.position){
       DrivePosition();
+    }
+
+    else if (translateState == TranslateState.path){
+      //i=0 point has already been set in setPath()
+      if(distance < DrivetrainConstants.validRange && rotDistance < DrivetrainConstants.validRotDiff){
+        pathIndex++;
+        if(pathIndex >= path.length){
+          isPathFinished = true;
+        }
+        else {
+          posX = path[pathIndex][0];
+          posY = path[pathIndex][1];
+          posR = path[pathIndex][2];
+          DrivePosition();
+          DrivePositionRot();
+        }  
+      }
+      else{
+        DrivePosition();
+      }
     }
 
     if (rotState == RotState.position){
@@ -127,6 +157,20 @@ public class Drivetrain extends SubsystemBase {
     rotDistance = angle - posR > 0? posR-angle: angle- posR;
     velR = rotDistance>DrivetrainConstants.rotTolerance? 1: rotDistance/DrivetrainConstants.rotTolerance;
   }
+
+  public void setPath(double[][] pathInput, Supplier<Boolean> booleanSupplier){
+    // path[0][0] = 3;
+    path = pathInput;
+    pathIndex = 0;
+    isPathFinished = false;
+    translateState = TranslateState.path;
+    rotState = RotState.path;
+    
+    posX = path[0][0];
+    posY = path[0][1];
+    posR = path[0][2];
+    }
+    
 
   //vx and vy should be from 0 to 1
   public void setTargetVel(double vx, double vy){
