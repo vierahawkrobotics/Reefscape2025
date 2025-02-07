@@ -7,6 +7,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SerialPort;
+import frc.robot.Components.PositionTools.PositionTools;
 import frc.robot.Drivetrain.Drivetrain;
 
 /**
@@ -28,10 +29,7 @@ public class PositionComponent {
     }
 
     public static Pose2d getPoseTranslated(Pose2d offset){
-        double x = getRobotPose().getX();
-        double y = getRobotPose().getY();
-        Rotation2d theta = getRobotPose().getRotation();
-        return new Pose2d(x*theta.getCos()-y*theta.getSin(), y*theta.getCos()+x*theta.getSin(), theta.plus(offset.getRotation()));
+        return PositionTools.getPoseTranslated(getRobotPose(), offset);
     }
 
     public static void updatePose(){
