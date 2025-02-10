@@ -76,6 +76,20 @@ public class ArmConstants { // All heights in meters
             }
         }
     }
+    public enum AlgaeMotorState {
+        Active,
+        Inactive;
+
+        double getMotorState() {
+            switch(this) {
+                case Active:
+                    return algaeMotorSpeed;
+                case Inactive:
+                default:
+                    return 0;
+            }
+        }
+    }
     public enum AlgaeDropState {
         High,
         Low;
@@ -96,7 +110,9 @@ public class ArmConstants { // All heights in meters
     final public static int elevatorFollowMotorID = -1;
     final public static int containerMotorID = -1;
     final public static int containerFollowMotorID = -1;
-    final public static double containerMotorSpeed = 0.5;
+    final public static int algaeMotorID = -1;
+    final public static double containerMotorSpeed = 99;
+    final public static double algaeMotorSpeed = 99;
 
     final public static double elevatorP = 1;
     final public static double elevatorI = 0;

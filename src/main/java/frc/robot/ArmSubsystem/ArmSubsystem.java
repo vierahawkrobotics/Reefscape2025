@@ -26,6 +26,7 @@ public class ArmSubsystem extends SubsystemBase {
     private SparkFlex elevatorFollower;
     public SparkFlex container;
     public SparkFlex containerFollower;
+    public SparkFlex algaeMotor; 
     private double targetHeight = ArmConstants.ground;
     private double curHeight = 0;
     PIDController elevatorPID = new PIDController(ArmConstants.elevatorP, ArmConstants.elevatorI, ArmConstants.elevatorD);
@@ -57,8 +58,20 @@ public class ArmSubsystem extends SubsystemBase {
         containerFollowerConfig.inverted(true);
         containerFollowerConfig.idleMode(IdleMode.kBrake);
         containerFollower.configure(containerFollowerConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kNoPersistParameters);
-    }
 
+        // Create and setup motor for Algae
+        algaeMotor = new SparkFlex(ArmConstants.algaeMotorID, MotorType.kBrushless);
+        SparkBaseConfig algaeConfig = new SparkFlexConfig();
+        algaeConfig.idleMode(IdleMode.kBrake);
+        algaeMotor.configure(algaeConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kNoPersistParameters);
+
+    }
+    /**
+     * Set algae motor speed
+     */
+    public void setAlgaeMotorSpeed(ArmConstants.AlgaeMotorState motorState){
+        algaeMotor.set(motorState.getMotorState());
+    }
     /**
      * Move elevator arm up to eject algae
      */
