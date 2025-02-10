@@ -4,6 +4,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 
 enum DropState {
+    PremoveInit,
+    PremovePeriodic,
     MoveInit,
     MovePeriodic,
     AlignInit,
@@ -27,17 +29,21 @@ public class DropCoralCommand extends Command {
     public void execute() {
         switch(state) {
             default:
-            case MoveInit: // Set robot position
+            case PremoveInit: // Set robot target position to where won't hit wall
                 Robot.instance.armSubsystem.setHeightState(dropPos.getHeight());
                 // drivetrain function move in front of place coral (include ArmConstants.armDistance)
                 state = DropState.MovePeriodic;
                 break;
-            case MovePeriodic: // Check in front of coral placement
+            case PremovePeriodic: // Check target placement
                 // if at target (drivetrain function)
                 //    state = DropState.AlignInit;
                 break;
-            case AlignInit: // Align placement to reef
-                // drivetrain function align place coral
+            case MoveInit: // Set robot target position in front of coral
+                break;
+            case MovePeriodic: // Check target placement
+                break;
+            case AlignInit: // Set robot align to reef
+                // drivetrain function align coral
                 state = DropState.AlignPeriodic;
                 break;
             case AlignPeriodic: // Check alignment

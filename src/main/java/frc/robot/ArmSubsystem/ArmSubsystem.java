@@ -66,12 +66,14 @@ public class ArmSubsystem extends SubsystemBase {
         algaeMotor.configure(algaeConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kNoPersistParameters);
 
     }
+    
     /**
      * Set algae motor speed
      */
     public void setAlgaeMotorSpeed(ArmConstants.AlgaeMotorState motorState){
         algaeMotor.set(motorState.getMotorState());
     }
+
     /**
      * Move elevator arm up to eject algae
      */
