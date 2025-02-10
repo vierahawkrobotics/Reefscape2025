@@ -113,6 +113,8 @@ public class ArmConstants { // All heights in meters
     final public static int algaeMotorID = -1;
     final public static double containerMotorSpeed = 99;
     final public static double algaeMotorSpeed = 99;
+    public static final double encoderPositionFactor = (2 * Math.PI); // radians
+    public static final double encoderVelocityFactor = (2 * Math.PI) / 60.0; // radians per second
 
     final public static double elevatorP = 1;
     final public static double elevatorI = 0;
