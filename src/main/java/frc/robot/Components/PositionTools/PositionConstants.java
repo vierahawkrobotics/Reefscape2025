@@ -18,4 +18,7 @@ public class PositionConstants {
         public static double backOffset = 1; // How far back the robot should be from each scoring location (meters)
         public static double limitSwitchOffet = -0.1;
     }
+    public static class AprilTagPositions{
+        
+    }
 }

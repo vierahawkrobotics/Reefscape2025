@@ -1,8 +1,11 @@
 package frc.robot.Components.PositionTools;
 
+import static edu.wpi.first.units.Units.Rotation;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
+import frc.robot.Robot;
 import frc.robot.Components.PositionComponent;
 
 public class PositionTools {
@@ -28,7 +31,12 @@ public class PositionTools {
     }
 
     public static Pose2d closestScorePose(boolean isRotated){
-        return trueclosestScore();
+        if(isRotated){
+            return getPoseTranslated(trueclosestScore(),
+            new Pose2d(Robot.instance.armSubsystem.isLimitSwitchPressed(), 0, Rotation2d.fromDegrees(0)));
+        } else {
+            return trueclosestScore().rotateBy(Rotation2d.fromDegrees(90));
+        }
     }
 
     public static Pose2d getPoseTranslated(Pose2d origin, Pose2d offset){

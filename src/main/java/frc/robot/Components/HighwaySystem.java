@@ -22,9 +22,11 @@ public class HighwaySystem {
         public Node end;
         public double weight;
     }
-
-    //List of nodes, edges, weights. Determine closest edge to current position, target, return path
     public HighwaySystem(){
+        
+    }
+    //List of nodes, edges, weights. Determine closest edge to current position, target, return path
+    /*public HighwaySystem(){
         var sideStart = new Pose2d(Units.feetToMeters(1.54), Units.feetToMeters(23.23),
             Rotation2d.fromDegrees(-180));
         var crossScale = new Pose2d(Units.feetToMeters(23.7), Units.feetToMeters(6.8),
@@ -51,5 +53,5 @@ public class HighwaySystem {
         CubicHermiteSpline joe;
     public static Node calculateClosest(Pose2d position){
 
-    }
+    }*/
 }
