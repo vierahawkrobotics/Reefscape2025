@@ -1,9 +1,7 @@
 package frc.robot.ArmSubsystem;
-import javax.lang.model.util.ElementScanner14;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
-import frc.robot.ArmSubsystem.ArmConstants.AlgaeMotorState;
 
 enum RemoveAlgaeState {
     SetupInit,
@@ -20,7 +18,7 @@ public class RemoveAlgaeCommand extends Command {
     ArmConstants.AlgaeDropState target;
     public RemoveAlgaeCommand(ArmConstants.AlgaeDropState target) {
         addRequirements(Robot.instance.armSubsystem);
-        addRequirements(Robot.instance.drivetrainSubsystem);
+        addRequirements(Robot.instance.drivetrain);
         this.target = target;
     }
 
@@ -57,7 +55,6 @@ public class RemoveAlgaeCommand extends Command {
                 //arm.ejectAlgae()
                 //rotate eject wheels and move arm up
                 //robot move back a foot
-                // set algae motor greater than 0 using constant
                 Robot.instance.armSubsystem.setAlgaeMotorSpeed(ArmConstants.AlgaeMotorState.Active);
                 if(Robot.instance.armSubsystem.AtTargetHeight()){
                     state = RemoveAlgaeState.End;
