@@ -43,7 +43,7 @@ public class Drive2D extends Command {
         //     Robot.instance.drivetrain.setTargetPosRot(vrVal);
         // }
         
-        Robot.instance.drivetrain.setTargetVel(vxVal, vyVal);
+        Robot.instance.drivetrain.setTargetVel(vxVal, vyVal, true);
     }
     @Override
     public void end(boolean interrupted) {}

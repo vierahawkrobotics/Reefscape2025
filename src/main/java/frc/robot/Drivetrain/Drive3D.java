@@ -40,7 +40,7 @@ public  class Drive3D extends Command {
     double vrVal = vr.get();
     vrVal = (vrVal< DrivetrainConstants.inputDeadband)?vrVal=0: vrVal;
     
-    Robot.instance.drivetrain.setTargetVel(vxVal, vyVal);
+    Robot.instance.drivetrain.setTargetVel(vxVal, vyVal, true);
     Robot.instance.drivetrain.setTargetVelRot(vrVal);
   }
   @Override

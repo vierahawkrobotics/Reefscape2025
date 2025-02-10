@@ -42,8 +42,6 @@ public class Drivetrain extends SubsystemBase {
   };
 
   public static ShuffleboardTab drivetrainTab = Shuffleboard.getTab("Drivetrain");
-
-  public double rotationSensitivity;
   
   enum TranslateState{
     velocity,
@@ -71,6 +69,7 @@ public class Drivetrain extends SubsystemBase {
   private double posX;
   private double posY;
   private double posR;
+  //targetX, Y, optional R, check velocity zero, radius factor
   private double[][] path;
   int pathIndex = 0;
 
@@ -83,18 +82,19 @@ public class Drivetrain extends SubsystemBase {
     if (translateState == TranslateState.position){
       DrivePosition();
     }
-
     else if (translateState == TranslateState.path){
       //i=0 point has already been set in setPath()
-      if(distance < DrivetrainConstants.validRange && rotDistance < DrivetrainConstants.validRotDiff){
+      if(distance < DrivetrainConstants.validRange && (pathIndex >= path.length || path[pathIndex].length == 2 || rotDistance < DrivetrainConstants.validRotDiff)){
         pathIndex++;
         if(pathIndex >= path.length){
           isPathFinished = true;
+          translateState = TranslateState.velocity;
+          rotState = RotState.velocity;
         }
         else {
           posX = path[pathIndex][0];
           posY = path[pathIndex][1];
-          posR = path[pathIndex][2];
+          if(path[pathIndex].length == 3) posR = path[pathIndex][2];
           DrivePosition();
           DrivePositionRot();
         }  
@@ -133,24 +133,31 @@ public class Drivetrain extends SubsystemBase {
       moduleStates[i].speedMetersPerSecond *= moduleStates[i].angle.minus(currentAngle).getCos();
     }
 
-    Robot.instance.drivetrain.setDesiredStates(moduleStates);
+    setDesiredStates(moduleStates);
 
   }
 
-  private void DrivePosition(){
+  private void UpdateDistance() {
     Pose2d currentRobotPosition = PositionComponent.getRobotPose();
-    Vector R = new Vector(currentRobotPosition.getX(), currentRobotPosition.getY());
-    Vector T = new Vector(posX, posY);
-
     distance = 
     Math.sqrt(
     Math.pow(currentRobotPosition.getX() - posX,2) +
     Math.pow(currentRobotPosition.getY() - posY, 2));
+  }
 
-    Vector V = T.subtract(R).normalize();
+  private void DrivePosition(){
+    Pose2d currentRobotPosition = PositionComponent.getRobotPose();
+    //robot current position
+    Vector R = new Vector(currentRobotPosition.getX(), currentRobotPosition.getY());
+    //target position
+    Vector T = new Vector(posX, posY);
+
+    UpdateDistance();
+
+    //normal vector
+    Vector V = (T.subtract(R)).normalize();
     double scaleFactor = distance>DrivetrainConstants.pointTolerance? 1: distance/DrivetrainConstants.pointTolerance;
-    velX = V.x*scaleFactor;
-    velY = V.y*scaleFactor;
+    setTargetVel(V.x*scaleFactor, V.y*scaleFactor, false);
   }
   private void DrivePositionRot(){
     double angle = PositionComponent.getRobotPose().getRotation().getRadians();
@@ -173,10 +180,10 @@ public class Drivetrain extends SubsystemBase {
     
 
   //vx and vy should be from 0 to 1
-  public void setTargetVel(double vx, double vy){
+  public void setTargetVel(double vx, double vy, boolean setToVelMode){
     velX = vx*maxSpeed;
     velY = vy*maxSpeed;
-    translateState = TranslateState.velocity;
+    if(setToVelMode){translateState = TranslateState.velocity;}
   }
 
   public void setTargetPos(double pX, double pY){
@@ -195,24 +202,23 @@ public class Drivetrain extends SubsystemBase {
     rotState = RotState.position;
   }
 
-  //use this ONLY for initialization
   private void setDesiredStates(SwerveModuleState[] desiredStates){
     for(int i = 0; i< 4; i++){
        maxSwerveModules[i].turningPIDController.setReference(desiredStates[i].angle.getRadians(), ControlType.kPosition);
        maxSwerveModules[i].drivingPIDController.setReference(desiredStates[i].speedMetersPerSecond, ControlType.kVelocity);
      }
     publisher.set(desiredStates);
-    }
+  }
     
-    public static SwerveModulePosition[] getSwerveModulePositions(){
-      SwerveModulePosition[] swerveModulePositionList = {
-        maxSwerveModules[0].getPosition(),
-        maxSwerveModules[1].getPosition(),
-        maxSwerveModules[2].getPosition(),
-        maxSwerveModules[3].getPosition(),
-      };
+  public static SwerveModulePosition[] getSwerveModulePositions(){
+    SwerveModulePosition[] swerveModulePositionList = {
+      maxSwerveModules[0].getPosition(),
+      maxSwerveModules[1].getPosition(),
+      maxSwerveModules[2].getPosition(),
+      maxSwerveModules[3].getPosition(),
+    };
 
-      return swerveModulePositionList;
-    }
+    return swerveModulePositionList;
+  }
   
 }
