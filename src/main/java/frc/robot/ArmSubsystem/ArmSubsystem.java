@@ -41,7 +41,7 @@ public class ArmSubsystem extends SubsystemBase {
         elevatorFollower = new SparkFlex(ArmConstants.elevatorFollowMotorID, MotorType.kBrushless);
         SparkBaseConfig elevatorConfig = new SparkFlexConfig();
         elevatorConfig.idleMode(IdleMode.kBrake);
-        elevatorConfig.absoluteEncoder
+        elevatorConfig.encoder
             .positionConversionFactor(ArmConstants.encoderPositionFactor)
             .velocityConversionFactor(ArmConstants.encoderVelocityFactor);
         elevator.configure(elevatorConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kNoPersistParameters);
@@ -49,9 +49,6 @@ public class ArmSubsystem extends SubsystemBase {
         elevatorFollowerConfig
             .follow(elevator)
             .idleMode(IdleMode.kBrake);
-        elevatorFollowerConfig.absoluteEncoder
-            .positionConversionFactor(ArmConstants.encoderPositionFactor)
-            .velocityConversionFactor(ArmConstants.encoderVelocityFactor);
         elevatorFollower.configure(elevatorFollowerConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kNoPersistParameters);
 
         // Create and setup motors for Drop and Collect
@@ -59,27 +56,18 @@ public class ArmSubsystem extends SubsystemBase {
         containerFollower = new SparkFlex(ArmConstants.containerFollowMotorID, MotorType.kBrushless);
         SparkBaseConfig containerConfig = new SparkFlexConfig();
         containerConfig.idleMode(IdleMode.kBrake);
-        containerConfig.absoluteEncoder
-            .positionConversionFactor(ArmConstants.encoderPositionFactor)
-            .velocityConversionFactor(ArmConstants.encoderVelocityFactor);
         container.configure(containerConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kNoPersistParameters);
         SparkBaseConfig containerFollowerConfig = new SparkFlexConfig();
         containerFollowerConfig
             .follow(container)
             .inverted(true)
             .idleMode(IdleMode.kBrake);
-        containerFollowerConfig.absoluteEncoder
-            .positionConversionFactor(ArmConstants.encoderPositionFactor)
-            .velocityConversionFactor(ArmConstants.encoderVelocityFactor);
         containerFollower.configure(containerFollowerConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kNoPersistParameters);
 
         // Create and setup motor for Algae
         algaeMotor = new SparkFlex(ArmConstants.algaeMotorID, MotorType.kBrushless);
         SparkBaseConfig algaeConfig = new SparkFlexConfig();
         algaeConfig.idleMode(IdleMode.kBrake);
-        algaeConfig.absoluteEncoder
-            .positionConversionFactor(ArmConstants.encoderPositionFactor)
-            .velocityConversionFactor(ArmConstants.encoderVelocityFactor);
         algaeMotor.configure(algaeConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kNoPersistParameters);
 
     }
