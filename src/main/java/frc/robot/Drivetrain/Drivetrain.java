@@ -55,8 +55,6 @@ public class Drivetrain extends SubsystemBase {
     path
   }
 
-  boolean isPathFinished;
-
   TranslateState translateState = TranslateState.velocity;
   RotState rotState = RotState.velocity;
 
@@ -70,8 +68,7 @@ public class Drivetrain extends SubsystemBase {
   private double posY;
   private double posR;
   //targetX, Y, optional R, check velocity zero, radius factor
-  private double[][] path;
-  int pathIndex = 0;
+  private Path path;
 
   public Drivetrain() {
   }
@@ -83,18 +80,17 @@ public class Drivetrain extends SubsystemBase {
       DrivePosition();
     }
     else if (translateState == TranslateState.path){
-      //i=0 point has already been set in setPath()
-      if(distance < DrivetrainConstants.validRange && (pathIndex >= path.length || path[pathIndex].length == 2 || rotDistance < DrivetrainConstants.validRotDiff)){
-        pathIndex++;
-        if(pathIndex >= path.length){
-          isPathFinished = true;
+      
+      if(distance < DrivetrainConstants.validRange && (path.getCurrentRot() == null || rotDistance < DrivetrainConstants.validRotDiff*path.getRadiusFactor()) && (path.getVelocityCheckSetting()== false)){
+        path.increaseIndex();
+        if(path.getPathStatus() == true){
           translateState = TranslateState.velocity;
           rotState = RotState.velocity;
         }
         else {
-          posX = path[pathIndex][0];
-          posY = path[pathIndex][1];
-          if(path[pathIndex].length == 3) posR = path[pathIndex][2];
+          posX = path.getCurrentX();
+          posY = path.getCurrentY();
+          posR = path.getCurrentPoint() == null? PositionComponent.getRobotPose().getRotation().getRadians(): path.getCurrentRot();
           DrivePosition();
           DrivePositionRot();
         }  
@@ -165,17 +161,15 @@ public class Drivetrain extends SubsystemBase {
     velR = rotDistance>DrivetrainConstants.rotTolerance? 1: rotDistance/DrivetrainConstants.rotTolerance;
   }
 
-  public void setPath(double[][] pathInput, Supplier<Boolean> booleanSupplier){
+  public void setPath(Path pathInput, Supplier<Boolean> booleanSupplier){
     // path[0][0] = 3;
     path = pathInput;
-    pathIndex = 0;
-    isPathFinished = false;
     translateState = TranslateState.path;
     rotState = RotState.path;
     
-    posX = path[0][0];
-    posY = path[0][1];
-    posR = path[0][2];
+    posX = path.getCurrentX();
+    posY = path.getCurrentY();
+    posR = path.getCurrentPoint() == null? PositionComponent.getRobotPose().getRotation().getRadians(): path.getCurrentRot();
     }
     
 
