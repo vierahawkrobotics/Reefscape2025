@@ -13,6 +13,7 @@ import frc.robot.subsystemExample.ExampleSubsystem;
 import frc.robot.Testing.*;
 
 public class Robot extends TimedRobot {
+  ///use a to climb
   public static Robot instance;
   public ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
   @Override
