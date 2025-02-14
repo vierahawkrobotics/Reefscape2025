@@ -1,6 +1,7 @@
 package frc.robot.Components;
 
 import frc.robot.Components.AreaEffects.AreaEffectsHandler;
+import frc.robot.Components.CANdle.CANdleController;
 
 public class ComponentManager {
     static CANdleController CANdle;
@@ -8,9 +9,10 @@ public class ComponentManager {
 
         ComponentExample.Initialize();
         CANdle = new CANdleController();
+        CANdleController.Initialize();
     }
     public static void Periodic() {
-        CANdle.Periodic();
+        CANdleController.Periodic();
         AreaEffectsHandler.periodic();
     }
 }

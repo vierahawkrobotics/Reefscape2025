@@ -1,4 +1,4 @@
-package frc.robot.Components;
+package frc.robot.Components.CANdle;
 
 import com.ctre.phoenix.led.Animation;
 import com.ctre.phoenix.led.CANdle;
@@ -7,25 +7,23 @@ import com.ctre.phoenix.led.FireAnimation;
 import com.ctre.phoenix.led.LarsonAnimation;
 import com.ctre.phoenix.led.RainbowAnimation;
 
-import frc.robot.Components.CANdleConstants.RobotStates;
+import frc.robot.Components.CANdle.CANdleConstants.RobotStates;
 
 public class CANdleController {
-    private final CANdle candle = new CANdle(CANdleConstants.CANdleID);
-    private Animation animate = null;
-    
-    public CANdleController() {}
+    private static CANdle candle;
+    private static Animation animate;
 
     /**
      * Change state
      */
-    public void setState(RobotStates state) {
+    public static void setState(RobotStates state) {
         setAnimation(state);
     }
 
     /**
      * Change animation
      */
-    public void setAnimation(RobotStates animation) {
+    public static void setAnimation(RobotStates animation) {
         switch (animation) {
             case Intaking:
                 animate = new ColorFlowAnimation(128, 20, 70, 0, 0.7, CANdleConstants.numLED, ColorFlowAnimation.Direction.Forward);
@@ -44,7 +42,12 @@ public class CANdleController {
         }
     }
 
-    public void Periodic() {
+    public static void Initialize() {
+        candle = new CANdle(CANdleConstants.CANdleID);
+        animate = null;
+    }
+
+    public static void Periodic() {
         if (animate == null) {
             candle.configBrightnessScalar(CANdleConstants.offScalar);
         } else {

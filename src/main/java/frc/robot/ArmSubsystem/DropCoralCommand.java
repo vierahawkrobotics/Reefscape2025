@@ -2,6 +2,8 @@ package frc.robot.ArmSubsystem;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
+import frc.robot.Components.CANdle.CANdleConstants;
+import frc.robot.Components.CANdle.CANdleController;
 
 enum DropState {
     PremoveInit,
@@ -53,6 +55,7 @@ public class DropCoralCommand extends Command {
             case DropInit: // Begin dropping
                 Robot.instance.armSubsystem.setIntakeState(ArmConstants.IntakeState.Drop);
                 state = DropState.DropPeriodic;
+                CANdleController.setState(CANdleConstants.RobotStates.Dropping);
                 break;
             case DropPeriodic: // Check done dropping
                 if(Robot.instance.armSubsystem.getIntakeState() == ArmConstants.IntakeState.Rest){

@@ -1,5 +1,6 @@
 package frc.robot.ArmSubsystem;
 
+import frc.robot.Components.CANdle.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 
@@ -12,6 +13,7 @@ public class CollectCoralCommand extends Command {
     public void initialize() {
         Robot.instance.armSubsystem.setHeightState(ArmConstants.HeightState.Collect);
         Robot.instance.armSubsystem.setIntakeState(ArmConstants.IntakeState.Collect);
+        CANdleController.setState(CANdleConstants.RobotStates.Intaking);
     }
 
     @Override
