@@ -71,6 +71,9 @@ public class DrivetrainConstants {
     public static double pointTolerance = 0.01;
     //the rotation version of what's above
     public static double rotTolerance = 0.17;
+    /*the speed(meters/second) at which the robot is considered stopped during
+    a path, this will be checked on each SwerveModule individually*/
+    public static double stoppedVelocity = 0.02;
 }
 
 

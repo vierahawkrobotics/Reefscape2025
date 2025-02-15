@@ -13,7 +13,10 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
@@ -70,7 +73,23 @@ public class Drivetrain extends SubsystemBase {
   //targetX, Y, optional R, check velocity zero, radius factor
   private Path path;
 
+  ShuffleboardTab drivetrainPIDTab = Shuffleboard.getTab("Drivetrain PIDs");
+  ShuffleboardLayout drivingPIDs = drivetrainPIDTab
+    .getLayout("Driving PID Constants", BuiltInLayouts.kList)
+    .withSize(2,2);
+  ShuffleboardLayout turningPIDs = drivetrainPIDTab
+  .getLayout("Turning PID Constants", BuiltInLayouts.kList)
+  .withSize(2,2);
+
   public Drivetrain() {
+      drivingPIDs.add("P", DrivetrainConstants.drivingP);
+      drivingPIDs.add("I", DrivetrainConstants.drivingI);
+      drivingPIDs.add("D", DrivetrainConstants.drivingD);
+
+      turningPIDs.add("P", DrivetrainConstants.turningP);
+      turningPIDs.add("I", DrivetrainConstants.turningI);
+      turningPIDs.add("D", DrivetrainConstants.turningD);
+
   }
 
   @Override
@@ -81,7 +100,10 @@ public class Drivetrain extends SubsystemBase {
     }
     else if (translateState == TranslateState.path){
       
-      if(distance < DrivetrainConstants.validRange && (path.getCurrentRot() == null || rotDistance < DrivetrainConstants.validRotDiff*path.getRadiusFactor()) && (path.getVelocityCheckSetting()== false)){
+      if(distance < DrivetrainConstants.validRange*path.getRadiusFactor() && 
+      (path.getCurrentRot() == null || rotDistance < DrivetrainConstants.validRotDiff) && 
+      (path.getVelocityCheckSetting()== false || checkIsRobotStopped()))
+      {
         path.increaseIndex();
         if(path.getPathStatus() == true){
           translateState = TranslateState.velocity;
@@ -139,6 +161,13 @@ public class Drivetrain extends SubsystemBase {
     Math.sqrt(
     Math.pow(currentRobotPosition.getX() - posX,2) +
     Math.pow(currentRobotPosition.getY() - posY, 2));
+  }
+
+  public boolean checkIsRobotStopped(){
+    for(int i =0; i<4; i++){
+      if(maxSwerveModules[i].drivingEncoder.getVelocity() > DrivetrainConstants.stoppedVelocity) return false;
+    }
+    return true;
   }
 
   private void DrivePosition(){
