@@ -39,8 +39,8 @@ public class PositionComponent {
     public static void perodic(){
         poseEstimator.update(Rotation2d.fromDegrees(gryoObject.getAngle()), Drivetrain.getSwerveModulePositions());
 
-        if(LimelightComponent.calcAprilTag() != null){
-            updatePose();
-        }        
+        // if(LimelightComponent.calcAprilTag() != null){
+        //     updatePose();
+        // }        
     }
 }
