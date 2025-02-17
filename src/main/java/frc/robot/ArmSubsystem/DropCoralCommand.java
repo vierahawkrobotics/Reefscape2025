@@ -2,8 +2,7 @@ package frc.robot.ArmSubsystem;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
-import frc.robot.Components.CANdle.CANdleConstants;
-import frc.robot.Components.CANdle.CANdleController;
+import frc.robot.Components.CANdle.*;
 
 enum DropState {
     PremoveInit,
