@@ -40,7 +40,7 @@ public class AreaEffectsHandler{
         double currentPointX = currentPose.getX();
         double currentPointY = currentPose.getY();
         boolean exit = false;
-        if(currentEffect.onExitCommand != null && !currentEffect.shape.check(currentPointX,currentPointY)){
+        if(currentEffect != null && currentEffect.onExitCommand != null && !currentEffect.shape.check(currentPointX,currentPointY)){
             currentEffect.onExitCommand.schedule();
         }
         if(currentEffect == null || !currentEffect.shape.check(currentPointX,currentPointY)){

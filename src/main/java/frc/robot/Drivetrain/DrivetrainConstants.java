@@ -62,10 +62,10 @@ public class DrivetrainConstants {
     public static int drivingMotorCurrentLimit = 80; // amps
     public static int turningMotorCurrentLimit = 20; // amps
 
-    public static final double flChassisAngularOffset = -Math.PI / 2;
+    public static final double flChassisAngularOffset = 0;
     public static final double frChassisAngularOffset = 0;
-    public static final double blChassisAngularOffset = Math.PI;
-    public static final double brChassisAngularOffset = Math.PI / 2;
+    public static final double blChassisAngularOffset = 0;
+    public static final double brChassisAngularOffset = 0;
 
     //the range at which the robot begins to slow down in DrivePosition()
     public static double pointTolerance = 0.01;

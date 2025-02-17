@@ -4,9 +4,9 @@ import frc.robot.Components.AreaEffects.AreaEffectsHandler;
 
 public class ComponentManager {
     public static void Initialize() {
-        
+        //AreaEffectsHandler.initialize();
     }
     public static void Periodic() {
-        AreaEffectsHandler.periodic();
+        //AreaEffectsHandler.periodic();
     }
 }

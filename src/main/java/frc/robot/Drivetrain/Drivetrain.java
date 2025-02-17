@@ -24,10 +24,9 @@ import frc.robot.Components.PositionComponent;
 
 public class Drivetrain extends SubsystemBase {
   //TO DO: this can be changed later for area effects etc, note it must be meters/second
-  double maxSpeed = 0.5;
-  XboxController controller = Robot.instance.controller;
-  double distance;
-  double rotDistance;
+  double maxSpeed = 1;
+  double distance = 0;
+  double rotDistance = 0;
 
   //this should ALWAYS be front left, front right, back left, and then back right
   public static SwerveDriveKinematics kinematics = new SwerveDriveKinematics(
