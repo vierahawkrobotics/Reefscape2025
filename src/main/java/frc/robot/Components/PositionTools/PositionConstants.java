@@ -1,7 +1,15 @@
 package frc.robot.Components.PositionTools;
 
-import edu.wpi.first.math.geometry.Pose2d;
+import java.security.spec.EdDSAParameterSpec;
+import java.util.List;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import frc.robot.Components.HighwaySystem;
+import frc.robot.Components.HighwaySystem.Edge;
+import frc.robot.Components.HighwaySystem.Node;
+/**
+ * @IMPORTANT ALL COORDINATES SHOULD BE IN FIELD-ABSOLUTE, WITH FIELD CENTER AT (0,0)!!!
+ */
 public class PositionConstants {
     /**
      * @todo add scoring locations, field relative meters
@@ -18,7 +26,13 @@ public class PositionConstants {
         public static double backOffset = 1; // How far back the robot should be from each scoring location (meters)
         public static double limitSwitchOffet = -0.1;
     }
-    public static class AprilTagPositions{
-        
+    public static class PoseGraphData {
+        //TODO figure whatever this is out
+        public static Node borderNodes[] = {
+            new Node(1,2)
+        };
+        public static Edge borderEdges[] = {
+            new Edge(borderNodes, 0, 0)
+        };
     }
 }
