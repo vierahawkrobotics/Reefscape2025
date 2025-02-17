@@ -30,12 +30,18 @@ public class RemoveAlgaeCommand extends Command {
         switch(state) {
             default:
             case SetupInit://initialize arm and robot position
-                //set robot position
-                ///Robot.instance.drivetrainSubsystem.setPosition(TriggerEffect.getAlgeaPose(this.hState));
+                //set robot position, 
+                //setTargetPos(double posX, double posY) in meters
+                //setTargetRot(double posR) in radians for posR
+                ///Robot.instance.Drivetrain.setTargetPos(TriggerEffect.getAlgeaPose(this.hState));
+                /// -----------------OR-----------------
+                /// Another option is to make a new DrivePoseBased command and set it on the command
+                /// scheduler which will allow you to use the isFinished method to check if the robot
+                ///  is at the target pose
                 state = RemoveAlgaeState.SetupPeriodic;
                 break;
             case SetupPeriodic://check if at target pose
-                ///if(drivetrain.isAtTargetPose() && Robot.instance.armSubsystem.atTargetHeight())
+                ///if(DrivetrainPoseBased.isFinished() && Robot.instance.armSubsystem.atTargetHeight())
                     state = RemoveAlgaeState.ExtendInit;
                 break;
             case ExtendInit://extend arm
@@ -43,7 +49,7 @@ public class RemoveAlgaeCommand extends Command {
                 state = RemoveAlgaeState.ExtendPeriodic;
                 break;
             case ExtendPeriodic://check if at target pose
-                ///if(drivetrain.isAtTargetPose())
+                /// if(DrivetrainPoseBased.isFinished())
                     state = RemoveAlgaeState.EjectInit;
                 break;
             case EjectInit://eject algae
@@ -51,7 +57,7 @@ public class RemoveAlgaeCommand extends Command {
                 state = RemoveAlgaeState.EjectPeriodic;
                 break;
             case EjectPeriodic://check if at target height
-                // (move robot back a foot) Robot.instance.drivetrainSubsystem.
+                // (move robot back a foot) Robot.instance.drivetrainSubsystem. 
                 //arm.ejectAlgae()
                 //rotate eject wheels and move arm up
                 //robot move back a foot
