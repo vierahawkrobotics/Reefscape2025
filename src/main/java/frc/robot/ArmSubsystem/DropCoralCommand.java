@@ -68,6 +68,7 @@ public class DropCoralCommand extends Command {
     public void end(boolean interrupted) {
         Robot.instance.armSubsystem.setHeightState(ArmConstants.HeightState.Ground);
         Robot.instance.armSubsystem.setIntakeState(ArmConstants.IntakeState.Rest);
+        CANdleController.setState(CANdleConstants.RobotStates.Dropping);
     }
     @Override
     public boolean isFinished() {
