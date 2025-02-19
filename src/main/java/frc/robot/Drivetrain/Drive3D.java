@@ -18,7 +18,7 @@ public  class Drive3D extends Command {
   Supplier<Double> vy;
   Supplier<Double> vr;
 
-  private Drive3D(Supplier<Double> vxInput, Supplier<Double> vyInput, Supplier<Double> vrInput) {
+  public Drive3D(Supplier<Double> vxInput, Supplier<Double> vyInput, Supplier<Double> vrInput) {
     vx = vxInput;
     vy = vyInput;
     vr = vrInput;
@@ -40,7 +40,7 @@ public  class Drive3D extends Command {
     double vrVal = vr.get();
     vrVal = (vrVal< DrivetrainConstants.inputDeadband)?vrVal=0: vrVal;
     
-    Robot.instance.drivetrain.setTargetVel(vxVal, vyVal);
+    Robot.instance.drivetrain.setTargetVel(vxVal, vyVal, true);
     Robot.instance.drivetrain.setTargetVelRot(vrVal);
   }
   @Override
@@ -48,6 +48,6 @@ public  class Drive3D extends Command {
 
   @Override
   public boolean isFinished() {
-    return true;
+    return false;
   }
 }

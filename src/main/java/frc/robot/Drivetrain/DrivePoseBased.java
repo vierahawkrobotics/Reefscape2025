@@ -6,20 +6,16 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 
 public class DrivePoseBased extends Command{
-    Supplier<Double> posX;
-    Supplier<Double> posY;
-    Supplier<Double> posR;
+    boolean bool;
 
-    private DrivePoseBased(Supplier<Double> posXInput, Supplier<Double> posYInput, Supplier<Double> posRInput){
-        posX = posXInput;
-        posY = posYInput;
-        posR = posRInput;
+    public DrivePoseBased(double posX, double posY, double posR, Supplier<Boolean> boolSupplier){
         addRequirements(Robot.instance.drivetrain);
+        bool = boolSupplier.get();
+        Robot.instance.drivetrain.setTargetPos(posX, posY);
+        Robot.instance.drivetrain.setTargetPosRot(posR);
     }
     @Override
     public void execute(){
-        Robot.instance.drivetrain.setTargetPos(posX.get(), posY.get());
-        Robot.instance.drivetrain.setTargetPosRot(posR.get());
     }
 
     @Override
@@ -27,7 +23,8 @@ public class DrivePoseBased extends Command{
 
     @Override
     public boolean isFinished() {
-        if(Robot.instance.drivetrain.distance< DrivetrainConstants.validRange && Robot.instance.drivetrain.rotDistance < DrivetrainConstants.validRotDiff){
+        if(bool) return true;
+        if(Robot.instance.drivetrain.distance < DrivetrainConstants.validRange && Robot.instance.drivetrain.rotDistance < DrivetrainConstants.validRotDiff){
         return true;
         }
         return false;
