@@ -2,7 +2,9 @@ package frc.robot.Components;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.PriorityQueue;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -31,13 +33,26 @@ public class HighwaySystem {
         public Boolean joinable;
         public double x;
         public double y;
+        public List<Edge> outboundEdges;
+        public Node(double x, double y, boolean j, List<Edge> outboundEdges){
+            super(x,y);
+            joinable = j;
+            this.outboundEdges = outboundEdges; 
+        }
+        public Node(double x, double y, List<Edge> outboundEdges){
+            super(x,y);
+            joinable = true;
+            this.outboundEdges = outboundEdges;
+        }
         public Node(double x, double y, boolean j){
             super(x,y);
             joinable = j;
+            this.outboundEdges = new ArrayList<Edge>();
         }
         public Node(double x, double y){
             super(x,y);
-            joinable = false;
+            joinable = true;
+            this.outboundEdges = new ArrayList<Edge>();
         }
     }
 
@@ -45,7 +60,12 @@ public class HighwaySystem {
         public Node start;
         public Node end;
         public double weight;
-
+        public boolean directed;
+        /**
+         * Tests if another edge intersects this one
+         * @param e Other Edge
+         * @return If an intersection exists
+         */
         public boolean intersects(Edge e){
             double x1 = e.start.x;
             double x2 = e.end.x;
@@ -77,23 +97,70 @@ public class HighwaySystem {
             this.start = nList[start];
             this.end = nList[end];
             this.weight = this.start.getDistance(this.end);
+            this.directed = false;
+
+            this.start.outboundEdges.add(this);
+            this.end.outboundEdges.add(this);
         }
         public Edge(Node start, Node end){
             this.start = start;
             this.end = end;
             this.weight = start.getDistance(end);
+            this.directed = false;
+
+            this.start.outboundEdges.add(this);
+            this.end.outboundEdges.add(this);
+        }
+        public Edge(Node[] nList, int start, int end, boolean directed){
+            this.start = nList[start];
+            this.end = nList[end];
+            this.weight = this.start.getDistance(this.end);
+            this.directed = directed;
+            
+            this.start.outboundEdges.add(this);
+            if(!directed){
+                this.end.outboundEdges.add(this);
+            }
+        }
+        public Edge(Node start, Node end, boolean directed){
+            this.start = start;
+            this.end = end;
+            this.weight = start.getDistance(end);
+            this.directed = directed;
+
+            this.start.outboundEdges.add(this);
+            if(!directed){
+                this.end.outboundEdges.add(this);
+            }
         }
     }
 
-    public void resetAdditionalNodes(){
+    private static class ComparableNode extends Node implements Comparable<ComparableNode>{
+        public double weight;
+        public ComparableNode(Node n){
+            super(n.x, n.y, n.joinable, n.outboundEdges);
+        }
+
+        @Override
+        public int compareTo(ComparableNode o) {
+            return this.weight > o.weight ? 1 : -1;
+        }
+    }
+    /**
+     * Resets the graph to its default state
+     * @author Darren Ringer
+     */
+    public static void resetAdditionalNodes(){
         NodeList = List.of(PositionConstants.PoseGraphData.borderNodes);
         EdgeList = List.of(PositionConstants.PoseGraphData.borderEdges);
     }
 
-    public void addNode(Node n){
-        /**
-         * Attempt to create edges 
-         */
+    /**
+     * Appends a node to the system network<p>
+     * Creates edges excluding any that intersect with border edges
+     * @param n Node to add
+     */
+    public static void addNode(Node n){
         Edge currentEdge;
         boolean validEdge;
         NodeList.add(n);
@@ -110,6 +177,38 @@ public class HighwaySystem {
                 EdgeList.add(currentEdge);
             }
         }
+    }
+    /**
+     * Calculates the optimal path between two nodes in the graph using 
+     * <a href = "https://www.geeksforgeeks.org/introduction-to-dijkstras-shortest-path-algorithm/">Dijkstra's algorithm </a>
+     * <p>(assumed reachable, if not, skill issue)</p>
+     * @param start Starting node
+     * @param end Ending node
+     * @return The list of edges to follow
+     */
+    public static List<Edge> calclulatePath(Node start, Node end){
+        /*
+         * Iterate through all nodes
+         * If all nodes are visited, return
+         * 
+         * Look at the head of the queue's edges
+         * Add all new nodes to the queue
+         */
+        HashMap<Integer, ComparableNode> nodeMap = new HashMap<Integer, ComparableNode>();
+        PriorityQueue<ComparableNode> joe = new PriorityQueue<ComparableNode>();
+
+        if(!NodeList.contains(start)) addNode(start);
+        if(!NodeList.contains(end)) addNode(end);
+        
+        for(int i=0;i<nodeMap.size();i++){
+            nodeMap.put(i, new ComparableNode(NodeList.get(i)));
+        }
+
+        while(!joe.isEmpty()){
+
+        }
+        return null;
+
     }
 
     private HighwaySystem(){
