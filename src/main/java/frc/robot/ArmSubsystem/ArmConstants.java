@@ -55,27 +55,27 @@ public class ArmConstants { // All heights in meters
             }
         }
     }
-    public enum CoralDropState {
-        L3Left,
-        L3Right,
-        L2Left,
-        L2Right,
-        L1;
+    // public enum CoralDropState {
+    //     L3Left,
+    //     L3Right,
+    //     L2Left,
+    //     L2Right,
+    //     L1;
 
-        HeightState getHeight() {
-            switch(this) {
-                case L3Left:
-                case L3Right:
-                    return HeightState.CoralHigh;
-                case L2Left:
-                case L2Right:
-                    return HeightState.CoralLow;
-                case L1:
-                default:
-                    return HeightState.Ground;
-            }
-        }
-    }
+    //     HeightState getHeight() {
+    //         switch(this) {
+    //             case L3Left:
+    //             case L3Right:
+    //                 return HeightState.CoralHigh;
+    //             case L2Left:
+    //             case L2Right:
+    //                 return HeightState.CoralLow;
+    //             case L1:
+    //             default:
+    //                 return HeightState.Ground;
+    //         }
+    //     }
+    // }
     public enum AlgaeMotorState {
         Active,
         Inactive;
