@@ -12,7 +12,7 @@ public class RobotState {
         //new JoystickButton(controller, XboxController.Button.kA.value).onTrue(null);
 
         Robot.instance.drivetrain.setDefaultCommand(new Drive3D(() -> {
-            return -1*controller.getLeftY();
+            return controller.getLeftY();
         }, () -> {
             return controller.getLeftX();
         }, () -> {

@@ -89,6 +89,11 @@ public class Drivetrain extends SubsystemBase {
       turningPIDs.add("I", DrivetrainConstants.turningI);
       turningPIDs.add("D", DrivetrainConstants.turningD);
 
+      drivetrainTab.addDouble("Robot rot", () -> {return PositionComponent.getRobotPose().getRotation().getRadians(); });
+
+      drivetrainTab.addDouble("Robot velR", () -> {return velR;});
+      drivetrainTab.addDouble("Robot velX", () -> {return velX;});
+      drivetrainTab.addDouble("Robot velY", () -> {return velY;});
   }
 
   @Override
@@ -141,7 +146,6 @@ public class Drivetrain extends SubsystemBase {
   private void DriveVelocity(double desiredvX, double desiredvY, double desiredvRot){
     Rotation2d currentRotation = PositionComponent.getRobotPose().getRotation();
     ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(desiredvX, desiredvY, desiredvRot, currentRotation);
-
     SwerveModuleState[] moduleStates = Drivetrain.kinematics.toSwerveModuleStates(speeds);
     
     for(int i =0; i<4; i++){
