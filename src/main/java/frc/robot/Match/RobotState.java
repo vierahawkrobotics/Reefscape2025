@@ -28,7 +28,7 @@ public class RobotState {
         new JoystickButton(controller1, XboxController.Button.kA.value).onTrue(new ElevatorUpDownCommand(false,true));
 
         Robot.instance.drivetrain.setDefaultCommand(new Drive3D(() -> {
-            return -1*controller1.getLeftY();
+            return controller.getLeftY();
         }, () -> {
             return controller1.getLeftX();
         }, () -> {

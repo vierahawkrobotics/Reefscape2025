@@ -24,10 +24,9 @@ import frc.robot.Components.PositionComponent;
 
 public class Drivetrain extends SubsystemBase {
   //TO DO: this can be changed later for area effects etc, note it must be meters/second
-  double maxSpeed = 0.5;
-  XboxController controller = Robot.instance.controller;
-  double distance;
-  double rotDistance;
+  double maxSpeed = 1;
+  double distance = 0;
+  double rotDistance = 0;
 
   //this should ALWAYS be front left, front right, back left, and then back right
   public static SwerveDriveKinematics kinematics = new SwerveDriveKinematics(
@@ -90,6 +89,11 @@ public class Drivetrain extends SubsystemBase {
       turningPIDs.add("I", DrivetrainConstants.turningI);
       turningPIDs.add("D", DrivetrainConstants.turningD);
 
+      drivetrainTab.addDouble("Robot rot", () -> {return PositionComponent.getRobotPose().getRotation().getRadians(); });
+
+      drivetrainTab.addDouble("Robot velR", () -> {return velR;});
+      drivetrainTab.addDouble("Robot velX", () -> {return velX;});
+      drivetrainTab.addDouble("Robot velY", () -> {return velY;});
   }
 
   @Override
@@ -142,7 +146,6 @@ public class Drivetrain extends SubsystemBase {
   private void DriveVelocity(double desiredvX, double desiredvY, double desiredvRot){
     Rotation2d currentRotation = PositionComponent.getRobotPose().getRotation();
     ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(desiredvX, desiredvY, desiredvRot, currentRotation);
-
     SwerveModuleState[] moduleStates = Drivetrain.kinematics.toSwerveModuleStates(speeds);
     
     for(int i =0; i<4; i++){

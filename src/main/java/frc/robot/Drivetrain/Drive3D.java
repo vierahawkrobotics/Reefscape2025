@@ -32,13 +32,13 @@ public  class Drive3D extends Command {
   public void execute() {
     //apply input deadband, input squaring,
     double vxVal = (vx.get() < 0) ? Math.pow(vx.get(),2)*(-1): Math.pow(vx.get(),2);
-    vxVal = (vxVal< DrivetrainConstants.inputDeadband)?vxVal=0: vxVal;
+    vxVal = (Math.abs(vxVal) < DrivetrainConstants.inputDeadband)?vxVal=0: vxVal;
 
     double vyVal = (vy.get() < 0) ? Math.pow(vy.get(),2)*(-1): Math.pow(vy.get(),2);
-    vyVal = (vyVal < DrivetrainConstants.inputDeadband) ? vyVal =0: vyVal;
+    vyVal = (Math.abs(vyVal) <  DrivetrainConstants.inputDeadband) ? vyVal =0: vyVal;
 
     double vrVal = vr.get();
-    vrVal = (vrVal< DrivetrainConstants.inputDeadband)?vrVal=0: vrVal;
+    vrVal = (Math.abs(vrVal) < DrivetrainConstants.inputDeadband)?vrVal=0: vrVal;
     
     Robot.instance.drivetrain.setTargetVel(vxVal, vyVal, true);
     Robot.instance.drivetrain.setTargetVelRot(vrVal);

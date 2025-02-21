@@ -44,7 +44,7 @@ public class MAXSwerveModule{
       .positionConversionFactor(DrivetrainConstants.turningEncoderPositionFactor)
       .velocityConversionFactor(DrivetrainConstants.turningEncoderVelocityFactor);
       turningConfig.closedLoop
-      .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+      .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
       .positionWrappingEnabled(true)
       .positionWrappingInputRange(DrivetrainConstants.turningPIDMinInput, DrivetrainConstants.turningPIDMaxInput)
       .outputRange(DrivetrainConstants.turningMinOutput, DrivetrainConstants.turningMaxOutput)
