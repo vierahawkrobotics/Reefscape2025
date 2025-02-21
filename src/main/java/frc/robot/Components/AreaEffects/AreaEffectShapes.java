@@ -1,7 +1,12 @@
 package frc.robot.Components.AreaEffects;
 
+/**
+ * Shapes used for area effect targeting/designation
+ * @author Darren Ringer
+ */
 
 public class AreaEffectShapes {
+
     public class Point{
         public double x;
         public double y;
@@ -12,18 +17,33 @@ public class AreaEffectShapes {
     }
 
 
-
+    /**
+     * Parent generic class for area effects
+     */
     public class DefaultShape{
+        /**
+         * Checks if (x,y) is inside the effect
+         * @param point Point (x,y) to check
+         * @return Boolean if the point is inside the effect
+         */
         public boolean check(double x, double y){
             return false;
         }
+        /**
+         * Checks if a point is inside the effect
+         * @param point Point to check
+         * @return Boolean if the point is inside the effect
+         */
         public boolean check(Point point){
             return false;
         }
     }
 
 
-
+    /**
+     * Area effect circle shape
+     * 
+     */
     public class Circle extends DefaultShape{
         private Point center;
         private double r;

@@ -2,6 +2,8 @@ package frc.robot.Components;
 
 import com.studica.frc.AHRS;
 
+import com.studica.frc.AHRS.NavXComType;
+
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -21,8 +23,9 @@ public class PositionComponent {
     private static AHRS gryoObject;
 
     public PositionComponent(Pose2d initialPose) {
-        gryoObject = new AHRS(AHRS.NavXComType.kMXP_SPI);
-        poseEstimator = new SwerveDrivePoseEstimator(Drivetrain.kinematics, Rotation2d.fromDegrees(gryoObject.getAngle()), Drivetrain.getSwerveModulePositions(), initialPose);
+        gryoObject = new AHRS(NavXComType.kMXP_SPI);
+        Rotation2d initialRot = Rotation2d.fromDegrees(gryoObject.getAngle());
+        poseEstimator = new SwerveDrivePoseEstimator(Drivetrain.kinematics, initialRot, Drivetrain.getSwerveModulePositions(), initialPose); // Fix kinematics and modulePositions parameter
     }
 
     public static Pose2d getRobotPose() {
