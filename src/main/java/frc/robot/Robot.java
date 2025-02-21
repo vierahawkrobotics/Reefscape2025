@@ -23,7 +23,7 @@ public class Robot extends TimedRobot {
   public ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
   public XboxController controller = new XboxController(0);
   public Drivetrain drivetrain = new Drivetrain();
-  public ArmSubsystem armSubsystem;
+  //public ArmSubsystem armSubsystem;
   public PositionComponent positionComponent = new PositionComponent(new Pose2d());
   @Override
   public void robotInit() {
@@ -31,7 +31,7 @@ public class Robot extends TimedRobot {
     ComponentManager.Initialize();
     instance = this;
 
-    armSubsystem = new ArmSubsystem();
+    //armSubsystem = new ArmSubsystem();
 
     RobotState.Initialize();
   }

@@ -17,13 +17,13 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 
 public class MAXSwerveModule{
-    SparkFlex drivingMotorController;
-    SparkMax turningMotorController;
-    SparkClosedLoopController drivingPIDController;
-    SparkClosedLoopController turningPIDController;
-    RelativeEncoder drivingEncoder;
-    AbsoluteEncoder turningEncoder;
-    double chassisAngularOffset;
+    private SparkFlex drivingMotorController;
+    private SparkMax turningMotorController;
+    public SparkClosedLoopController drivingPIDController;
+    public SparkClosedLoopController turningPIDController;
+    public RelativeEncoder drivingEncoder;
+    public AbsoluteEncoder turningEncoder;
+    private double chassisAngularOffset;
 
     public MAXSwerveModule(int drivingMotorID,int turningMotorID,double chassisAngularOffset){
 
@@ -40,6 +40,7 @@ public class MAXSwerveModule{
       .idleMode(IdleMode.kBrake)
       .smartCurrentLimit(DrivetrainConstants.turningMotorCurrentLimit);
       turningConfig.absoluteEncoder
+      .zeroOffset(chassisAngularOffset / (2 * Math.PI))
       .inverted(true)
       .positionConversionFactor(DrivetrainConstants.turningEncoderPositionFactor)
       .velocityConversionFactor(DrivetrainConstants.turningEncoderVelocityFactor);
@@ -66,12 +67,15 @@ public class MAXSwerveModule{
       turningMotorController.configure(turningConfig, DrivetrainConstants.turningReset, DrivetrainConstants.turningPersist);
     }
     public SwerveModulePosition getPosition() {
-    // Apply chassis angular offset to the encoder position to get the position
-    // relative to the chassis.
-    return new SwerveModulePosition(
-        drivingEncoder.getPosition(),
-        new Rotation2d(turningEncoder.getPosition() - chassisAngularOffset));
-  }
+      // Apply chassis angular offset to the encoder position to get the position
+      // relative to the chassis.
+      return new SwerveModulePosition(
+          drivingEncoder.getPosition(),
+          new Rotation2d(turningEncoder.getPosition() - chassisAngularOffset));
+    }
+    public void set(double metersPerSec, double targetRat) {
+
+    }
   
   }
 

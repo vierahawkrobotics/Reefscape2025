@@ -30,8 +30,7 @@ public class PositionTools {
 
     public static Pose2d closestScorePose(boolean isRotated){
         if(isRotated){
-            return getPoseTranslated(trueclosestScore(),
-            new Pose2d(Robot.instance.armSubsystem.isLimitSwitchPressed(), 0, Rotation2d.fromDegrees(0)));
+            return null;
         } else {
             return trueclosestScore().rotateBy(Rotation2d.fromDegrees(90));
         }
