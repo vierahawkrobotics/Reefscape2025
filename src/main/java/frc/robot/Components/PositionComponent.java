@@ -9,6 +9,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.wpilibj.SerialPort;
+import frc.robot.Components.PositionTools.PositionTools;
 import frc.robot.Drivetrain.Drivetrain;
 
 /**
@@ -30,10 +31,13 @@ public class PositionComponent {
         return poseEstimator.getEstimatedPosition();
     }
 
-    public static void updatePose(){
-        poseEstimator.addVisionMeasurement(null, edu.wpi.first.wpilibj.Timer.getFPGATimestamp()); // Fix visionRobotPoseMeters
+    public static Pose2d getPoseTranslated(Pose2d offset){
+        return PositionTools.getPoseTranslated(getRobotPose(), offset);
     }
 
+    public static void updatePose(){
+        poseEstimator.addVisionMeasurement(getRobotPose(), edu.wpi.first.wpilibj.Timer.getFPGATimestamp());
+    }
     public static void perodic(){
         poseEstimator.update(Rotation2d.fromDegrees(gryoObject.getAngle()), Drivetrain.getSwerveModulePositions());
 

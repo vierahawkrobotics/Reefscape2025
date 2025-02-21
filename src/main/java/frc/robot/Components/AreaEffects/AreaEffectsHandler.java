@@ -8,7 +8,8 @@ import frc.robot.Components.PositionComponent;
 
 /**
  * The area effect handler that holds all area effects and returns attributes based off of the current effect
- * @autor Darren Ringer
+ * It is a singleton class designed around utilizing static methods
+ * @author Darren Ringer
  */
 public class AreaEffectsHandler{
     private static AreaEffectsHandler instance;
