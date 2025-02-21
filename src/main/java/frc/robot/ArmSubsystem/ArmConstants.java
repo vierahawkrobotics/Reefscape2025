@@ -55,27 +55,6 @@ public class ArmConstants { // All heights in meters
             }
         }
     }
-    // public enum CoralDropState {
-    //     L3Left,
-    //     L3Right,
-    //     L2Left,
-    //     L2Right,
-    //     L1;
-
-    //     HeightState getHeight() {
-    //         switch(this) {
-    //             case L3Left:
-    //             case L3Right:
-    //                 return HeightState.CoralHigh;
-    //             case L2Left:
-    //             case L2Right:
-    //                 return HeightState.CoralLow;
-    //             case L1:
-    //             default:
-    //                 return HeightState.Ground;
-    //         }
-    //     }
-    // }
     public enum AlgaeMotorState {
         Active,
         Inactive;
@@ -106,16 +85,18 @@ public class ArmConstants { // All heights in meters
         }
     }
 
+    // Motors Constants
     final public static int elevatorMotorID = 11;
     final public static int elevatorFollowMotorID = 12;
     final public static int containerMotorID = 13;
     final public static int containerFollowMotorID = 14;
     final public static int algaeMotorID = 15;
-    final public static double containerMotorSpeed = 99;
     final public static double algaeMotorSpeed = 99;
+    final public static double containerMotorSpeed = 99;
     public static final double encoderPositionFactor = (2 * Math.PI); // radians
     public static final double encoderVelocityFactor = (2 * Math.PI) / 60.0; // radians per second
 
+    // Elevator Constants
     final public static double elevatorP = 1;
     final public static double elevatorI = 0;
     final public static double elevatorD = 0;
@@ -125,6 +106,7 @@ public class ArmConstants { // All heights in meters
     final public static double resetHeightModeBias = 0;
     final public static double containerDropTime = 5; // Seconds
 
+    // Elevator Constants
     final public static double armHeight = -1; // Arm bottom distance from ground
     final public static double armForwardOffset = 0.2921; // Arm distance from center of robot
     final public static double maxHeight = 100; // Arm max extension length
@@ -134,6 +116,7 @@ public class ArmConstants { // All heights in meters
     final public static double high = 1.83; // L3
     final public static double algaeOffset = 0.1; // How much higher algae is than coral placement
 
+    // Intake Constants
     final public static double farLeftIntakeChannel = -1;
     final public static double middleLeftIntakeChannel = -0.5;
     final public static double middleRightIntakeChannel = 0.5;

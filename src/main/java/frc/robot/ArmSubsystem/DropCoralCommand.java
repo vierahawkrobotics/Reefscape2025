@@ -8,6 +8,8 @@ import frc.robot.Components.PositionTools.PositionTools;
 import frc.robot.Drivetrain.DrivePoseBased;
 
 enum DropState {
+    PremoveInit,
+    PremovePeriodic,
     MoveInit,
     MovePeriodic,
     DropInit,
@@ -17,12 +19,11 @@ enum DropState {
 
 public class DropCoralCommand extends Command {
     private DropState state = DropState.MoveInit;
-    // private ArmConstants.CoralDropState dropPos;
     private SequentialCommandGroup moveCommand;
+
     public DropCoralCommand() {
         addRequirements(Robot.instance.armSubsystem);
         addRequirements(Robot.instance.drivetrain);
-        // this.dropPos = dropPos;
     }
 
     @Override
@@ -31,17 +32,22 @@ public class DropCoralCommand extends Command {
     public void execute() {
         switch(state) {
             default:
-            case MoveInit: // Set robot target position to where won't hit wall
-                // Robot.instance.armSubsystem.setHeightState(dropPos.getHeight());
+            case PremoveInit: // Set robot target position to where won't hit wall
                 // Replace DrivePoseBased params with closestScorePoseEntry 
                 Pose2d entryPose = PositionTools.closestScorePoseEntry(isScheduled());
                 moveCommand = new SequentialCommandGroup(new DrivePoseBased(0, 0, 0, null),
                 new DrivePoseBased(0, 0, 0, null));
                 moveCommand.schedule();
+                state = DropState.PremovePeriodic;
+                break;
+            case PremovePeriodic: // Check target
+                // if done (drivetrain)
                 state = DropState.MoveInit;
                 break;
-            case MovePeriodic: // Check target placement
-                // if done (drivetrain)
+            case MoveInit: // Move robot to reef
+                state = DropState.MovePeriodic;
+                break;
+            case MovePeriodic: // Check target
                 state = DropState.DropInit;
                 break;
             case DropInit: // Begin dropping

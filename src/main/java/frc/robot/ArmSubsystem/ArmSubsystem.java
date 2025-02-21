@@ -74,6 +74,8 @@ public class ArmSubsystem extends SubsystemBase {
     
     /**
      * Set algae motor speed
+     * @param motorState new algae motorState (Active or Inactive)
+     * @author Christian M
      */
     public void setAlgaeMotorSpeed(ArmConstants.AlgaeMotorState motorState){
         algaeMotor.set(motorState.getMotorState());
@@ -81,6 +83,8 @@ public class ArmSubsystem extends SubsystemBase {
 
     /**
      * Move elevator arm up to eject algae
+     * @param height target HeightState
+     * @author Andrew S
      */
     public void setHeightState(ArmConstants.HeightState height) {
         SetTargetHeight(height.getHeight());
@@ -88,32 +92,33 @@ public class ArmSubsystem extends SubsystemBase {
 
     /**
      * @return left/right offset in meters based on limit switch pressed (0 if none pressed)
+     * @author Andrew S
      */
     public double isLimitSwitchPressed() {
-        int press = 0;
+        int pressed = 0;
         if(container.getForwardLimitSwitch().isPressed()) {
-            // print indentifiers
-            press = 1;
+            pressed = 1;
         }
         if(container.getReverseLimitSwitch().isPressed()) {
-            if(press != 0) System.out.println("ArmSubsystem.isLimitSwitchPressed - multiple limit switches pressed");
-            press = 2;
+            if(pressed != 0) System.out.println("ArmSubsystem.isLimitSwitchPressed - multiple limit switches pressed");
+            pressed = 2;
         }
         if(containerFollower.getForwardLimitSwitch().isPressed()) {
-            if(press != 0) System.out.println("ArmSubsystem.isLimitSwitchPressed - multiple limit switches pressed");
-            press = 3;
+            if(pressed != 0) System.out.println("ArmSubsystem.isLimitSwitchPressed - multiple limit switches pressed");
+            pressed = 3;
         }
         if(containerFollower.getReverseLimitSwitch().isPressed()) {
-            if(press != 0) System.out.println("ArmSubsystem.isLimitSwitchPressed - multiple limit switches pressed");
-            press = 4;
+            if(pressed != 0) System.out.println("ArmSubsystem.isLimitSwitchPressed - multiple limit switches pressed");
+            pressed = 4;
         }
-        if (press == 1) { // Far left channel pressed
+        System.out.println(pressed);
+        if (pressed == 1) { // Far left channel pressed
             return ArmConstants.farLeftIntakeChannel;
-        } else if (press == 2) { // Middle left channel pressed
+        } else if (pressed == 2) { // Middle left channel pressed
             return ArmConstants.middleLeftIntakeChannel;
-        } else if (press == 3) { // Middle right channel pressed
+        } else if (pressed == 3) { // Middle right channel pressed
             return ArmConstants.middleRightIntakeChannel;
-        } else if (press == 4) { // Far right channel pressed
+        } else if (pressed == 4) { // Far right channel pressed
             return ArmConstants.farRightIntakeChannel;
         } else { // none pressed
             return 0;
@@ -121,7 +126,9 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     /**
-     * Change current intake state
+     * Change current IntakeState and start timer if changing to Drop state
+     * @param state new intake state
+     * @author Andrew S
      */
     public void setIntakeState(ArmConstants.IntakeState state) {
         if(state == ArmConstants.IntakeState.Drop && intakeState != ArmConstants.IntakeState.Drop) {
@@ -132,13 +139,16 @@ public class ArmSubsystem extends SubsystemBase {
 
     /**
      * @return current intake state
+     * @author Andrew S
      */
     public ArmConstants.IntakeState getIntakeState() {
         return intakeState;
     }
 
     /**
-     * Set target height
+     * Set target height based on the smallest between targetHeight and max armHeight
+     * @param targetHeight target arm height
+     * @author Andrew S
      */
     public void SetTargetHeight(double targetHeight) {
         targetHeight = Math.min(Math.max(targetHeight,ArmConstants.armHeight),ArmConstants.maxHeight);
@@ -146,12 +156,14 @@ public class ArmSubsystem extends SubsystemBase {
 
     /**
      * @return current height
+     * @author Andrew S
      */
     public double getHeight() {
         return curHeight;
     }
     /**
      * @return current target height
+     * @author Andrew S
      */
     public double getTargetHeight() {
         return targetHeight;
@@ -159,6 +171,7 @@ public class ArmSubsystem extends SubsystemBase {
 
     /**
      * @return if at target height
+     * @author Andrew S
      */
     public boolean AtTargetHeight() {
         return Math.abs(targetHeight - elevator.getExternalEncoder().getPosition()) < ArmConstants.epsilon;
@@ -166,6 +179,7 @@ public class ArmSubsystem extends SubsystemBase {
 
     /**
      * Reset height to 0
+     * @author Andrew S
      */
     private void RecallibrateHeight() {
         elevator.set(ArmConstants.resetHeightModeBias);

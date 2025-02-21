@@ -11,28 +11,26 @@ import frc.robot.ArmSubsystem.RemoveAlgaeCommand;
 import frc.robot.Drivetrain.Drive3D;
 
 public class RobotState {
-    public static XboxController controller1;
-    public static XboxController controller2;
+    public static XboxController controller;
     public static void Initialize() {
-        controller1 = new XboxController(0);
-        controller2 = new XboxController(1);
+        controller = new XboxController(0);
         // Defines button B which calls function CollectCoralCommand
-        new JoystickButton(controller1, XboxController.Button.kB.value).onTrue(new CollectCoralCommand());
+        new JoystickButton(controller, XboxController.Button.kB.value).onTrue(new CollectCoralCommand());
         // Defines button X which calls function DropCoralCommand
-        new JoystickButton(controller1, XboxController.Button.kX.value).onTrue(new DropCoralCommand());
+        new JoystickButton(controller, XboxController.Button.kX.value).onTrue(new DropCoralCommand());
         // Defines button left bumper which calls function RemoveAlgaeCommand
-        new JoystickButton(controller1, XboxController.Button.kLeftBumper.value).onTrue(new RemoveAlgaeCommand());
+        new JoystickButton(controller, XboxController.Button.kLeftBumper.value).onTrue(new RemoveAlgaeCommand());
         // Defines button Y which moves elevator up
-        new JoystickButton(controller1, XboxController.Button.kY.value).onTrue(new ElevatorUpDownCommand(true,false));
+        new JoystickButton(controller, XboxController.Button.kY.value).onTrue(new ElevatorUpDownCommand(true,false));
         // Defines button A which moves elevator up
-        new JoystickButton(controller1, XboxController.Button.kA.value).onTrue(new ElevatorUpDownCommand(false,true));
+        new JoystickButton(controller, XboxController.Button.kA.value).onTrue(new ElevatorUpDownCommand(false,true));
 
         Robot.instance.drivetrain.setDefaultCommand(new Drive3D(() -> {
             return controller.getLeftY();
         }, () -> {
-            return controller1.getLeftX();
+            return controller.getLeftX();
         }, () -> {
-            return controller1.getRightX();
+            return controller.getRightX();
         }));
     }
     public static void Periodic() {}
