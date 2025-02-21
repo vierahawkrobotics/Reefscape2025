@@ -40,7 +40,7 @@ public class MAXSwerveModule{
       .idleMode(IdleMode.kBrake)
       .smartCurrentLimit(DrivetrainConstants.turningMotorCurrentLimit);
       turningConfig.absoluteEncoder
-      .zeroOffset(chassisAngularOffset / (2 * Math.PI))
+      //.zeroOffset(chassisAngularOffset / (2 * Math.PI))
       .inverted(true)
       .positionConversionFactor(DrivetrainConstants.turningEncoderPositionFactor)
       .velocityConversionFactor(DrivetrainConstants.turningEncoderVelocityFactor);
@@ -71,7 +71,7 @@ public class MAXSwerveModule{
       // relative to the chassis.
       return new SwerveModulePosition(
           drivingEncoder.getPosition(),
-          new Rotation2d(turningEncoder.getPosition() - chassisAngularOffset));
+          new Rotation2d(turningEncoder.getPosition()));
     }
     public void set(double metersPerSec, double targetRat) {
 

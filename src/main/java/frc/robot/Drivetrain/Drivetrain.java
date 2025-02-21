@@ -24,7 +24,8 @@ import frc.robot.Components.PositionComponent;
 
 public class Drivetrain extends SubsystemBase {
   //TO DO: this can be changed later for area effects etc, note it must be meters/second
-  double maxSpeed = 1;
+  double maxSpeed = 0.5;
+  double maxRotSpeed = Math.PI;
   double distance = 0;
   double rotDistance = 0;
 
@@ -190,7 +191,8 @@ public class Drivetrain extends SubsystemBase {
   private void DrivePositionRot(){
     double angle = PositionComponent.getRobotPose().getRotation().getRadians();
     rotDistance = angle - posR > 0? posR-angle: angle- posR;
-    velR = rotDistance>DrivetrainConstants.rotTolerance? 1: rotDistance/DrivetrainConstants.rotTolerance;
+    double r = rotDistance>DrivetrainConstants.rotTolerance? 1: rotDistance/DrivetrainConstants.rotTolerance;
+    setTargetVelRot(r);
   }
 
   public void setPath(Path pathInput, Supplier<Boolean> booleanSupplier){
@@ -219,7 +221,7 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public void setTargetVelRot(double vr){
-    velR = vr;
+    velR = vr*maxRotSpeed;
     rotState = RotState.velocity;
   }
 

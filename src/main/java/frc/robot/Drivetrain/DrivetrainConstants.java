@@ -8,7 +8,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 public class DrivetrainConstants {
     public static double inputDeadband = 0.02;
     public static double physicalSpeedLimit = 3.5; // meters per second
-    public static double physicalRotSpeedLimit = 6; // rad per second
+    public static double physicalRotSpeedLimit = 18; // rad per second
 
     //The range at which the robot is considered to have reached a position
     public static double validRange = 0.05; //translation in meters
@@ -48,7 +48,7 @@ public class DrivetrainConstants {
     public static PersistMode drivingPersist = PersistMode.kNoPersistParameters;
     public static ResetMode drivingReset = ResetMode.kResetSafeParameters;
 
-    public static double turningP = 1.75;
+    public static double turningP = 3.75;
     public static double turningI = 0;
     public static double turningD = 0;
     //sets wrapping for the PIDController
