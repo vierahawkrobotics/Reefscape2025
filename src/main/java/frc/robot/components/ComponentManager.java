@@ -21,6 +21,7 @@ public class ComponentManager {
         
     }
     public static void Periodic() {
-        
+        PositionComponent.periodic();
+        AreaEffectsHandler.periodic();
     }
 }

@@ -55,7 +55,7 @@ public class PositionComponent {
     public static void updatePose(){
         poseEstimator.addVisionMeasurement(getRobotPose(), edu.wpi.first.wpilibj.Timer.getFPGATimestamp());
     }
-    public static void perodic(){
+    public static void periodic(){
         poseEstimator.update(Rotation2d.fromDegrees(gryoObject.getAngle()), Drivetrain.getSwerveModulePositions());
 
         // if(LimelightComponent.calcAprilTag() != null){
