@@ -4,6 +4,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.Components.AreaEffects.AreaEffectsHandler;
+import frc.robot.Components.PositionComponent.PositionComponent;
+import frc.robot.Components.PositionComponent.PositionComponentSettings;
 
 public class ComponentManager {
     private static ShuffleboardTab posTab;
@@ -14,6 +16,16 @@ public class ComponentManager {
 
         //Shuffleboard stuff
         posTab = Shuffleboard.getTab("Position Data");
+        posTab.addString("Estimated Velocity Vector", ()->{return String.format("(x: .3f, y: .3f, r: .3f)",
+            PositionComponent.getChassisSpeeds().vxMetersPerSecond,
+            PositionComponent.getChassisSpeeds().vyMetersPerSecond,
+            PositionComponent.getChassisSpeeds().omegaRadiansPerSecond
+        );});
+        posTab.addString("Estimated Gyro Velocity Vector", ()->{return String.format("(x: .3f, y: .3f, r: .3f)",
+            PositionComponent.getChassisSpeeds(PositionComponentSettings.velType.kGyroscope).vxMetersPerSecond,
+            PositionComponent.getChassisSpeeds(PositionComponentSettings.velType.kGyroscope).vyMetersPerSecond,
+            PositionComponent.getChassisSpeeds(PositionComponentSettings.velType.kGyroscope).omegaRadiansPerSecond
+        );});
         posTab.addDouble("Drive Estimated X", ()->{return PositionComponent.getRobotPose().getX();});
         posTab.addDouble("Drive Estimated Y", ()->{return PositionComponent.getRobotPose().getY();});
         posTab.addDouble("Drive Estimated Rotation (degrees)", ()->{return PositionComponent.getRobotPose().getRotation().getDegrees();});
