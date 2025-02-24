@@ -15,9 +15,16 @@ public class DrivePoseBased extends Command{
      * @param posR Desired robot rotation, radians
      * @param boolSupplier Button to quit go to
      */
-    public DrivePoseBased(double posX, double posY, double posR, Supplier<Boolean> boolSupplier){
+    public DrivePoseBased(double posX, double posY, double posR, Supplier<Boolean> boolSupplier ){
         addRequirements(Robot.instance.drivetrain);
         bool = boolSupplier.get();
+        Robot.instance.drivetrain.setTargetPos(posX, posY);
+        Robot.instance.drivetrain.setTargetPosRot(posR);
+        Robot.instance.drivetrain.setIsPointReached(false);
+    }
+    public DrivePoseBased(double posX, double posY, double posR){
+        addRequirements(Robot.instance.drivetrain);
+        bool = false;
         Robot.instance.drivetrain.setTargetPos(posX, posY);
         Robot.instance.drivetrain.setTargetPosRot(posR);
         Robot.instance.drivetrain.setIsPointReached(false);
