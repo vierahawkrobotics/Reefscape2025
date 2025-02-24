@@ -24,8 +24,8 @@ import frc.robot.Components.PositionComponent;
 
 public class Drivetrain extends SubsystemBase {
   //TO DO: this can be changed later for area effects etc, note it must be meters/second
-  double maxSpeed = 0.5;
-  double maxRotSpeed = Math.PI;
+  double maxSpeed = 1;
+  double maxRotSpeed = Math.PI*(3/2);
   double distance = 0;
   double rotDistance = 0;
 
@@ -145,7 +145,7 @@ public class Drivetrain extends SubsystemBase {
   }
 
   private void DriveVelocity(double desiredvX, double desiredvY, double desiredvRot){
-    Rotation2d currentRotation = PositionComponent.getRobotPose().getRotation();
+    Rotation2d currentRotation = PositionComponent.getRobotPose().getRotation().times(-1);
     ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(desiredvX, desiredvY, desiredvRot, currentRotation);
     SwerveModuleState[] moduleStates = Drivetrain.kinematics.toSwerveModuleStates(speeds);
     

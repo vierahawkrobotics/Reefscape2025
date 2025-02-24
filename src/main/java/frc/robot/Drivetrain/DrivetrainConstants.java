@@ -6,7 +6,7 @@ import com.revrobotics.spark.SparkBase.PersistMode;
 import edu.wpi.first.math.geometry.Translation2d;
 
 public class DrivetrainConstants {
-    public static double inputDeadband = 0.02;
+    public static double inputDeadband = 0.12;
     public static double physicalSpeedLimit = 3.5; // meters per second
     public static double physicalRotSpeedLimit = 18; // rad per second
 
@@ -40,7 +40,7 @@ public class DrivetrainConstants {
     public static final double drivingEncoderPositionFactor = (wheelDiameterMeters * Math.PI) / drivingMotorReduction; // meters
     public static final double drivingEncoderVelocityFactor = ((wheelDiameterMeters * Math.PI) / drivingMotorReduction) / 60.0; // meters per second
 
-    public static double drivingP = 0.125;
+    public static double drivingP = 0.9;
     public static double drivingI = 0;
     public static double drivingD = 0;
     public static double drivingMinOutput = -1;
@@ -48,9 +48,9 @@ public class DrivetrainConstants {
     public static PersistMode drivingPersist = PersistMode.kNoPersistParameters;
     public static ResetMode drivingReset = ResetMode.kResetSafeParameters;
 
-    public static double turningP = 3.75;
+    public static double turningP = 2;
     public static double turningI = 0;
-    public static double turningD = 0;
+    public static double turningD = 2;
     //sets wrapping for the PIDController
     public static double turningPIDMinInput = 0; // radians
     public static double turningPIDMaxInput = turningEncoderPositionFactor; // radians
@@ -59,7 +59,7 @@ public class DrivetrainConstants {
     public static PersistMode turningPersist = PersistMode.kNoPersistParameters;
     public static ResetMode turningReset = ResetMode.kResetSafeParameters;
 
-    public static int drivingMotorCurrentLimit = 80; // amps
+    public static int drivingMotorCurrentLimit = 20; // amps
     public static int turningMotorCurrentLimit = 20; // amps
 
     public static final double flChassisAngularOffset = 0;
