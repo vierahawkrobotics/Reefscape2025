@@ -20,7 +20,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
-import frc.robot.Components.PositionComponent;
+import frc.robot.Components.PositionComponent.PositionComponent;
 
 public class Drivetrain extends SubsystemBase {
   //TO DO: this can be changed later for area effects etc, note it must be meters/second
