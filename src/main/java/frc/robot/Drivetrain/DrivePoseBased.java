@@ -8,7 +8,6 @@ import frc.robot.Robot;
 
 public class DrivePoseBased extends Command{
     boolean bool;
-
     /**
      * @author Giahna C
      * @param posX Desired x position, meters
@@ -21,6 +20,7 @@ public class DrivePoseBased extends Command{
         bool = boolSupplier.get();
         Robot.instance.drivetrain.setTargetPos(posX, posY);
         Robot.instance.drivetrain.setTargetPosRot(posR);
+        Robot.instance.drivetrain.setIsPointReached(false);
     }
     /**
      * @author Giahna C
@@ -32,6 +32,7 @@ public class DrivePoseBased extends Command{
         bool = boolSupplier.get();
         Robot.instance.drivetrain.setTargetPos(pose.getX(), pose.getY());
         Robot.instance.drivetrain.setTargetPosRot(pose.getRotation().getRadians());
+        Robot.instance.drivetrain.setIsPointReached(false);
     }
     @Override
     public void execute(){
@@ -48,7 +49,8 @@ public class DrivePoseBased extends Command{
     public boolean isFinished() {
         if(bool) return true;
         if(Robot.instance.drivetrain.distance < DrivetrainConstants.validRange && Robot.instance.drivetrain.rotDistance < DrivetrainConstants.validRotDiff && Robot.instance.drivetrain.checkIsRobotStopped()){
-        return true;
+            Robot.instance.drivetrain.setIsPointReached(true);
+            return true;
         }
         return false;
     }

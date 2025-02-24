@@ -25,6 +25,7 @@ import frc.robot.Components.PositionComponent.PositionComponent;
 public class Drivetrain extends SubsystemBase {
   //TO DO: this can be changed later for area effects etc, note it must be meters/second
   double maxSpeed = 1;
+  double maxRotSpeed = Math.PI*(3/2);
   double distance = 0;
   double rotDistance = 0;
 
@@ -69,6 +70,7 @@ public class Drivetrain extends SubsystemBase {
   private double posX;
   private double posY;
   private double posR;
+  private boolean isPointReached = false;
   //targetX, Y, optional R, check velocity zero, radius factor
   private Path path;
 
@@ -144,7 +146,7 @@ public class Drivetrain extends SubsystemBase {
   }
 
   private void DriveVelocity(double desiredvX, double desiredvY, double desiredvRot){
-    Rotation2d currentRotation = PositionComponent.getRobotPose().getRotation();
+    Rotation2d currentRotation = PositionComponent.getRobotPose().getRotation().times(-1);
     ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(desiredvX, desiredvY, desiredvRot, currentRotation);
     SwerveModuleState[] moduleStates = Drivetrain.kinematics.toSwerveModuleStates(speeds);
     
@@ -172,6 +174,12 @@ public class Drivetrain extends SubsystemBase {
     }
     return true;
   }
+  public void setIsPointReached(boolean x){
+    isPointReached = x;
+  }
+  public boolean getIsPointReached(){
+    return isPointReached;
+  }
 
   private void DrivePosition(){
     Pose2d currentRobotPosition = PositionComponent.getRobotPose();
@@ -190,7 +198,8 @@ public class Drivetrain extends SubsystemBase {
   private void DrivePositionRot(){
     double angle = PositionComponent.getRobotPose().getRotation().getRadians();
     rotDistance = angle - posR > 0? posR-angle: angle- posR;
-    velR = rotDistance>DrivetrainConstants.rotTolerance? 1: rotDistance/DrivetrainConstants.rotTolerance;
+    double r = rotDistance>DrivetrainConstants.rotTolerance? 1: rotDistance/DrivetrainConstants.rotTolerance;
+    setTargetVelRot(r);
   }
 
   public void setPath(Path pathInput, Supplier<Boolean> booleanSupplier){
@@ -219,7 +228,7 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public void setTargetVelRot(double vr){
-    velR = vr;
+    velR = vr*maxRotSpeed;
     rotState = RotState.velocity;
   }
 
