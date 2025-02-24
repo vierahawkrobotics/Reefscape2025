@@ -1,5 +1,9 @@
 package frc.robot.ArmSubsystem;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import frc.robot.Components.PositionTools.PositionTools;
+
 public class ArmConstants { // All heights in meters
     public enum HeightState {
         CoralHigh,
@@ -106,7 +110,7 @@ public class ArmConstants { // All heights in meters
     final public static double resetHeightModeBias = 0;
     final public static double containerDropTime = 5; // Seconds
 
-    // Elevator Constants
+    // Arm Constants
     final public static double armHeight = -1; // Arm bottom distance from ground
     final public static double armForwardOffset = 0.2921; // Arm distance from center of robot
     final public static double maxHeight = 100; // Arm max extension length
@@ -121,4 +125,9 @@ public class ArmConstants { // All heights in meters
     final public static double middleLeftIntakeChannel = -0.5;
     final public static double middleRightIntakeChannel = 0.5;
     final public static double farRightIntakeChannel = 1;
+
+    // Other Constants
+    final public static Pose2d origin = new Pose2d();
+    final public static Pose2d offset = new Pose2d(0,armForwardOffset,Rotation2d.fromDegrees(0));
+    final public static Pose2d pose = PositionTools.getPoseTranslated(origin, offset);
 }

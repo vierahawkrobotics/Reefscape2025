@@ -31,12 +31,14 @@ public class DropCoralCommand extends Command {
         switch(state) {
             default:
             case MoveInit: // Set robot target position to reef
-                moveCommand = new SequentialCommandGroup(new DrivePoseBased(PositionTools.closestScorePoseEntry(false),()->{return false;}), new DrivePoseBased(PositionTools.closestScorePose(false,Robot.instance.armSubsystem.limitSwitchOffset),()->{return false;}));
+                Pose2d translatedPremove = PositionTools.getPoseTranslated(PositionTools.closestScorePoseEntry(false), ArmConstants.pose);
+                Pose2d translateMove = PositionTools.getPoseTranslated(PositionTools.closestScorePose(false, Robot.instance.armSubsystem.limitSwitchOffset), ArmConstants.pose);
+                moveCommand = new SequentialCommandGroup(new DrivePoseBased(translatedPremove,()->{return false;}), new DrivePoseBased(translateMove,()->{return false;}));
                 moveCommand.schedule();
                 state = DropState.MovePeriodic;
                 break;
             case MovePeriodic: // Check target
-                if (Robot.instance.drivetrain.DrivePoseBased.isFinished()) {
+                if (Robot.instance.drivetrain.getIsPointReached()) {
                     state = DropState.DropInit;
                 }
                 break;
