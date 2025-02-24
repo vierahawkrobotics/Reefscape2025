@@ -70,6 +70,7 @@ public class Drivetrain extends SubsystemBase {
   private double posX;
   private double posY;
   private double posR;
+  private boolean isPointReached = false;
   //targetX, Y, optional R, check velocity zero, radius factor
   private Path path;
 
@@ -172,6 +173,12 @@ public class Drivetrain extends SubsystemBase {
       if(maxSwerveModules[i].drivingEncoder.getVelocity() > DrivetrainConstants.stoppedVelocity) return false;
     }
     return true;
+  }
+  public void setIsPointReached(boolean x){
+    isPointReached = x;
+  }
+  public boolean getIsPointReached(){
+    return isPointReached;
   }
 
   private void DrivePosition(){
