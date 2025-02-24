@@ -30,7 +30,7 @@ public class ArmSubsystem extends SubsystemBase {
     private double targetHeight = ArmConstants.ground;
     private double curHeight = 0;
     PIDController elevatorPID = new PIDController(ArmConstants.elevatorP, ArmConstants.elevatorI, ArmConstants.elevatorD);
-    private double limitSwitchOffset;
+    public double limitSwitchOffset;
     public double startTime;
 
     public ArmSubsystem() {
