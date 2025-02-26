@@ -2,6 +2,10 @@ package frc.robot.Drivetrain;
 
 import java.util.function.Supplier;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.revrobotics.spark.SparkBase.ControlType;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -12,7 +16,9 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructArrayPublisher;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -96,6 +102,30 @@ public class Drivetrain extends SubsystemBase {
       drivetrainTab.addDouble("Robot velR", () -> {return velR;});
       drivetrainTab.addDouble("Robot velX", () -> {return velX;});
       drivetrainTab.addDouble("Robot velY", () -> {return velY;});
+
+      RobotConfig config;
+      try{
+        config = RobotConfig.fromGUISettings();
+      } catch (Exception e){
+        e.printStackTrace();
+      }
+      AutoBuilder.configure(
+        getPose,//Pose supplier
+        resetPose,//reset odomotry function
+        getRobotRelativeSpeeds,//chassis speed supplier
+        (speeds, feedforwards) -> driveRobotRelative(speeds),
+        new PPHolonomicDriveController(new PIDConstants(5.0,0.0,0.0), new PIDConstants(5.0,0.0,0.0)),
+        config,
+        () ->{
+          var alliance = DriverStation.getAlliance();
+          if (alliance.isPresent()) {
+            return alliance.get() == DriverStation.Alliance.Red;
+          }
+          return false;
+        },
+        this
+
+      );
   }
 
   @Override
