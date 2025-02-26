@@ -1,5 +1,6 @@
 package frc.robot.Drivetrain;
 
+import java.io.Console;
 import java.util.function.Supplier;
 
 import com.revrobotics.spark.SparkBase.ControlType;
@@ -24,7 +25,7 @@ import frc.robot.Components.PositionComponent.PositionComponent;
 
 public class Drivetrain extends SubsystemBase {
   //TO DO: this can be changed later for area effects etc, note it must be meters/second
-  double maxSpeed = 1;
+  double maxSpeed = 1.5;
   double maxRotSpeed = Math.PI*(3/2);
   double distance = 0;
   double rotDistance = 0;
@@ -64,13 +65,17 @@ public class Drivetrain extends SubsystemBase {
   StructArrayPublisher<SwerveModuleState> publisher = NetworkTableInstance.getDefault()
 .getStructArrayTopic("MyStates", SwerveModuleState.struct).publish();
   
-  private double velX;
-  private double velY;
-  private double velR;
+private double velX;
+private double velY;
+private double velR;
+private double velTX;
+private double velTY;
+private double velTR;
   private double posX;
   private double posY;
   private double posR;
   private boolean isPointReached = false;
+  private boolean isRotationReached = false;
   //targetX, Y, optional R, check velocity zero, radius factor
   private Path path;
 
@@ -83,26 +88,30 @@ public class Drivetrain extends SubsystemBase {
   .withSize(2,2);
 
   public Drivetrain() {
-      drivingPIDs.add("P", DrivetrainConstants.drivingP);
-      drivingPIDs.add("I", DrivetrainConstants.drivingI);
-      drivingPIDs.add("D", DrivetrainConstants.drivingD);
+      //drivingPIDs.add("P", DrivetrainConstants.drivingP);
+      //drivingPIDs.add("I", DrivetrainConstants.drivingI);
+      //drivingPIDs.add("D", DrivetrainConstants.drivingD);
 
-      turningPIDs.add("P", DrivetrainConstants.turningP);
-      turningPIDs.add("I", DrivetrainConstants.turningI);
-      turningPIDs.add("D", DrivetrainConstants.turningD);
+      //turningPIDs.add("P", DrivetrainConstants.turningP);
+      //turningPIDs.add("I", DrivetrainConstants.turningI);
+      //turningPIDs.add("D", DrivetrainConstants.turningD);
 
-      drivetrainTab.addDouble("Robot rot", () -> {return PositionComponent.getRobotPose().getRotation().getRadians(); });
+      //drivetrainTab.addDouble("Robot rot", () -> {return PositionComponent.getRobotPose().getRotation().getRadians(); });
 
-      drivetrainTab.addDouble("Robot velR", () -> {return velR;});
-      drivetrainTab.addDouble("Robot velX", () -> {return velX;});
-      drivetrainTab.addDouble("Robot velY", () -> {return velY;});
+      drivetrainTab.addDouble("Robot velR", () -> {return velTR;});
+      drivetrainTab.addDouble("Robot velX", () -> {return velTX;});
+      drivetrainTab.addDouble("Robot velY", () -> {return velTY;});
+
+      drivetrainTab.addDouble("Robot posR", () -> {return posR;});
+      drivetrainTab.addDouble("Robot posX", () -> {return posX;});
+      drivetrainTab.addDouble("Robot posY", () -> {return posY;});
   }
 
   @Override
   public void periodic() {
-
     if (translateState == TranslateState.position){
       DrivePosition();
+      System.out.println("DrivePosition() Called");
     }
     else if (translateState == TranslateState.path){
       
@@ -130,10 +139,14 @@ public class Drivetrain extends SubsystemBase {
 
     if (rotState == RotState.position){
       DrivePositionRot();
+      System.out.println("DrivePositionRot() Called");
     }
 
     DriveVelocity(velX, velY, velR);
     
+    velTX = velX;
+    velTY = velY;
+    velTR = velR;
     
     velX = 0;
     velY = 0;
@@ -174,14 +187,15 @@ public class Drivetrain extends SubsystemBase {
     }
     return true;
   }
-  public void setIsPointReached(boolean x){
-    isPointReached = x;
-  }
   public boolean getIsPointReached(){
-    return isPointReached;
+    return Robot.instance.drivetrain.distance < DrivetrainConstants.validRange;
+  }
+  public boolean getIsRotationReached(){
+    return Robot.instance.drivetrain.rotDistance < DrivetrainConstants.validRotDiff;
   }
 
   private void DrivePosition(){
+
     Pose2d currentRobotPosition = PositionComponent.getRobotPose();
     //robot current position
     Vector R = new Vector(currentRobotPosition.getX(), currentRobotPosition.getY());
@@ -194,12 +208,13 @@ public class Drivetrain extends SubsystemBase {
     Vector V = (T.subtract(R)).normalize();
     double scaleFactor = distance>DrivetrainConstants.pointTolerance? 1: distance/DrivetrainConstants.pointTolerance;
     setTargetVel(V.x*scaleFactor, V.y*scaleFactor, false);
+    System.out.println("Vector Math in DrivePosition done, setTargetVel called: " + V.x + ", " + V.y);
   }
   private void DrivePositionRot(){
     double angle = PositionComponent.getRobotPose().getRotation().getRadians();
     rotDistance = angle - posR > 0? posR-angle: angle- posR;
     double r = rotDistance>DrivetrainConstants.rotTolerance? 1: rotDistance/DrivetrainConstants.rotTolerance;
-    setTargetVelRot(r);
+    setTargetVelRot(r, false);
   }
 
   public void setPath(Path pathInput, Supplier<Boolean> booleanSupplier){
@@ -225,16 +240,22 @@ public class Drivetrain extends SubsystemBase {
     posX = pX;
     posY = pY;
     translateState = TranslateState.position;
+    isPointReached = false;
   }
 
   public void setTargetVelRot(double vr){
+    setTargetVelRot(vr, true);
+  }
+
+  public void setTargetVelRot(double vr, boolean setToVelMode){
     velR = vr*maxRotSpeed;
-    rotState = RotState.velocity;
+    if(setToVelMode) rotState = RotState.velocity;
   }
 
   public void setTargetPosRot(double pR){
     posR = pR;
     rotState = RotState.position;
+    isRotationReached = false;
   }
 
   private void setDesiredStates(SwerveModuleState[] desiredStates){
