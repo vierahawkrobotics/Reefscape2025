@@ -4,12 +4,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 
 public class ElevatorUpDownCommand extends Command {
-    private boolean up;
-    private boolean down;
-    public ElevatorUpDownCommand(boolean up, boolean down) {
+    private boolean move;
+    public ElevatorUpDownCommand(boolean move) { // move = true = up, move = false = down
         addRequirements(Robot.instance.armSubsystem);
-        this.up = up;
-        this.down = down;
+        this.move = move;
     }
 
     @Override
@@ -18,31 +16,21 @@ public class ElevatorUpDownCommand extends Command {
     @Override
     public void execute() {
         double height = Robot.instance.armSubsystem.getTargetHeight();
-        if (up) { // Check go up
-            if(height == ArmConstants.HeightState.CoralHigh.getHeight()) {
-                Robot.instance.armSubsystem.setHeightState(ArmConstants.HeightState.AlgaeHigh);
-            }
-            else if(height == ArmConstants.HeightState.AlgaeLow.getHeight()) {
+        if (move) { // Check go up
+            if(height == ArmConstants.HeightState.CoralLow.getHeight() || height == ArmConstants.HeightState.AlgaeLow.getHeight()) {
                 Robot.instance.armSubsystem.setHeightState(ArmConstants.HeightState.CoralHigh);
-            }
-            else if(height == ArmConstants.HeightState.CoralLow.getHeight()) {
-                Robot.instance.armSubsystem.setHeightState(ArmConstants.HeightState.AlgaeLow);
-            }
-            else { //error or ground
+            } else if (height == ArmConstants.HeightState.Collect.getHeight()) {
                 Robot.instance.armSubsystem.setHeightState(ArmConstants.HeightState.CoralLow);
+            } else { // Error or Ground State
+                Robot.instance.armSubsystem.setHeightState(ArmConstants.HeightState.Collect);
             }
-        } else if (down) { // Check go down
-            if(height == ArmConstants.HeightState.CoralLow.getHeight()) {
+        } else if (!move) { // Check go down
+            if (height == ArmConstants.HeightState.CoralHigh.getHeight() || height == ArmConstants.HeightState.AlgaeHigh.getHeight()) {
+                Robot.instance.armSubsystem.setHeightState(ArmConstants.HeightState.CoralLow);
+            } else if (height == ArmConstants.HeightState.CoralLow.getHeight()) {
+                Robot.instance.armSubsystem.setHeightState(ArmConstants.HeightState.Collect);
+            } else { // Error or Collect State
                 Robot.instance.armSubsystem.setHeightState(ArmConstants.HeightState.Ground);
-            }
-            else if(height == ArmConstants.HeightState.AlgaeLow.getHeight()) {
-                Robot.instance.armSubsystem.setHeightState(ArmConstants.HeightState.CoralLow);
-            }
-            else if(height == ArmConstants.HeightState.CoralHigh.getHeight()) {
-                Robot.instance.armSubsystem.setHeightState(ArmConstants.HeightState.AlgaeLow);
-            }
-            else { //error or algaehigh
-                Robot.instance.armSubsystem.setHeightState(ArmConstants.HeightState.AlgaeHigh);
             }
         }
     }

@@ -1,4 +1,4 @@
-package frc.robot.climber;
+package frc.robot.Climber;
 
 import java.lang.Math;
 

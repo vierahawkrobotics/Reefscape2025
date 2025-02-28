@@ -10,21 +10,21 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.ArmSubsystem.*;
+import frc.robot.Climber.*;
 import frc.robot.Components.*;
 import frc.robot.Components.PositionComponent.PositionComponent;
 import frc.robot.Drivetrain.Drive3D;
 import frc.robot.Drivetrain.Drivetrain;
 import frc.robot.Drivetrain.DrivetrainConstants;
 import frc.robot.Match.*;
-import frc.robot.subsystemExample.ExampleSubsystem;
 import frc.robot.Testing.*;
 
 public class Robot extends TimedRobot {
   ///use a to climb
   public static Robot instance;
-  public ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
   public XboxController controller = new XboxController(0);
   public ArmSubsystem armSubsystem = new ArmSubsystem();
+  public climbersubmarine climberSubsystem = new climbersubmarine();
   public Drivetrain drivetrain = new Drivetrain();
   public PositionComponent positionComponent = PositionComponent.getInstance();
   @Override
@@ -32,7 +32,6 @@ public class Robot extends TimedRobot {
     GUI.initialize();
     ComponentManager.Initialize();
     instance = this;
-
 
     RobotState.Initialize();
   }

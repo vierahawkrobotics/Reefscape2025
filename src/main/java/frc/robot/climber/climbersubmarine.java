@@ -7,12 +7,6 @@ import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
 
-enum climberstate {
-    Close,
-    Open,
-}
-// defines the possible states of the climber subsystem
-
 public class climbersubmarine extends SubsystemBase{
     private SparkFlex roborobotLeft;
     private SparkFlex roborobotRight;
@@ -22,10 +16,8 @@ public class climbersubmarine extends SubsystemBase{
     private double posl;
     private PIDController pidr = new PIDController(Constants.p, Constants.i, Constants.d);
     private PIDController pidl = new PIDController(Constants.p2, Constants.i2, Constants.d2);
-    private climberstate state = climberstate.Open;
+    public climberstate state = climberstate.Open;
     // defines motors, pids, positions, and state variables
-
-
 
     public climbersubmarine(){
         System.out.println("Climber submarine initialized");
@@ -70,6 +62,9 @@ public class climbersubmarine extends SubsystemBase{
         state = newstate;
     }
     //function to set state of the climber
+    public climberstate getState() {
+        return state;
+    }
     private void calcPos(){
         System.out.println("Periodic Position Calculated");
         posr = encoder.getPosition()*Constants.rotToRad;
@@ -78,4 +73,9 @@ public class climbersubmarine extends SubsystemBase{
         System.out.printf("Posl: %d", posl);
     }
     //calculates the position of the climber arms
+    public enum climberstate {
+        Close,
+        Open,
+    }
+    // defines the possible states of the climber subsystem
 }

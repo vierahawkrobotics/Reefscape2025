@@ -15,11 +15,11 @@ enum RemoveAlgaeState {
 
 public class RemoveAlgaeCommand extends Command {
     private RemoveAlgaeState state = RemoveAlgaeState.SetupInit;
-    ArmConstants.AlgaeDropState target;
-    public RemoveAlgaeCommand(ArmConstants.AlgaeDropState target) {
+    double height;
+    public RemoveAlgaeCommand() {
         addRequirements(Robot.instance.armSubsystem);
         addRequirements(Robot.instance.drivetrain);
-        this.target = target;
+        height = Robot.instance.armSubsystem.getTargetHeight();
     }
 
     @Override
@@ -53,7 +53,11 @@ public class RemoveAlgaeCommand extends Command {
                     state = RemoveAlgaeState.EjectInit;
                 break;
             case EjectInit://eject algae
-                Robot.instance.armSubsystem.setHeightState(target.getHeight());
+                if (height == ArmConstants.HeightState.CoralLow.getHeight() || height == ArmConstants.HeightState.Collect.getHeight() || height == ArmConstants.HeightState.Ground.getHeight()) {
+                    Robot.instance.armSubsystem.setHeightState(ArmConstants.HeightState.AlgaeLow);
+                } else {
+                    Robot.instance.armSubsystem.setHeightState(ArmConstants.HeightState.AlgaeHigh);
+                }
                 state = RemoveAlgaeState.EjectPeriodic;
                 break;
             case EjectPeriodic://check if at target height
