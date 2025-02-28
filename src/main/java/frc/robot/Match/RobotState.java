@@ -2,6 +2,7 @@ package frc.robot.Match;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
 import frc.robot.ArmSubsystem.CollectCoralCommand;
 import frc.robot.ArmSubsystem.DropCoralCommand;
@@ -32,8 +33,8 @@ public class RobotState {
         new JoystickButton(controller2, XboxController.Button.kY.value).onTrue(new CollectCoralCommand());
         new JoystickButton(controller2, XboxController.Button.kA.value).onTrue(new DropCoralCommand());
         //  Elevator
-        new JoystickButton(controller2, XboxController.Button.kLeftBumper.value).onTrue(new ElevatorUpDownCommand(true));
-        new JoystickButton(controller2, XboxController.Button.kRightBumper.value).onTrue(new ElevatorUpDownCommand(false));
+        new Trigger(()->{return controller2.getPOV() == 0;}).onTrue(new ElevatorUpDownCommand(true));
+        new Trigger(()->{return controller2.getPOV() == 180;}).onTrue(new ElevatorUpDownCommand(false));
         //  Algae
         new JoystickButton(controller2, XboxController.Button.kX.value).onTrue(new RemoveAlgaeCommand());
         //  Climber
