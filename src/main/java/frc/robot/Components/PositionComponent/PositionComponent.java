@@ -10,9 +10,11 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
+import frc.robot.Components.LimelightComponent;
 import frc.robot.Components.PositionComponent.PositionComponentSettings.*;
 import frc.robot.Components.PositionTools.PositionTools;
 import frc.robot.Drivetrain.Drivetrain;
@@ -52,8 +54,12 @@ public class PositionComponent {
         }
         return instance;
     }
+    public static void zeroPos(){
+        gryoObject.zeroYaw();
+        poseEstimator.resetPose(new Pose2d(0,0,Rotation2d.fromRadians(0)));
+    }
     public static Pose2d getRobotPose() {
-        return poseEstimator.getEstimatedPosition();
+        return lastPose[0];
     }
     
     public static Pose2d getPoseTranslated(Pose2d offset){
@@ -81,12 +87,15 @@ public class PositionComponent {
         return gryoObject.getRotation2d().getDegrees();
     }
 
-    public static void updatePose(){
-        poseEstimator.addVisionMeasurement(getRobotPose(), edu.wpi.first.wpilibj.Timer.getFPGATimestamp());
+    public static void updatePose(Pose2d limelightPos){
+        if(PositionTools.poseDist(getRobotPose(),limelightPos) <= PositionComponentSettings.maxLimelightDistance){
+            poseEstimator.addVisionMeasurement(limelightPos, edu.wpi.first.wpilibj.Timer.getFPGATimestamp());
+        }
     }
 
     public static void periodic(){
         poseEstimator.update(Rotation2d.fromDegrees(gryoObject.getAngle()), Drivetrain.getSwerveModulePositions());
+        if(LimelightComponent.calcAprilTag() != null) updatePose(LimelightComponent.calcAprilTag());
         lastTimestamp[1] = lastTimestamp[0];
         lastTimestamp[0] = edu.wpi.first.wpilibj.RobotController.getFPGATime();
         lastPose[1] = lastPose[1];

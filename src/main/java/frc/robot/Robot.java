@@ -28,6 +28,7 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     GUI.initialize();
     ComponentManager.Initialize();
+    PositionComponent.zeroPos();
     instance = this;
 
 

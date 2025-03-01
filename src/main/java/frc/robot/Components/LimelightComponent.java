@@ -19,15 +19,13 @@ public class LimelightComponent {
         LimelightHelpers.PoseEstimate limelightMeasurement = null;
         boolean hasTarget = LimelightHelpers.getTV("");
 
-        if(hasTarget){
-            Optional<Alliance> ally = DriverStation.getAlliance();
-            if (ally.isPresent()) {
-                if (ally.get() == Alliance.Red) {
-                    limelightMeasurement = LimelightHelpers.getBotPoseEstimate_wpiRed("");
-                } else if(ally.get() == Alliance.Blue){
-                    limelightMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue("");
-                }
-            }
+        Optional<Alliance> ally = DriverStation.getAlliance();
+        if(!hasTarget || ally.isEmpty()) return null;
+        
+        if (ally.get() == Alliance.Red) {
+            limelightMeasurement = LimelightHelpers.getBotPoseEstimate_wpiRed("");
+        } else if(ally.get() == Alliance.Blue){
+            limelightMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue("");
         }
 
         if(limelightMeasurement != null){

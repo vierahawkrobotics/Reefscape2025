@@ -11,4 +11,5 @@ public class PositionComponentSettings {
         kAverage
     }
     public static final velType defaultVelType = velType.kOdometry;
+    public static final double maxLimelightDistance = 1;
 }
