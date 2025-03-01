@@ -1,7 +1,5 @@
 package frc.robot.Components.PositionComponent;
 
-import java.util.Optional;
-
 import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
 
@@ -10,7 +8,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
@@ -87,9 +84,9 @@ public class PositionComponent {
         return gryoObject.getRotation2d().getDegrees();
     }
 
-    public static void updatePose(Pose2d limelightPos){
-        if(PositionTools.poseDist(getRobotPose(),limelightPos) <= PositionComponentSettings.maxLimelightDistance){
-            poseEstimator.addVisionMeasurement(limelightPos, edu.wpi.first.wpilibj.Timer.getFPGATimestamp());
+    public static void updatePose(LimelightComponent.PoseWithTimestamp limelightPos){
+        if(PositionTools.poseDist(getRobotPose(),limelightPos.pose) <= PositionComponentSettings.maxLimelightDistance){
+            poseEstimator.addVisionMeasurement(limelightPos.pose, limelightPos.timestamp);
         }
     }
 
