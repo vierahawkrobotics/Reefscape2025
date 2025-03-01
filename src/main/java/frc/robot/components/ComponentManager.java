@@ -34,6 +34,8 @@ public class ComponentManager {
         posTab.addDouble("Limelight Estimated X", ()->{return LimelightComponent.getLastAprilTag().getX();});
         posTab.addDouble("Limelight Estimated Y", ()->{return LimelightComponent.getLastAprilTag().getY();});
         posTab.addDouble("Limelight Estimated Rotation (degrees)", ()->{return LimelightComponent.getLastAprilTag().getRotation().getDegrees();});
+
+        posTab.addBoolean("Limelight Target Found", ()->{return LimelightComponent.active();});
     }
     public static void Periodic() {
         PositionComponent.periodic();

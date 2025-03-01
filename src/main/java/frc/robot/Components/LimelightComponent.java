@@ -1,6 +1,7 @@
 package frc.robot.Components;
 
 import frc.robot.LimelightHelpers;
+import frc.robot.Components.PositionComponent.PositionComponentSettings;
 
 import java.util.Optional;
 
@@ -16,6 +17,9 @@ public class LimelightComponent {
     }
 
     private static Pose2d lPos = new Pose2d();
+    public static boolean active(){
+        return LimelightHelpers.getTV(PositionComponentSettings.limelightName);
+    }
     public static Pose2d getLastAprilTag(){
         calcAprilTag();
         return lPos;
@@ -23,15 +27,15 @@ public class LimelightComponent {
     }
     public static PoseWithTimestamp calcAprilTag() {
         LimelightHelpers.PoseEstimate limelightMeasurement = null;
-        boolean hasTarget = LimelightHelpers.getTV("");
+        boolean hasTarget = LimelightHelpers.getTV(PositionComponentSettings.limelightName);
 
         Optional<Alliance> ally = DriverStation.getAlliance();
         if(!hasTarget || ally.isEmpty()) return null;
 
         if (ally.get() == Alliance.Red) {
-            limelightMeasurement = LimelightHelpers.getBotPoseEstimate_wpiRed("");
+            limelightMeasurement = LimelightHelpers.getBotPoseEstimate_wpiRed(PositionComponentSettings.limelightName);
         } else if(ally.get() == Alliance.Blue){
-            limelightMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue("");
+            limelightMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue(PositionComponentSettings.limelightName);
         }
 
         if(limelightMeasurement != null){
