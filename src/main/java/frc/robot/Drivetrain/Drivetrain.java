@@ -139,16 +139,10 @@ public class Drivetrain extends SubsystemBase{
         Pose2d currentRobotPosition = PositionComponent.getRobotPose();
         //robot current position
         Vector R = new Vector(currentRobotPosition.getX(), currentRobotPosition.getY());
-        System.out.println("R.x:" + R.x);
-        System.out.println("R.y:" + R.y);
         //target position
         Vector T = new Vector(posX, posY);
-        System.out.println("T.x:" + T.x);
-        System.out.println("T.y:" + T.y);
         //normal vector
         Vector V = (T.subtract(R)).normalize();
-        System.out.println("V.x:" + V.x);
-        System.out.println("V.y:" + V.y);
         double scaleFactor = distance>DrivetrainConstants.pointTolerance? 1: distance/DrivetrainConstants.pointTolerance;
         VxSB = V.x;
         VySB = V.y;

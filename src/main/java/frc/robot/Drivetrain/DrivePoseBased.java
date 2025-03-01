@@ -11,24 +11,28 @@ public class DrivePoseBased extends Command{
     double r;
     Supplier<Boolean> stopButton;
     public DrivePoseBased(double x, double y, double r, Supplier<Boolean> stopButton){
+        addRequirements(Robot.instance.drivetrain);
         this.x = x;
         this.y = y;
         this.r = r;
         this.stopButton = stopButton;
     }
     public DrivePoseBased(double x, double y, double r){
+        addRequirements(Robot.instance.drivetrain);
         this.x = x;
         this.y = y;
         this.r = r;
         this.stopButton = () -> {return false;};
     }
     public DrivePoseBased(Pose2d pose, Supplier<Boolean> stopButton){
+        addRequirements(Robot.instance.drivetrain);
         this.x = pose.getX();
         this.y = pose.getY();
         this.r = pose.getRotation().getRadians();
         this.stopButton = stopButton;
     }
     public DrivePoseBased(Pose2d pose){
+        addRequirements(Robot.instance.drivetrain);
         this.x = pose.getX();
         this.y = pose.getY();
         this.r = pose.getRotation().getRadians();
@@ -37,7 +41,7 @@ public class DrivePoseBased extends Command{
     @Override
     public void initialize() {
         Robot.instance.drivetrain.setTargetPos(x, y);
-        Robot.instance.drivetrain.setTargetPosRot(r);
+        //Robot.instance.drivetrain.setTargetPosRot(r);
         System.out.println("Initialize run");
     }
     @Override

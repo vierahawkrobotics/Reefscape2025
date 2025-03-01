@@ -10,13 +10,13 @@ public class RobotState {
         controller = new XboxController(0);
         //new JoystickButton(controller, XboxController.Button.kA.value).onTrue(null);
 
-        // Robot.instance.drivetrain.setDefaultCommand(new Drive3D(() -> {
-        //     return controller.getLeftY();
-        // }, () -> {
-        //     return controller.getLeftX();
-        // }, () -> {
-        //     return controller.getRightX();
-        // }));
+        Robot.instance.drivetrain.setDefaultCommand(new Drive3D(() -> {
+            return controller.getLeftY();
+        }, () -> {
+            return controller.getLeftX();
+        }, () -> {
+            return controller.getRightX();
+        }));
     }
     public static void Periodic() {}
 }
