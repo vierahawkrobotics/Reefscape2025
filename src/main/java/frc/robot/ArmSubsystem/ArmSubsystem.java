@@ -49,6 +49,7 @@ public class ArmSubsystem extends SubsystemBase {
         SparkBaseConfig elevatorFollowerConfig = new SparkFlexConfig();
         elevatorFollowerConfig
             .follow(elevator)
+            .inverted(true)
             .idleMode(IdleMode.kBrake);
         elevatorFollower.configure(elevatorFollowerConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kNoPersistParameters);
 
@@ -204,7 +205,7 @@ public class ArmSubsystem extends SubsystemBase {
                     container.set(0);
                 }
                 else {
-                    container.set(ArmConstants.containerMotorSpeed);
+                    container.set(-ArmConstants.containerMotorSpeed);
                 }
                 break;
             case Drop:
@@ -213,7 +214,7 @@ public class ArmSubsystem extends SubsystemBase {
                     container.set(0);
                 }
                 else {
-                    container.set(-ArmConstants.containerMotorSpeed);
+                    container.set(ArmConstants.containerMotorSpeed);
                 }
                 break;
         }

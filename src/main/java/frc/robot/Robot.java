@@ -21,7 +21,6 @@ import frc.robot.subsystemExample.ExampleSubsystem;
 public class Robot extends TimedRobot {
   ///use a to climb
   public static Robot instance;
-  public XboxController controller = new XboxController(0);
   public ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
   public ArmSubsystem armSubsystem = new ArmSubsystem();
   public climbersubmarine climberSubsystem = new climbersubmarine();

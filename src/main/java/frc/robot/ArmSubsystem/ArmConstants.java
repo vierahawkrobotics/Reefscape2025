@@ -92,13 +92,14 @@ public class ArmConstants { // All heights in meters
     // Motors Constants
     final public static int elevatorMotorID = 11;
     final public static int elevatorFollowMotorID = 12;
-    final public static int containerMotorID = 13;
-    final public static int containerFollowMotorID = 14;
+    final public static int containerMotorID = 13; //bottom
+    final public static int containerFollowMotorID = 14; //top
     final public static int algaeMotorID = 15;
     final public static double algaeMotorSpeed = 1;
-    final public static double containerMotorSpeed = 1;
+    final public static double containerMotorSpeed = 0.1;
     public static final double encoderPositionFactor = (2 * Math.PI); // radians
     public static final double encoderVelocityFactor = (2 * Math.PI) / 60.0; // radians per second
+    public static final int maxAmp = 10;
 
     // Elevator Constants
     final public static double elevatorP = 1;
@@ -113,11 +114,11 @@ public class ArmConstants { // All heights in meters
     // Arm Constants
     final public static double armHeight = -1; // Arm bottom distance from ground
     final public static double armForwardOffset = 0.2921; // Arm distance from center of robot
-    final public static double maxHeight = 100; // Arm max extension length
-    final public static double collectHeight = 1; // Height to intake from collecetion area
-    final public static double ground = 0; // Arm lowest height (L1)
+    final public static double maxHeight = 0.4699; // Arm max extension length
+    final public static double collectHeight = 100; // Height to intake from collecetion area
+    final public static double ground = 0.33; // L1
     final public static double low = 0.81; // L2
-    final public static double high = 1.83; // L3
+    final public static double high = 1.21; // L3
     final public static double algaeOffset = 0.1; // How much higher algae is than coral placement
 
     // Intake Constants
