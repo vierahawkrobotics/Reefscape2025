@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import frc.robot.Components.PositionComponent.PositionComponentSettings.*;
 import frc.robot.Components.PositionTools.PositionTools;
-import frc.robot.Drivetrain.Drivetrain;
+import frc.robot.Drivetrain.OldDrivetrain;
 
 /**
  * @todo: Implement
@@ -33,7 +33,7 @@ public class PositionComponent {
         gryoObject = new AHRS(NavXComType.kMXP_SPI);
         gryoObject.reset();
         Rotation2d initialRot = Rotation2d.fromDegrees(gryoObject.getAngle());
-        poseEstimator = new SwerveDrivePoseEstimator(Drivetrain.kinematics, initialRot, Drivetrain.getSwerveModulePositions(), initialPose); // Fix kinematics and modulePositions parameter
+        poseEstimator = new SwerveDrivePoseEstimator(OldDrivetrain.kinematics, initialRot, OldDrivetrain.getSwerveModulePositions(), initialPose); // Fix kinematics and modulePositions parameter
         lastPose[0] = poseEstimator.getEstimatedPosition();
         lastPose[1] = poseEstimator.getEstimatedPosition();
 
@@ -86,7 +86,7 @@ public class PositionComponent {
     }
 
     public static void periodic(){
-        poseEstimator.update(Rotation2d.fromDegrees(gryoObject.getAngle()), Drivetrain.getSwerveModulePositions());
+        poseEstimator.update(Rotation2d.fromDegrees(gryoObject.getAngle()), OldDrivetrain.getSwerveModulePositions());
         lastTimestamp[1] = lastTimestamp[0];
         lastTimestamp[0] = edu.wpi.first.wpilibj.RobotController.getFPGATime();
         lastPose[1] = lastPose[1];

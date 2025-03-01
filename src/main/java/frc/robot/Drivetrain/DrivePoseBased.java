@@ -1,6 +1,5 @@
 package frc.robot.Drivetrain;
 
-import java.io.Console;
 import java.util.function.Supplier;
 
 import edu.wpi.first.math.geometry.Pose2d;

@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Components.*;
 import frc.robot.Components.PositionComponent.PositionComponent;
 import frc.robot.Drivetrain.Drive3D;
-import frc.robot.Drivetrain.Drivetrain;
+import frc.robot.Drivetrain.OldDrivetrain;
 import frc.robot.Drivetrain.DrivetrainConstants;
 import frc.robot.Match.*;
 import frc.robot.subsystemExample.ExampleSubsystem;
@@ -22,7 +22,7 @@ public class Robot extends TimedRobot {
   public static Robot instance;
   public ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
   public XboxController controller = new XboxController(0);
-  public Drivetrain drivetrain = new Drivetrain();
+  public OldDrivetrain drivetrain = new OldDrivetrain();
   public PositionComponent positionComponent = PositionComponent.getInstance();
   @Override
   public void robotInit() {

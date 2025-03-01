@@ -7,6 +7,8 @@ import edu.wpi.first.math.geometry.Translation2d;
 
 public class DrivetrainConstants {
     public static double inputDeadband = 0.12;
+    public static double maxSpeed = 1;
+    public static double maxRotSpeed = Math.PI;
     public static double physicalSpeedLimit = 3.5; // meters per second
     public static double physicalRotSpeedLimit = 18; // rad per second
 
@@ -71,6 +73,9 @@ public class DrivetrainConstants {
     public static double pointTolerance = 0.01;
     //the rotation version of what's above
     public static double rotTolerance = 0.17;
+    //the value to divide the velocity by when within tolerance
+    public static double divNumber = 2;
+    public static double divNumberRot = 2;
     /*the speed(meters/second) at which the robot is considered stopped during
     a path, this will be checked on each SwerveModule individually*/
     public static double stoppedVelocity = 0.02;
