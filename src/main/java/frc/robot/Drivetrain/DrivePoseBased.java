@@ -1,5 +1,4 @@
 package frc.robot.Drivetrain;
-
 import java.util.function.Supplier;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -10,41 +9,30 @@ public class DrivePoseBased extends Command{
     double x;
     double y;
     double r;
-    Supplier<Boolean> bSupplier;
-    /**
-     * @author Giahna C
-     * @param posX Desired x position, meters
-     * @param posY Desired y position, meters
-     * @param posR Desired robot rotation, radians
-     * @param boolSupplier Button to quit go to
-     */
-    public DrivePoseBased(double posX, double posY, double posR, Supplier<Boolean> boolSupplier ){
-        bSupplier = boolSupplier;
-        x = posX;
-        y = posY;
-        r = posR;
+    Supplier<Boolean> stopButton;
+    public DrivePoseBased(double x, double y, double r, Supplier<Boolean> stopButton){
+        this.x = x;
+        this.y = y;
+        this.r = r;
+        this.stopButton = stopButton;
     }
-    /**
-     * @author Giahna C
-     * @param posX Desired x position, meters
-     * @param posY Desired y position, meters
-     * @param posR Desired robot rotation, radians
-     */
-    public DrivePoseBased(double posX, double posY, double posR){
-        x = posX;
-        y = posY;
-        r = posR;
+    public DrivePoseBased(double x, double y, double r){
+        this.x = x;
+        this.y = y;
+        this.r = r;
+        this.stopButton = () -> {return false;};
     }
-    /**
-     * @author Giahna C
-     * @param pose Desired position containing an x, y, and rotation in meters & radians
-     * @param boolSupplier Button to quit go to
-     */
-    public DrivePoseBased(Pose2d pose, Supplier<Boolean> boolSupplier){
-        x = pose.getX();
-        y = pose.getY();
-        r = pose.getRotation().getRadians();
-        bSupplier = boolSupplier;
+    public DrivePoseBased(Pose2d pose, Supplier<Boolean> stopButton){
+        this.x = pose.getX();
+        this.y = pose.getY();
+        this.r = pose.getRotation().getRadians();
+        this.stopButton = stopButton;
+    }
+    public DrivePoseBased(Pose2d pose){
+        this.x = pose.getX();
+        this.y = pose.getY();
+        this.r = pose.getRotation().getRadians();
+        this.stopButton = () -> {return false;};
     }
     @Override
     public void initialize() {
@@ -52,31 +40,16 @@ public class DrivePoseBased extends Command{
         Robot.instance.drivetrain.setTargetPosRot(r);
     }
     @Override
-    public void execute(){
-        
-    }
+    public void execute(){}
 
     @Override
-    public void end(boolean interrupted) {
-        System.out.println("finished posirion stuff");
-        if(interrupted) System.out.println("INTERP");
+    public void end(boolean interrupted){}
+    @Override
+    public boolean isFinished(){
+        return (stopButton.get()) || 
+        (Robot.instance.drivetrain.getIsPointReached() 
+        && Robot.instance.drivetrain.getIsRotationReached()
+        && Robot.instance.drivetrain.checkIsRobotStopped());
     }
 
-    /**
-     * @author Giahna C
-     * @return Returns whether robot has arrived at the position or not
-     */
-    @Override
-    public boolean isFinished() {
-        if(bSupplier != null && bSupplier.get()) {
-            return true;
-        }
-        if(Robot.instance.drivetrain.getIsPointReached() &&
-        Robot.instance.drivetrain.getIsRotationReached() &&
-        Robot.instance.drivetrain.checkIsRobotStopped()){
-            System.out.println("Position Reached");
-            return true;
-        }
-        return false;
-    }
 }

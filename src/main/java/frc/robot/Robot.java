@@ -4,16 +4,13 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Components.*;
 import frc.robot.Components.PositionComponent.PositionComponent;
-import frc.robot.Drivetrain.Drive3D;
-import frc.robot.Drivetrain.OldDrivetrain;
-import frc.robot.Drivetrain.DrivetrainConstants;
+import frc.robot.Drivetrain.Drivetrain;
 import frc.robot.Match.*;
 import frc.robot.subsystemExample.ExampleSubsystem;
 import frc.robot.Testing.*;
@@ -22,7 +19,7 @@ public class Robot extends TimedRobot {
   public static Robot instance;
   public ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
   public XboxController controller = new XboxController(0);
-  public OldDrivetrain drivetrain = new OldDrivetrain();
+  public Drivetrain drivetrain = new Drivetrain();
   public PositionComponent positionComponent = PositionComponent.getInstance();
   @Override
   public void robotInit() {

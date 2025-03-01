@@ -6,11 +6,12 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Robot;
+import frc.robot.Components.AreaEffects.AreaEffectsHandler;
 import frc.robot.Components.PositionComponent.PositionComponent;
 
 public class Drivetrain extends SubsystemBase{
@@ -26,10 +27,14 @@ public class Drivetrain extends SubsystemBase{
     );
     //physical parts
     public static MAXSwerveModule[] maxSwerveModules = {
-        new MAXSwerveModule(DrivetrainConstants.flDrivingID,DrivetrainConstants.flTurningID,DrivetrainConstants.flChassisAngularOffset),
-        new MAXSwerveModule(DrivetrainConstants.frDrivingID,DrivetrainConstants.frTurningID,DrivetrainConstants.frChassisAngularOffset),
-        new MAXSwerveModule(DrivetrainConstants.blDrivingID,DrivetrainConstants.blTurningID,DrivetrainConstants.blChassisAngularOffset),
-        new MAXSwerveModule(DrivetrainConstants.brDrivingID,DrivetrainConstants.brTurningID,DrivetrainConstants.brChassisAngularOffset)
+        new MAXSwerveModule(DrivetrainConstants.flDrivingID,DrivetrainConstants
+        .flTurningID,DrivetrainConstants.flChassisAngularOffset),
+        new MAXSwerveModule(DrivetrainConstants.frDrivingID,DrivetrainConstants
+        .frTurningID,DrivetrainConstants.frChassisAngularOffset),
+        new MAXSwerveModule(DrivetrainConstants.blDrivingID,DrivetrainConstants
+        .blTurningID,DrivetrainConstants.blChassisAngularOffset),
+        new MAXSwerveModule(DrivetrainConstants.brDrivingID,DrivetrainConstants
+        .brTurningID,DrivetrainConstants.brChassisAngularOffset)
       };
     /*states for translation and rotation
     roatation state path doesn't do anything 
@@ -56,17 +61,19 @@ public class Drivetrain extends SubsystemBase{
     private double posR =0; //radians
     //distance for pos based control
     private double distance = 0;
+    private double rotDistance;
     //velocities for applyDrivetrain
     private double appliedX = 0;
     private double appliedY = 0;
     private double appliedR = 0;
-    //velocities for shuffleBoard
+    //velocities and other vars for shuffleBoard
     private double velTX;
     private double velTY;
     private double velTR;
+    private double distanceShuffle = 0;
 
     ShuffleboardTab drivetrainTab = Shuffleboard.getTab("Drivetrain");
-    Drivetrain(){
+    public Drivetrain(){
         drivetrainTab.addDouble("Robot velR", () -> {return velTR;});
         drivetrainTab.addDouble("Robot velX", () -> {return velTX;});
         drivetrainTab.addDouble("Robot velY", () -> {return velTY;});
@@ -74,6 +81,8 @@ public class Drivetrain extends SubsystemBase{
         drivetrainTab.addDouble("Robot posR", () -> {return posR;});
         drivetrainTab.addDouble("Robot posX", () -> {return posX;});
         drivetrainTab.addDouble("Robot posY", () -> {return posY;});
+
+        drivetrainTab.addDouble("Distance From Point", () -> {return distanceShuffle;});
     }
 //-------------------------------------------Periodic------------------------------------  
     @Override 
@@ -125,34 +134,34 @@ public class Drivetrain extends SubsystemBase{
         Vector T = new Vector(posX, posY);
         //normal vector
         Vector V = (T.subtract(R)).normalize();
-        double scaleFactor = distance>DrivetrainConstants.pointTolerance? 1: distance/DrivetrainConstants.divNumber;
+        double scaleFactor = distance>DrivetrainConstants.pointTolerance? 1: distance/DrivetrainConstants.pointTolerance;
         //for testing
         scaleFactor = 1;
         setDrivetrain(V.x*scaleFactor, V.y*scaleFactor);
     }
     private void drivePositionRot(){
-        double currentAngle = PositionComponent.getRobotPose().getRotation().getRadians();
-        double d = (posR - currentAngle)%(2*Math.PI) + 2*Math.PI;
-        d = d > Math.PI? d - 2*Math.PI: d;
+        updateRotDistance();
 
-        double vr = d>DrivetrainConstants.rotTolerance? 1: d/DrivetrainConstants.divNumberRot;
+        double vr = Math.abs(rotDistance)>DrivetrainConstants.rotTolerance?
+        Math.signum(rotDistance): rotDistance/DrivetrainConstants.rotTolerance;
         setDrivetrainRot(vr);
     }
 //-------------------------------------Set Drivetrain based on Drive Functions-----------------------------
 
     //this allows translation and rotation to be seperated
     private void setDrivetrain(double vx, double vy){
-        appliedX = vx*DrivetrainConstants.maxSpeed;
-        appliedY = vy*DrivetrainConstants.maxSpeed;
+        double scale = !(AreaEffectsHandler.getMaxSpeed() == null)? AreaEffectsHandler.getMaxSpeed(): DrivetrainConstants.defaultMaxSpeed;
+        appliedX = vx*scale;
+        appliedY = vy*scale;
     }
     private void setDrivetrainRot(double vr){
-        appliedR = vr*DrivetrainConstants.maxRotSpeed;
+        appliedR = vr*DrivetrainConstants.defaultRotSpeed;
     }
 //-------------------------------------------Apply Set Values------------------------------------
     private void applyDrivetrain(){
         Rotation2d currentRotation = PositionComponent.getRobotPose().getRotation().times(-1);
         ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(appliedX, appliedY, appliedR, currentRotation);
-        SwerveModuleState[] moduleStates = OldDrivetrain.kinematics.toSwerveModuleStates(speeds);
+        SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(speeds);
         
         for(int i =0; i<4; i++){
         Rotation2d currentAngle = new Rotation2d(maxSwerveModules[i].turningEncoder.getPosition());
@@ -192,16 +201,33 @@ public class Drivetrain extends SubsystemBase{
     }
 //------------------------------------------Getter Methods------------------------------------
     public boolean getIsPointReached(){
-        return Robot.instance.drivetrain.distance < DrivetrainConstants.validRange;
+        return distance < DrivetrainConstants.validRange;
+    }
+    public boolean getIsRotationReached(){
+        return rotDistance < DrivetrainConstants.validRotDiff;
+    }
+     public static SwerveModulePosition[] getSwerveModulePositions(){
+        SwerveModulePosition[] swerveModulePositionList = {
+        maxSwerveModules[0].getPosition(),
+        maxSwerveModules[1].getPosition(),
+        maxSwerveModules[2].getPosition(),
+        maxSwerveModules[3].getPosition()};
+        
+        return swerveModulePositionList;
     }
 //-------------------------------------------Misc Methods------------------------------------
     private void updateDistance(){
-        //TODO: error messaging to check if this works
         Pose2d currentRobotPosition = PositionComponent.getRobotPose();
         distance = 
         Math.sqrt(
         Math.pow(currentRobotPosition.getX() - posX,2) +
         Math.pow(currentRobotPosition.getY() - posY, 2));
+        distanceShuffle =  distance;
+    }
+    private void updateRotDistance(){
+        double currentAngle = PositionComponent.getRobotPose().getRotation().getRadians();
+        rotDistance = (posR - currentAngle)%(2*Math.PI) + 2*Math.PI;
+        rotDistance = rotDistance > Math.PI? rotDistance - 2*Math.PI: rotDistance;
     }
     public boolean checkIsRobotStopped(){
         for(int i =0; i<4; i++){

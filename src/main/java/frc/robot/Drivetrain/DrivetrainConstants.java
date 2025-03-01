@@ -6,15 +6,30 @@ import com.revrobotics.spark.SparkBase.PersistMode;
 import edu.wpi.first.math.geometry.Translation2d;
 
 public class DrivetrainConstants {
+//speed setting- this is just default if no areaEffects are being triggered
+    public static double defaultMaxSpeed = 1;
+    public static double defaultRotSpeed = Math.PI;
+//-------------------------------------------Limits and Deadband-------------------------------------------
     public static double inputDeadband = 0.12;
-    public static double maxSpeed = 1;
-    public static double maxRotSpeed = Math.PI;
     public static double physicalSpeedLimit = 3.5; // meters per second
     public static double physicalRotSpeedLimit = 18; // rad per second
+    public static int drivingMotorCurrentLimit = 20; // amps
+    public static int turningMotorCurrentLimit = 20; // amps
 
+//-------------------------------------------Point Reached Ranges-------------------------------------------
     //The range at which the robot is considered to have reached a position
     public static double validRange = 0.05; //translation in meters
     public static double validRotDiff = 0.14; //rotation in radians
+     //the range at which the robot begins to slow down in DrivePosition()
+     public static double pointTolerance = 0.1; //meters
+     //the rotation version of what's above
+     public static double rotTolerance = 0.26;//radians
+     /*the speed(meters/second) at which the robot is considered stopped during
+     a path, this will be checked on each SwerveModule individually*/
+     public static double stoppedVelocity = 0.02;
+
+//-------------------------------------Mechanical Information-----------------------------
+
     // Locations for the swerve drive modules relative to the robot center.
     public static Translation2d frontLeftLocation = new Translation2d(0.381, 0.381);
     public static Translation2d frontRightLocation = new Translation2d(0.381, -0.381);
@@ -42,6 +57,7 @@ public class DrivetrainConstants {
     public static final double drivingEncoderPositionFactor = (wheelDiameterMeters * Math.PI) / drivingMotorReduction; // meters
     public static final double drivingEncoderVelocityFactor = ((wheelDiameterMeters * Math.PI) / drivingMotorReduction) / 60.0; // meters per second
 
+    //------------------------------------------------PIDs-------------------------------------------------
     public static double drivingP = 0.6;
     public static double drivingI = 0;
     public static double drivingD = 0;
@@ -58,27 +74,16 @@ public class DrivetrainConstants {
     public static double turningPIDMaxInput = turningEncoderPositionFactor; // radians
     public static double turningMinOutput = -1;
     public static double turningMaxOutput = 1;
+
+    //------------------------------------------------Misc Settings-------------------------------------------------
     public static PersistMode turningPersist = PersistMode.kNoPersistParameters;
     public static ResetMode turningReset = ResetMode.kResetSafeParameters;
-
-    public static int drivingMotorCurrentLimit = 20; // amps
-    public static int turningMotorCurrentLimit = 20; // amps
 
     public static final double flChassisAngularOffset = 0;
     public static final double frChassisAngularOffset = 0;
     public static final double blChassisAngularOffset = 0;
     public static final double brChassisAngularOffset = 0;
 
-    //the range at which the robot begins to slow down in DrivePosition()
-    public static double pointTolerance = 0.01;
-    //the rotation version of what's above
-    public static double rotTolerance = 0.17;
-    //the value to divide the velocity by when within tolerance
-    public static double divNumber = 2;
-    public static double divNumberRot = 2;
-    /*the speed(meters/second) at which the robot is considered stopped during
-    a path, this will be checked on each SwerveModule individually*/
-    public static double stoppedVelocity = 0.02;
 }
 
 
