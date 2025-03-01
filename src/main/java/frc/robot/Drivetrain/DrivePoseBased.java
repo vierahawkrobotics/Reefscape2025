@@ -41,7 +41,7 @@ public class DrivePoseBased extends Command{
     @Override
     public void initialize() {
         Robot.instance.drivetrain.setTargetPos(x, y);
-        //Robot.instance.drivetrain.setTargetPosRot(r);
+        Robot.instance.drivetrain.setTargetPosRot(r);
         System.out.println("Initialize run");
     }
     @Override

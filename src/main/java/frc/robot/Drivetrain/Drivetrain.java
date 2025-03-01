@@ -242,8 +242,7 @@ public class Drivetrain extends SubsystemBase{
     }
     private void updateRotDistance(){
         double currentAngle = PositionComponent.getRobotPose().getRotation().getRadians();
-        rotDistance = (posR - currentAngle)%(2*Math.PI) + 2*Math.PI;
-        rotDistance = rotDistance > Math.PI? rotDistance - 2*Math.PI: rotDistance;
+        rotDistance = mod(posR - currentAngle -Math.PI, 2*Math.PI) - Math.PI;
     }
     public boolean checkIsRobotStopped(){
         for(int i =0; i<4; i++){
@@ -254,5 +253,8 @@ public class Drivetrain extends SubsystemBase{
     public double[] convertToNWU(double x, double y, double r){
         return new double[] {y, -x, r};
     
+    }
+    public double mod(double a, double b){
+        return (a%b + b)%b;
     }
 }
