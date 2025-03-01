@@ -5,12 +5,14 @@ import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkFlexConfig;
+import com.revrobotics.spark.config.LimitSwitchConfig.Type;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.ArmSubsystem.ArmConstants.HeightState;
 
@@ -28,11 +30,14 @@ public class ArmSubsystem extends SubsystemBase {
     public SparkFlex container;
     public SparkFlex containerFollower;
     public SparkFlex algaeMotor; 
-    private double targetHeight = ArmConstants.ground;
+    private double targetHeight = ArmConstants.armHeight;
     private double curHeight = 0;
     PIDController elevatorPID = new PIDController(ArmConstants.elevatorP, ArmConstants.elevatorI, ArmConstants.elevatorD);
     public double limitSwitchOffset;
     public double startTime;
+
+    private double elevatorSet = 0;
+    private double collectorSet = 0;
 
     public ArmSubsystem() {
         armTab = Shuffleboard.getTab("Arm Subsystem");
@@ -40,47 +45,68 @@ public class ArmSubsystem extends SubsystemBase {
         // Create and setup motors for Elevator
         elevator = new SparkFlex(ArmConstants.elevatorMotorID, MotorType.kBrushless);
         elevatorFollower = new SparkFlex(ArmConstants.elevatorFollowMotorID, MotorType.kBrushless);
-        SparkBaseConfig elevatorConfig = new SparkFlexConfig();
+        SparkFlexConfig elevatorConfig = new SparkFlexConfig();
         elevatorConfig.idleMode(IdleMode.kBrake);
-        elevatorConfig.encoder
+        elevatorConfig.limitSwitch
+            .reverseLimitSwitchEnabled(false);
+        elevator.configure(elevatorConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kNoPersistParameters);
+        SparkFlexConfig elevatorFollowerConfig = new SparkFlexConfig();
+        elevatorFollowerConfig.externalEncoder
+            .measurementPeriod(20)
             .positionConversionFactor(ArmConstants.encoderPositionFactor)
             .velocityConversionFactor(ArmConstants.encoderVelocityFactor);
-        elevator.configure(elevatorConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kNoPersistParameters);
-        SparkBaseConfig elevatorFollowerConfig = new SparkFlexConfig();
         elevatorFollowerConfig
-            .follow(elevator)
-            .inverted(true)
-            .idleMode(IdleMode.kBrake);
+            .follow(elevator, true)
+            .idleMode(IdleMode.kBrake)
+            .smartCurrentLimit(ArmConstants.maxAmp);
         elevatorFollower.configure(elevatorFollowerConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kNoPersistParameters);
 
         // Create and setup motors for Drop and Collect
         container = new SparkFlex(ArmConstants.containerMotorID, MotorType.kBrushless);
         containerFollower = new SparkFlex(ArmConstants.containerFollowMotorID, MotorType.kBrushless);
-        SparkBaseConfig containerConfig = new SparkFlexConfig();
-        containerConfig.idleMode(IdleMode.kBrake);
+        SparkFlexConfig containerConfig = new SparkFlexConfig();
+        containerConfig.limitSwitch
+            .forwardLimitSwitchEnabled(false)
+            .reverseLimitSwitchEnabled(false);
+        containerConfig
+            .idleMode(IdleMode.kBrake)
+            .smartCurrentLimit(ArmConstants.maxAmp);
         container.configure(containerConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kNoPersistParameters);
-        SparkBaseConfig containerFollowerConfig = new SparkFlexConfig();
+        SparkFlexConfig containerFollowerConfig = new SparkFlexConfig();
+        containerFollowerConfig.limitSwitch
+            .forwardLimitSwitchEnabled(false)
+            .reverseLimitSwitchEnabled(false);
         containerFollowerConfig
-            .follow(container)
             .inverted(true)
-            .idleMode(IdleMode.kBrake);
+            .idleMode(IdleMode.kBrake)
+            .smartCurrentLimit(ArmConstants.maxAmp);
         containerFollower.configure(containerFollowerConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kNoPersistParameters);
 
         // Create and setup motor for Algae
-        algaeMotor = new SparkFlex(ArmConstants.algaeMotorID, MotorType.kBrushless);
-        SparkBaseConfig algaeConfig = new SparkFlexConfig();
-        algaeConfig.idleMode(IdleMode.kBrake);
-        algaeMotor.configure(algaeConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kNoPersistParameters);
+        // algaeMotor = new SparkFlex(ArmConstants.algaeMotorID, MotorType.kBrushless);
+        // SparkBaseConfig algaeConfig = new SparkFlexConfig();
+        // algaeConfig.idleMode(IdleMode.kBrake);
+        // algaeMotor.configure(algaeConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kNoPersistParameters);
 
+        
+        armTab.addNumber("current height", () -> {return curHeight;});
+        armTab.addNumber("target height", () -> {return targetHeight;});
+        armTab.addDouble("elevator motor set", () -> {return elevatorSet;});
+        armTab.addDouble("collector motor set", () -> {return collectorSet;});
+        armTab.addDouble("elevator rad", () -> {return elevatorFollower.getExternalEncoder().getPosition();});
+        armTab.addString("elevator state", () -> {return state.toString();});
+        armTab.addString("collector state", () -> {return intakeState.toString();});
+        armTab.addBoolean("limit switch", () -> {return elevator.getReverseLimitSwitch().isPressed();});
     }
     
     /**
+     * THIS FUNCTION IS NOT CORRECT PLEASE FIX
      * Set algae motor speed
      * @param motorState new algae motorState (Active or Inactive)
      * @author Christian M
      */
     public void setAlgaeMotorSpeed(ArmConstants.AlgaeMotorState motorState){
-        algaeMotor.set(motorState.getMotorState());
+       // algaeMotor.set(motorState.getMotorState());
     }
 
     /**
@@ -113,7 +139,6 @@ public class ArmSubsystem extends SubsystemBase {
             if(pressed != 0) System.out.println("ArmSubsystem.isLimitSwitchPressed - multiple limit switches pressed");
             pressed = 4;
         }
-        System.out.println(pressed);
         if (pressed == 1) { // Far left channel pressed
             return ArmConstants.farLeftIntakeChannel;
         } else if (pressed == 2) { // Middle left channel pressed
@@ -153,7 +178,7 @@ public class ArmSubsystem extends SubsystemBase {
      * @author Andrew S
      */
     public void SetTargetHeight(double targetHeight) {
-        targetHeight = Math.min(Math.max(targetHeight,ArmConstants.armHeight),ArmConstants.maxHeight);
+        this.targetHeight = Math.min(Math.max(targetHeight,ArmConstants.armHeight),ArmConstants.maxHeight);
     }
 
     /**
@@ -176,7 +201,7 @@ public class ArmSubsystem extends SubsystemBase {
      * @author Andrew S
      */
     public boolean AtTargetHeight() {
-        return Math.abs(targetHeight - elevator.getExternalEncoder().getPosition()) < ArmConstants.epsilon;
+        return Math.abs(targetHeight - getHeight()) < ArmConstants.epsilon;
     }
 
     /**
@@ -184,37 +209,53 @@ public class ArmSubsystem extends SubsystemBase {
      * @author Andrew S
      */
     private void RecallibrateHeight() {
-        elevator.set(ArmConstants.resetHeightModeBias);
-        if(elevator.getForwardLimitSwitch().isPressed()) {
-            elevator.getExternalEncoder().setPosition(0);
+        if(!elevator.getReverseLimitSwitch().isPressed()) {
+            elevatorFollower.getExternalEncoder().setPosition(0);
             state = ArmState.NormalOper;
+            elevatorSet = 0;
+            elevator.set(0);
+        }
+        else {
+            elevatorSet = ArmConstants.resetHeightModeBias;
+            elevator.set(ArmConstants.resetHeightModeBias);
         }
     }
     
     @Override
     public void periodic() {
-        curHeight = elevator.getExternalEncoder().getPosition()*2*Math.PI*ArmConstants.gearRadius + ArmConstants.armHeight;
+        curHeight = elevatorFollower.getExternalEncoder().getPosition()*ArmConstants.gearRadius + ArmConstants.armHeight;
+        
         switch (intakeState) { // Periodic for Collect and Drop commands
             case Rest:
                 container.set(0);
+                containerFollower.set(0);
+                collectorSet = 0;
                 break;
             case Collect:
                 limitSwitchOffset = isLimitSwitchPressed();
                 if (limitSwitchOffset != 0) {
                     intakeState = ArmConstants.IntakeState.Rest;
+                    collectorSet = 0;
                     container.set(0);
+                    containerFollower.set(0);
                 }
                 else {
-                    container.set(-ArmConstants.containerMotorSpeed);
+                    container.set(ArmConstants.containerMotorSpeedBottomCollect);
+                    containerFollower.set(ArmConstants.containerMotorSpeedTopCollect);
+                    collectorSet = -ArmConstants.containerMotorSpeedBottomCollect;
                 }
                 break;
             case Drop:
                 if (Timer.getFPGATimestamp()-startTime >= ArmConstants.containerDropTime) {
                     intakeState = ArmConstants.IntakeState.Rest;
                     container.set(0);
+                    containerFollower.set(0);
+                    collectorSet = 0;
                 }
                 else {
-                    container.set(ArmConstants.containerMotorSpeed);
+                    container.set(ArmConstants.containerMotorSpeedBottomDrop);
+                    containerFollower.set(ArmConstants.containerMotorSpeedTopDrop);
+                    collectorSet = ArmConstants.containerMotorSpeedBottomDrop;
                 }
                 break;
         }
@@ -224,7 +265,13 @@ public class ArmSubsystem extends SubsystemBase {
                 RecallibrateHeight();
                 break;
             case NormalOper:
-                elevator.set(elevatorPID.calculate(getHeight(),targetHeight)+ArmConstants.elevatorMotorBias);
+                if(!elevator.getReverseLimitSwitch().isPressed()) {
+                    elevator.getExternalEncoder().setPosition(0);
+                }
+                double v = elevatorPID.calculate(getHeight(),targetHeight)+ArmConstants.elevatorMotorBias;
+                elevatorSet = v;
+                v = Math.min(Math.max(v,-0.15),.15);
+                elevator.set(v);
                 break;
         }
     }

@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.ArmSubsystem.*;
-import frc.robot.Climber.*;
 import frc.robot.Components.*;
 import frc.robot.Components.PositionComponent.PositionComponent;
 import frc.robot.Drivetrain.Drivetrain;
@@ -23,9 +22,9 @@ public class Robot extends TimedRobot {
   public static Robot instance;
   public ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
   public ArmSubsystem armSubsystem = new ArmSubsystem();
-  public climbersubmarine climberSubsystem = new climbersubmarine();
   public Drivetrain drivetrain = new Drivetrain();
   public PositionComponent positionComponent = PositionComponent.getInstance();
+  public boolean testing = true;
   @Override
   public void robotInit() {
     GUI.initialize();

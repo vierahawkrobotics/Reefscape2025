@@ -96,26 +96,29 @@ public class ArmConstants { // All heights in meters
     final public static int containerFollowMotorID = 14; //top
     final public static int algaeMotorID = 15;
     final public static double algaeMotorSpeed = 1;
-    final public static double containerMotorSpeed = 0.1;
+    final public static double containerMotorSpeedBottomDrop = 0.1;
+    final public static double containerMotorSpeedTopDrop = 0.3;
+    final public static double containerMotorSpeedBottomCollect = -0.08;
+    final public static double containerMotorSpeedTopCollect = -0.08;
     public static final double encoderPositionFactor = (2 * Math.PI); // radians
     public static final double encoderVelocityFactor = (2 * Math.PI) / 60.0; // radians per second
-    public static final int maxAmp = 10;
+    public static final int maxAmp = 60;
 
     // Elevator Constants
-    final public static double elevatorP = 1;
+    final public static double elevatorP = 3;
     final public static double elevatorI = 0;
     final public static double elevatorD = 0;
-    final public static double gearRadius = 0.02;
+    final public static double gearRadius = 0.0206;
     final public static double elevatorMotorBias = 0;
     final public static double epsilon = 0.02;
-    final public static double resetHeightModeBias = 0;
-    final public static double containerDropTime = 5; // Seconds
+    final public static double resetHeightModeBias = -0.06;
+    final public static double containerDropTime = 1; // Seconds
 
     // Arm Constants
-    final public static double armHeight = -1; // Arm bottom distance from ground
+    final public static double armHeight = 0.73; // Arm bottom distance from ground 28.75
     final public static double armForwardOffset = 0.2921; // Arm distance from center of robot
-    final public static double maxHeight = 0.4699; // Arm max extension length
-    final public static double collectHeight = 100; // Height to intake from collecetion area
+    final public static double maxHeight = 1.143; // Arm max extension length
+    final public static double collectHeight = .95; // Height to intake from collecetion area
     final public static double ground = 0.33; // L1
     final public static double low = 0.81; // L2
     final public static double high = 1.21; // L3

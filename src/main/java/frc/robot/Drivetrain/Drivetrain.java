@@ -38,10 +38,10 @@ public class Drivetrain extends SubsystemBase {
   );
 
   public static MAXSwerveModule[] maxSwerveModules = {
-    new MAXSwerveModule(DrivetrainConstants.flDrivingID,DrivetrainConstants.flTurningID,DrivetrainConstants.flChassisAngularOffset),
-    new MAXSwerveModule(DrivetrainConstants.frDrivingID,DrivetrainConstants.frTurningID,DrivetrainConstants.frChassisAngularOffset),
-    new MAXSwerveModule(DrivetrainConstants.blDrivingID,DrivetrainConstants.blTurningID,DrivetrainConstants.blChassisAngularOffset),
-    new MAXSwerveModule(DrivetrainConstants.brDrivingID,DrivetrainConstants.brTurningID,DrivetrainConstants.brChassisAngularOffset)
+    // new MAXSwerveModule(DrivetrainConstants.flDrivingID,DrivetrainConstants.flTurningID,DrivetrainConstants.flChassisAngularOffset),
+    // new MAXSwerveModule(DrivetrainConstants.frDrivingID,DrivetrainConstants.frTurningID,DrivetrainConstants.frChassisAngularOffset),
+    // new MAXSwerveModule(DrivetrainConstants.blDrivingID,DrivetrainConstants.blTurningID,DrivetrainConstants.blChassisAngularOffset),
+    // new MAXSwerveModule(DrivetrainConstants.brDrivingID,DrivetrainConstants.brTurningID,DrivetrainConstants.brChassisAngularOffset)
   };
 
   public static ShuffleboardTab drivetrainTab = Shuffleboard.getTab("Drivetrain");
@@ -100,7 +100,7 @@ public class Drivetrain extends SubsystemBase {
 
   @Override
   public void periodic() {
-
+    if(Robot.instance.testing) return;
     if (translateState == TranslateState.position){
       DrivePosition();
     }
@@ -238,19 +238,19 @@ public class Drivetrain extends SubsystemBase {
   }
 
   private void setDesiredStates(SwerveModuleState[] desiredStates){
-    for(int i = 0; i< 4; i++){
-       maxSwerveModules[i].turningPIDController.setReference(desiredStates[i].angle.getRadians(), ControlType.kPosition);
-       maxSwerveModules[i].drivingPIDController.setReference(desiredStates[i].speedMetersPerSecond, ControlType.kVelocity);
-     }
-    publisher.set(desiredStates);
+    // for(int i = 0; i< 4; i++){
+    //    maxSwerveModules[i].turningPIDController.setReference(desiredStates[i].angle.getRadians(), ControlType.kPosition);
+    //    maxSwerveModules[i].drivingPIDController.setReference(desiredStates[i].speedMetersPerSecond, ControlType.kVelocity);
+    //  }
+    // publisher.set(desiredStates);
   }
     
   public static SwerveModulePosition[] getSwerveModulePositions(){
     SwerveModulePosition[] swerveModulePositionList = {
-      maxSwerveModules[0].getPosition(),
-      maxSwerveModules[1].getPosition(),
-      maxSwerveModules[2].getPosition(),
-      maxSwerveModules[3].getPosition(),
+      // maxSwerveModules[0].getPosition(),
+      // maxSwerveModules[1].getPosition(),
+      // maxSwerveModules[2].getPosition(),
+      // maxSwerveModules[3].getPosition(),
     };
 
     return swerveModulePositionList;

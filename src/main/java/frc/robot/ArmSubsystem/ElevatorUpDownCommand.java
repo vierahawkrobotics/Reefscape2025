@@ -11,12 +11,11 @@ public class ElevatorUpDownCommand extends Command {
     }
 
     @Override
-    public void initialize() {}
-
-    @Override
-    public void execute() {
+    public void initialize() {
         double height = Robot.instance.armSubsystem.getTargetHeight();
         if (move) { // Check go up
+            System.out.println("up");
+            System.out.println("height: " + height);
             if(height == ArmConstants.HeightState.CoralLow.getHeight() || height == ArmConstants.HeightState.AlgaeLow.getHeight()) {
                 Robot.instance.armSubsystem.setHeightState(ArmConstants.HeightState.CoralHigh);
             } else if (height == ArmConstants.HeightState.Collect.getHeight()) {
@@ -24,6 +23,7 @@ public class ElevatorUpDownCommand extends Command {
             } else { // Error or Ground State
                 Robot.instance.armSubsystem.setHeightState(ArmConstants.HeightState.Collect);
             }
+            System.out.println("next: " + Robot.instance.armSubsystem.getTargetHeight());
         } else if (!move) { // Check go down
             if (height == ArmConstants.HeightState.CoralHigh.getHeight() || height == ArmConstants.HeightState.AlgaeHigh.getHeight()) {
                 Robot.instance.armSubsystem.setHeightState(ArmConstants.HeightState.CoralLow);
@@ -33,6 +33,10 @@ public class ElevatorUpDownCommand extends Command {
                 Robot.instance.armSubsystem.setHeightState(ArmConstants.HeightState.Ground);
             }
         }
+    }
+
+    @Override
+    public void execute() {
     }
 
     @Override
