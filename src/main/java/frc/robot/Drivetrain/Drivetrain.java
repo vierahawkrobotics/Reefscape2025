@@ -251,4 +251,8 @@ public class Drivetrain extends SubsystemBase{
         }
         return true;
     }
+    public double[] convertToNWU(double x, double y, double r){
+        return new double[] {y, -x, r};
+    
+    }
 }
