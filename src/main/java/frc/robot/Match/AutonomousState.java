@@ -6,7 +6,7 @@ import frc.robot.Drivetrain.DrivePoseBased;
 public class AutonomousState {
     public static Command getAutoCommand() {
         //input using NWU
-        return new DrivePoseBased(-1,0,0);
+        return new DrivePoseBased(-1,0,Math.PI/2);
     }
     public static void initialize() {}
     public static void periodic() {}
