@@ -70,19 +70,28 @@ public class Drivetrain extends SubsystemBase{
     private double velTX;
     private double velTY;
     private double velTR;
+    private double setVelX;
+    private double setVelY;
+    private double VxSB;
+    private double VySB;
     private double distanceShuffle = 0;
 
     ShuffleboardTab drivetrainTab = Shuffleboard.getTab("Drivetrain");
     public Drivetrain(){
-        drivetrainTab.addDouble("Robot velR", () -> {return velTR;});
-        drivetrainTab.addDouble("Robot velX", () -> {return velTX;});
-        drivetrainTab.addDouble("Robot velY", () -> {return velTY;});
+        // drivetrainTab.addDouble("Robot velR", () -> {return velTR;});
+        // drivetrainTab.addDouble("Robot velX", () -> {return velTX;});
+        // drivetrainTab.addDouble("Robot velY", () -> {return velTY;});
 
         drivetrainTab.addDouble("Robot posR", () -> {return posR;});
         drivetrainTab.addDouble("Robot posX", () -> {return posX;});
         drivetrainTab.addDouble("Robot posY", () -> {return posY;});
 
+        // drivetrainTab.addDouble("Set X Speed", () -> {return setVelX;});
+        // drivetrainTab.addDouble("Set Y Speed", () -> {return setVelY;});
+        drivetrainTab.addDouble("V.x", () -> {return VxSB;});
+        drivetrainTab.addDouble("V.y", () -> {return VySB;});
         drivetrainTab.addDouble("Distance From Point", () -> {return distanceShuffle;});
+        drivetrainTab.addString("tran state", () -> {return translateState.toString();});
     }
 //-------------------------------------------Periodic------------------------------------  
     @Override 
@@ -130,11 +139,19 @@ public class Drivetrain extends SubsystemBase{
         Pose2d currentRobotPosition = PositionComponent.getRobotPose();
         //robot current position
         Vector R = new Vector(currentRobotPosition.getX(), currentRobotPosition.getY());
+        System.out.println("R.x:" + R.x);
+        System.out.println("R.y:" + R.y);
         //target position
         Vector T = new Vector(posX, posY);
+        System.out.println("T.x:" + T.x);
+        System.out.println("T.y:" + T.y);
         //normal vector
         Vector V = (T.subtract(R)).normalize();
+        System.out.println("V.x:" + V.x);
+        System.out.println("V.y:" + V.y);
         double scaleFactor = distance>DrivetrainConstants.pointTolerance? 1: distance/DrivetrainConstants.pointTolerance;
+        VxSB = V.x;
+        VySB = V.y;
         //for testing
         scaleFactor = 1;
         setDrivetrain(V.x*scaleFactor, V.y*scaleFactor);
@@ -150,9 +167,14 @@ public class Drivetrain extends SubsystemBase{
 
     //this allows translation and rotation to be seperated
     private void setDrivetrain(double vx, double vy){
-        double scale = !(AreaEffectsHandler.getMaxSpeed() == null)? AreaEffectsHandler.getMaxSpeed(): DrivetrainConstants.defaultMaxSpeed;
+        double scale = DrivetrainConstants.defaultMaxSpeed;
+        // if(AreaEffectsHandler.isAreaEffect() == false || AreaEffectsHandler.getMaxSpeed() == null)
+        //     scale = DrivetrainConstants.defaultMaxSpeed;
+        // else 
+            // scale = AreaEffectsHandler.getMaxSpeed();
         appliedX = vx*scale;
         appliedY = vy*scale;
+
     }
     private void setDrivetrainRot(double vr){
         appliedR = vr*DrivetrainConstants.defaultRotSpeed;
@@ -164,9 +186,9 @@ public class Drivetrain extends SubsystemBase{
         SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(speeds);
         
         for(int i =0; i<4; i++){
-        Rotation2d currentAngle = new Rotation2d(maxSwerveModules[i].turningEncoder.getPosition());
-        moduleStates[i].optimize(currentAngle);
-        moduleStates[i].speedMetersPerSecond *= moduleStates[i].angle.minus(currentAngle).getCos();
+            Rotation2d currentAngle = new Rotation2d(maxSwerveModules[i].turningEncoder.getPosition());
+            moduleStates[i].optimize(currentAngle);
+            moduleStates[i].speedMetersPerSecond *= moduleStates[i].angle.minus(currentAngle).getCos();
         }
 
          for(int i = 0; i< 4; i++){

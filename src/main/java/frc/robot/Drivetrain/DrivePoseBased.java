@@ -38,12 +38,18 @@ public class DrivePoseBased extends Command{
     public void initialize() {
         Robot.instance.drivetrain.setTargetPos(x, y);
         Robot.instance.drivetrain.setTargetPosRot(r);
+        System.out.println("Initialize run");
     }
     @Override
-    public void execute(){}
+    public void execute(){
+        // System.out.println("execute func");
+    }
 
     @Override
-    public void end(boolean interrupted){}
+    public void end(boolean interrupted){
+        if (interrupted) System.out.println("interrupted");
+        System.out.println("end");
+    }
     @Override
     public boolean isFinished(){
         return (stopButton.get()) || 
