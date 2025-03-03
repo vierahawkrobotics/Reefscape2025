@@ -39,7 +39,7 @@ public class LimelightComponent {
             limelightMeasurement = LimelightHelpers.getBotPoseEstimate_wpiRed(PositionComponentSettings.limelightName);
             if(limelightMeasurement.rawFiducials[0].distToCamera < maxDistMT1){
                 // Continue as normal (MT1)
-            }else if(limelightMeasurement.rawFiducials[0].distToCamera > maxDistMT1 && limelightMeasurement.rawFiducials[0].distToCamera < maxDistMT2){
+            }else if(limelightMeasurement.rawFiducials[0].distToCamera < maxDistMT2){
                 LimelightHelpers.SetRobotOrientation("limelight", PositionComponent.getRobotPose().getRotation().getDegrees(), 0, 0, 0, 0, 0);
                 limelightMeasurement = LimelightHelpers.getBotPoseEstimate_wpiRed_MegaTag2("limelight");
             }else{
@@ -49,7 +49,7 @@ public class LimelightComponent {
             limelightMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue(PositionComponentSettings.limelightName);
             if(limelightMeasurement.rawFiducials[0].distToCamera < maxDistMT1){
                 // Continue as normal (MT1)
-            }else if(limelightMeasurement.rawFiducials[0].distToCamera > maxDistMT1 && limelightMeasurement.rawFiducials[0].distToCamera < maxDistMT2){
+            }else if(limelightMeasurement.rawFiducials[0].distToCamera < maxDistMT2){
                 LimelightHelpers.SetRobotOrientation("limelight", PositionComponent.getRobotPose().getRotation().getDegrees(), 0, 0, 0, 0, 0);
                 limelightMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
             }else{
