@@ -26,9 +26,9 @@ public class ComponentManager {
         //     PositionComponent.getChassisSpeeds(PositionComponentSettings.velType.kGyroscope).vyMetersPerSecond,
         //     PositionComponent.getChassisSpeeds(PositionComponentSettings.velType.kGyroscope).omegaRadiansPerSecond
         // );});
-        // posTab.addDouble("Drive Estimated X", ()->{return PositionComponent.getRobotPose().getX();});
-        // posTab.addDouble("Drive Estimated Y", ()->{return PositionComponent.getRobotPose().getY();});
-        // posTab.addDouble("Drive Estimated Rotation (degrees)", ()->{return PositionComponent.getRobotPose().getRotation().getDegrees();});
+        posTab.addDouble("Drive Estimated X", ()->{return PositionComponent.getRobotPose().getX();});
+        posTab.addDouble("Drive Estimated Y", ()->{return PositionComponent.getRobotPose().getY();});
+        posTab.addDouble("Drive Estimated Rotation (degrees)", ()->{return PositionComponent.getRobotPose().getRotation().getDegrees();});
         // posTab.addDouble("Gyroscope Estimated Rotation (degrees)", ()->{return PositionComponent.getGyroRotation();});
         
     }

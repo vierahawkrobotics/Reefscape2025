@@ -79,6 +79,9 @@ public class AreaEffectsHandler{
     public static Command getExitCommand(){
         return currentEffect.onExitCommand;
     }
+    public static boolean isAreaEffect(){
+        return !(currentEffect == null);
+    }
 
 
 

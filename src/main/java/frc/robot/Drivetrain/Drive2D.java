@@ -38,14 +38,14 @@ public class Drive2D extends Command {
         Pose2d areaPose = AreaEffectsHandler.getTargetPose();
         if (areaPose == null){
          vrVal = (vr.get()< DrivetrainConstants.inputDeadband)?0: vr.get();
-         Robot.instance.drivetrain.setTargetVelRot(vrVal);
+         Robot.instance.drivetrain.setInputVelRot(vrVal);
         }
         else{
             vrVal = areaPose.getRotation().getRadians();
             Robot.instance.drivetrain.setTargetPosRot(vrVal);
         }
         
-        Robot.instance.drivetrain.setTargetVel(vxVal, vyVal, true);
+        Robot.instance.drivetrain.setInputVel(vxVal, vyVal);
     }
     @Override
     public void end(boolean interrupted) {}
