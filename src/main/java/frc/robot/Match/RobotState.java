@@ -18,7 +18,7 @@ public class RobotState {
         controller2 = new XboxController(1);
 
         // Controller 1
-        //  Left Joystick - Movement, Right Joystick - Rotation
+        //   Left Joystick - Movement, Right Joystick - Rotation
         // Robot.instance.drivetrain.setDefaultCommand(new Drive3D(() -> {
         //     return controller1.getLeftY();
         // }, () -> {
@@ -28,18 +28,18 @@ public class RobotState {
         // }));
 
         // Controller 2
-        //  Container
+        //   Container
         new JoystickButton(controller2, XboxController.Button.kY.value).onTrue(new CollectCoralCommand());
         new JoystickButton(controller2, XboxController.Button.kA.value).onTrue(new DropCoralCommand());
         new JoystickButton(controller2, XboxController.Button.kB.value).onTrue(new RunCommand(() -> {
             Robot.instance.armSubsystem.SetTargetHeight(1);
         }, Robot.instance.armSubsystem));
-        //  Elevator
+        //   Elevator
         new Trigger(()->{return controller2.getPOV() == 0;}).onTrue(new ElevatorUpDownCommand(true));
         new Trigger(()->{return controller2.getPOV() == 180;}).onTrue(new ElevatorUpDownCommand(false));
-        //  Algae
+        //   Algae
         new JoystickButton(controller2, XboxController.Button.kX.value).onTrue(new RemoveAlgaeCommand());
-        //  Climber
+        //   Climber
         //Insert climber command call (button X)
     }
     public static void Periodic() {

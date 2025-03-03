@@ -5,7 +5,7 @@ import frc.robot.Robot;
 
 public class ElevatorUpDownCommand extends Command {
     private boolean move;
-    public ElevatorUpDownCommand(boolean move) { // move = true = up, move = false = down
+    public ElevatorUpDownCommand(boolean move) { // true = up, false = down
         addRequirements(Robot.instance.armSubsystem);
         this.move = move;
     }
