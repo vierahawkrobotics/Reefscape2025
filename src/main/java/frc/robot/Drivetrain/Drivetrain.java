@@ -27,14 +27,14 @@ public class Drivetrain extends SubsystemBase{
     );
     //physical parts
     public static MAXSwerveModule[] maxSwerveModules = {
-        new MAXSwerveModule(DrivetrainConstants.flDrivingID,DrivetrainConstants
-        .flTurningID,DrivetrainConstants.flChassisAngularOffset),
-        new MAXSwerveModule(DrivetrainConstants.frDrivingID,DrivetrainConstants
-        .frTurningID,DrivetrainConstants.frChassisAngularOffset),
-        new MAXSwerveModule(DrivetrainConstants.blDrivingID,DrivetrainConstants
-        .blTurningID,DrivetrainConstants.blChassisAngularOffset),
-        new MAXSwerveModule(DrivetrainConstants.brDrivingID,DrivetrainConstants
-        .brTurningID,DrivetrainConstants.brChassisAngularOffset)
+        // new MAXSwerveModule(DrivetrainConstants.flDrivingID,DrivetrainConstants
+        // .flTurningID,DrivetrainConstants.flChassisAngularOffset),
+        // new MAXSwerveModule(DrivetrainConstants.frDrivingID,DrivetrainConstants
+        // .frTurningID,DrivetrainConstants.frChassisAngularOffset),
+        // new MAXSwerveModule(DrivetrainConstants.blDrivingID,DrivetrainConstants
+        // .blTurningID,DrivetrainConstants.blChassisAngularOffset),
+        // new MAXSwerveModule(DrivetrainConstants.brDrivingID,DrivetrainConstants
+        // .brTurningID,DrivetrainConstants.brChassisAngularOffset)
       };
     /*states for translation and rotation
     roatation state path doesn't do anything 
@@ -96,33 +96,33 @@ public class Drivetrain extends SubsystemBase{
 //-------------------------------------------Periodic------------------------------------  
     @Override 
     public void periodic(){
-        switch(translateState){
-            case path:
-                //TODO: drivePath();
-                break;
-            case velocity:
-                driveVelocity();
-                break;
-            case position:
-                drivePosition();
-                break;
-        }
-        switch(rotationState){
-            case velocity:
-                driveVelocityRot();
-                break;
-            case position:
-                drivePositionRot();
-                break;
-            case path:
-                //this should NOT be used
-                break;
-        }
-        applyDrivetrain();
-        //set values for shuffleboard
-        velTX = velX;
-        velTY = velY;
-        velTR = velR;
+        // switch(translateState){
+        //     case path:
+        //         //TODO: drivePath();
+        //         break;
+        //     case velocity:
+        //         driveVelocity();
+        //         break;
+        //     case position:
+        //         drivePosition();
+        //         break;
+        // }
+        // switch(rotationState){
+        //     case velocity:
+        //         driveVelocityRot();
+        //         break;
+        //     case position:
+        //         drivePositionRot();
+        //         break;
+        //     case path:
+        //         //this should NOT be used
+        //         break;
+        // }
+        // applyDrivetrain();
+        // //set values for shuffleboard
+        // velTX = velX;
+        // velTY = velY;
+        // velTR = velR;
     }
 //-------------------------------------------Drive Functions------------------------------------
     private void driveVelocity(){
@@ -183,10 +183,10 @@ public class Drivetrain extends SubsystemBase{
             moduleStates[i].speedMetersPerSecond *= moduleStates[i].angle.minus(currentAngle).getCos();
         }
 
-         for(int i = 0; i< 4; i++){
-            maxSwerveModules[i].turningPIDController.setReference(moduleStates[i].angle.getRadians(), ControlType.kPosition);
-            maxSwerveModules[i].drivingPIDController.setReference(moduleStates[i].speedMetersPerSecond, ControlType.kVelocity);
-        }
+        // for(int i = 0; i< 4; i++){
+        //     maxSwerveModules[i].turningPIDController.setReference(moduleStates[i].angle.getRadians(), ControlType.kPosition);
+        //     maxSwerveModules[i].drivingPIDController.setReference(moduleStates[i].speedMetersPerSecond, ControlType.kVelocity);
+        // }
     }
 //------------------------------------------Setter Methods------------------------------------
     public void setInputVel(double vx, double vy){
@@ -222,11 +222,12 @@ public class Drivetrain extends SubsystemBase{
     }
      public static SwerveModulePosition[] getSwerveModulePositions(){
         SwerveModulePosition[] swerveModulePositionList = {
-        maxSwerveModules[0].getPosition(),
-        maxSwerveModules[1].getPosition(),
-        maxSwerveModules[2].getPosition(),
-        maxSwerveModules[3].getPosition()};
-        
+            // maxSwerveModules[0].getPosition(),
+            // maxSwerveModules[1].getPosition(),
+            // maxSwerveModules[2].getPosition(),
+            // maxSwerveModules[3].getPosition()
+        };
+            
         return swerveModulePositionList;
     }
 //-------------------------------------------Misc Methods------------------------------------

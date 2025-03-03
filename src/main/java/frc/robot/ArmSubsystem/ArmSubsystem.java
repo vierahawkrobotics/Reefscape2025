@@ -34,7 +34,7 @@ public class ArmSubsystem extends SubsystemBase {
     public ArmSubsystem() {
         armTab = Shuffleboard.getTab("Arm Subsystem");
 
-        // Create and setup motors for Elevator
+        // Elevator Motors Setup
         elevator = new SparkFlex(ArmConstants.elevatorMotorID, MotorType.kBrushless);
         elevatorFollower = new SparkFlex(ArmConstants.elevatorFollowMotorID, MotorType.kBrushless);
         SparkFlexConfig elevatorConfig = new SparkFlexConfig();
@@ -44,7 +44,8 @@ public class ArmSubsystem extends SubsystemBase {
         elevator.configure(elevatorConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kNoPersistParameters);
         SparkFlexConfig elevatorFollowerConfig = new SparkFlexConfig();
         elevatorFollowerConfig.externalEncoder
-            .measurementPeriod(5)
+            .measurementPeriod(50)
+            .countsPerRevolution(8192)
             .positionConversionFactor(ArmConstants.encoderPositionFactor)
             .velocityConversionFactor(ArmConstants.encoderVelocityFactor);
         elevatorFollowerConfig
@@ -53,7 +54,7 @@ public class ArmSubsystem extends SubsystemBase {
             .smartCurrentLimit(ArmConstants.maxAmp);
         elevatorFollower.configure(elevatorFollowerConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kNoPersistParameters);
 
-        // Create and setup motors for Drop and Collect
+        // Container Motors Setup
         container = new SparkFlex(ArmConstants.containerMotorID, MotorType.kBrushless);
         containerFollower = new SparkFlex(ArmConstants.containerFollowMotorID, MotorType.kBrushless);
         SparkFlexConfig containerConfig = new SparkFlexConfig();
@@ -74,17 +75,19 @@ public class ArmSubsystem extends SubsystemBase {
             .smartCurrentLimit(ArmConstants.maxAmp);
         containerFollower.configure(containerFollowerConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kNoPersistParameters);
 
-        // Create and setup motor for Algae
+        // Algae Motor Setup
         // algaeMotor = new SparkFlex(ArmConstants.algaeMotorID, MotorType.kBrushless);
         // SparkBaseConfig algaeConfig = new SparkFlexConfig();
         // algaeConfig.idleMode(IdleMode.kBrake);
         // algaeMotor.configure(algaeConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kNoPersistParameters);
 
+        // Shuffleboard Setup
         armTab.addNumber("Current Height", () -> {return curHeight;});
         armTab.addNumber("Target Height", () -> {return targetHeight;});
         armTab.addDouble("Elevator Radians", () -> {return elevatorFollower.getExternalEncoder().getPosition();});
         armTab.addString("Collector State", () -> {return intakeState.toString();});
         armTab.addBoolean("Limit Switch", () -> {return elevator.getReverseLimitSwitch().isPressed();});
+        armTab.addNumber("Current Height Inches", () -> {return curHeight*39.37;});
     }
     
     /**
@@ -252,7 +255,7 @@ public class ArmSubsystem extends SubsystemBase {
                     elevator.getExternalEncoder().setPosition(0);
                 }
                 double v = elevatorPID.calculate(getHeight(),targetHeight)+ArmConstants.elevatorMotorBias;
-                v = Math.min(Math.max(v,-0.15),.15);
+                v = Math.min(Math.max(v,-0.2),.3);
                 elevator.set(v);
                 break;
         }

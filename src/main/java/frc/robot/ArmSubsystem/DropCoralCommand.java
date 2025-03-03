@@ -1,11 +1,11 @@
 package frc.robot.ArmSubsystem;
 
-import edu.wpi.first.math.geometry.Pose2d;
+// import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Robot;
-import frc.robot.Components.PositionTools.PositionTools;
-import frc.robot.Drivetrain.DrivePoseBased;
+// import frc.robot.Components.PositionTools.PositionTools;
+// import frc.robot.Drivetrain.DrivePoseBased;
 
 enum DropState {
     MoveInit,
@@ -21,7 +21,7 @@ public class DropCoralCommand extends Command {
 
     public DropCoralCommand() {
         addRequirements(Robot.instance.armSubsystem);
-        addRequirements(Robot.instance.drivetrain);
+        // addRequirements(Robot.instance.drivetrain);
     }
 
     @Override

@@ -105,10 +105,10 @@ public class ArmConstants { // All heights in meters
     public static final int maxAmp = 60;
 
     // Elevator Constants
-    final public static double elevatorP = 3;
+    final public static double elevatorP = 3.8;
     final public static double elevatorI = 0;
     final public static double elevatorD = 0;
-    final public static double gearRadius = 0.0206;
+    final public static double gearRadius = 0.02199;
     final public static double elevatorMotorBias = 0;
     final public static double epsilon = 0.02;
     final public static double resetHeightModeBias = -0.06;
@@ -117,9 +117,9 @@ public class ArmConstants { // All heights in meters
 
     // Arm Constants
     final public static double autoResetHeight = 0.1; // Difference between current height and minimum arm height to automatically reset to zero
-    final public static double armHeight = 0.73; // Arm bottom distance from ground 28.75
+    final public static double armHeight = 0.737; // Arm bottom distance from ground 28.75
     final public static double armForwardOffset = 0.2921; // Arm distance from center of robot
-    final public static double maxHeight = 1.143; // Arm max extension length
+    final public static double maxHeight = 1.1938; // Arm max extension length
     final public static double collectHeight = .95; // Height to intake from collection area
     final public static double ground = 0.33; // L1
     final public static double low = 0.81; // L2

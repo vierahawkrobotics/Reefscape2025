@@ -18,7 +18,7 @@ public class RemoveAlgaeCommand extends Command {
     double height;
     public RemoveAlgaeCommand() {
         addRequirements(Robot.instance.armSubsystem);
-        addRequirements(Robot.instance.drivetrain);
+        // addRequirements(Robot.instance.drivetrain);
         height = Robot.instance.armSubsystem.getTargetHeight();
     }
 
@@ -53,11 +53,11 @@ public class RemoveAlgaeCommand extends Command {
                     state = RemoveAlgaeState.EjectInit;
                 break;
             case EjectInit://eject algae
-                if (height == ArmConstants.HeightState.CoralLow.getHeight() || height == ArmConstants.HeightState.Collect.getHeight() || height == ArmConstants.HeightState.Ground.getHeight()) {
-                    Robot.instance.armSubsystem.setHeightState(ArmConstants.HeightState.AlgaeLow);
-                } else {
-                    Robot.instance.armSubsystem.setHeightState(ArmConstants.HeightState.AlgaeHigh);
-                }
+                // if (height == ArmConstants.HeightState.CoralLow.getHeight() || height == ArmConstants.HeightState.Collect.getHeight() || height == ArmConstants.HeightState.Ground.getHeight()) {
+                //     Robot.instance.armSubsystem.setHeightState(ArmConstants.HeightState.AlgaeLow);
+                // } else {
+                //     Robot.instance.armSubsystem.setHeightState(ArmConstants.HeightState.AlgaeHigh);
+                // }
                 state = RemoveAlgaeState.EjectPeriodic;
                 break;
             case EjectPeriodic://check if at target height
