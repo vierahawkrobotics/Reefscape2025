@@ -12,6 +12,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import frc.robot.Components.LimelightComponent;
+import frc.robot.Components.LimelightComponent.PoseWithTimestamp;
 import frc.robot.Components.PositionComponent.PositionComponentSettings.*;
 import frc.robot.Components.PositionTools.PositionTools;
 import frc.robot.Drivetrain.Drivetrain;
@@ -92,12 +93,12 @@ public class PositionComponent {
 
     public static void periodic(){
         poseEstimator.update(Rotation2d.fromDegrees(gryoObject.getAngle()), Drivetrain.getSwerveModulePositions());
-        if(LimelightComponent.calcAprilTag() != null) updatePose(LimelightComponent.calcAprilTag());
+        PoseWithTimestamp pose = LimelightComponent.calcAprilTag();
+        if(pose != null) updatePose(pose);
         lastTimestamp[1] = lastTimestamp[0];
         lastTimestamp[0] = edu.wpi.first.wpilibj.RobotController.getFPGATime();
         lastPose[1] = lastPose[1];
         lastPose[0] = poseEstimator.getEstimatedPosition();
-
 
         // if(LimelightComponent.calcAprilTag() != null){
         //     updatePose();
