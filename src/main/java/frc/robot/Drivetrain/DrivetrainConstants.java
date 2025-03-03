@@ -40,7 +40,7 @@ public class DrivetrainConstants {
     public static final double drivingEncoderPositionFactor = (wheelDiameterMeters * Math.PI) / drivingMotorReduction; // meters
     public static final double drivingEncoderVelocityFactor = ((wheelDiameterMeters * Math.PI) / drivingMotorReduction) / 60.0; // meters per second
 
-    public static double drivingP = 0.9;
+    public static double drivingP = 0.6;
     public static double drivingI = 0;
     public static double drivingD = 0;
     public static double drivingMinOutput = -1;
@@ -48,9 +48,9 @@ public class DrivetrainConstants {
     public static PersistMode drivingPersist = PersistMode.kNoPersistParameters;
     public static ResetMode drivingReset = ResetMode.kResetSafeParameters;
 
-    public static double turningP = 2;
+    public static double turningP = 0.5;
     public static double turningI = 0;
-    public static double turningD = 2;
+    public static double turningD = 0.05;
     //sets wrapping for the PIDController
     public static double turningPIDMinInput = 0; // radians
     public static double turningPIDMaxInput = turningEncoderPositionFactor; // radians

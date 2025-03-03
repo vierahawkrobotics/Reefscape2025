@@ -53,7 +53,7 @@ public class PositionComponent {
         return instance;
     }
     public static Pose2d getRobotPose() {
-        return poseEstimator.getEstimatedPosition();
+        return lastPose[0];
     }
     
     public static Pose2d getPoseTranslated(Pose2d offset){
