@@ -16,9 +16,15 @@ enum ArmState {
     NormalOper
 }
 
+enum AlgaeState {
+    Rest,
+    Eject
+}
+
 public class ArmSubsystem extends SubsystemBase {
     private ShuffleboardTab armTab;
     private ArmState state = ArmState.ResetHeight; // Immediately reset height
+    private AlgaeState algaeState = AlgaeState.Rest;
     private ArmConstants.IntakeState intakeState = ArmConstants.IntakeState.Rest;
     private SparkFlex elevator;
     private SparkFlex elevatorFollower;
@@ -30,6 +36,7 @@ public class ArmSubsystem extends SubsystemBase {
     PIDController elevatorPID = new PIDController(ArmConstants.elevatorP, ArmConstants.elevatorI, ArmConstants.elevatorD);
     public double limitSwitchOffset;
     public double startTime;
+    public double algaeStartTime;
 
     public ArmSubsystem() {
         armTab = Shuffleboard.getTab("Arm Subsystem");
@@ -94,7 +101,7 @@ public class ArmSubsystem extends SubsystemBase {
      * @author Christian M
      */
     public void setAlgaeMotorSpeed(ArmConstants.AlgaeMotorState motorState){
-       // algaeMotor.set(motorState.getMotorState());
+       algaeState = AlgaeState.Eject;
     }
 
     /**
@@ -103,6 +110,7 @@ public class ArmSubsystem extends SubsystemBase {
      * @author Andrew S
      */
     public void setHeightState(ArmConstants.HeightState height) {
+        algaeStartTime = Timer.getFPGATimestamp();
         SetTargetHeight(height.getHeight());
     }
 
@@ -254,6 +262,22 @@ public class ArmSubsystem extends SubsystemBase {
                 double v = elevatorPID.calculate(getHeight(),targetHeight)+ArmConstants.elevatorMotorBias;
                 v = Math.min(Math.max(v,-0.15),.15);
                 elevator.set(v);
+                break;
+        }
+
+        switch(algaeState) {
+            case Rest:
+                algaeMotor.set(0);
+                break; 
+
+            case Eject:
+                if (Timer.getFPGATimestamp()-algaeStartTime >= ArmConstants.algaeEjectTime) {
+                    algaeState = AlgaeState.Rest;
+                    algaeMotor.set(0);
+                }
+                else {
+                    algaeMotor.set(ArmConstants.algaeMotorSpeed);
+                }
                 break;
         }
     }
