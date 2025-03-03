@@ -173,7 +173,7 @@ public class Drivetrain extends SubsystemBase{
     }
 //-------------------------------------------Apply Set Values------------------------------------
     private void applyDrivetrain(){
-        Rotation2d currentRotation = PositionComponent.getRobotPose().getRotation().times(-1);
+        Rotation2d currentRotation = PositionComponent.getRobotPose().getRotation();
         ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(appliedX, appliedY, appliedR, currentRotation);
         SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(speeds);
         
