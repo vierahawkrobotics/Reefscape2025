@@ -8,6 +8,8 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Components.*;
 import frc.robot.Components.PositionComponent.PositionComponent;
 import frc.robot.Drivetrain.Drivetrain;
@@ -25,10 +27,14 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     GUI.initialize();
     ComponentManager.Initialize();
+    PositionComponent.zeroPos();
     instance = this;
 
 
     RobotState.Initialize();
+
+    //Reset Pose
+    new JoystickButton(controller, 8).onTrue(new InstantCommand(PositionComponent::zeroPos));
   }
 
   @Override
@@ -51,20 +57,20 @@ public class Robot extends TimedRobot {
   private Command autoCommand;
   @Override
   public void autonomousInit() {
-    autoCommand = AutonomousState.getAutoCommand();
-    if (autoCommand != null) autoCommand.schedule();
-    AutonomousState.initialize();
+    //autoCommand = AutonomousState.getAutoCommand();
+    //if (autoCommand != null) autoCommand.schedule();
+    //AutonomousState.initialize();
   }
 
   @Override
   public void autonomousPeriodic() {
-    AutonomousState.periodic();
+    //AutonomousState.periodic();
   }
 
   @Override
   public void autonomousExit() {
-    if (autoCommand != null) autoCommand.cancel();
-    AutonomousState.exit();
+    //if (autoCommand != null) autoCommand.cancel();
+    //AutonomousState.exit();
   }
 
   @Override
