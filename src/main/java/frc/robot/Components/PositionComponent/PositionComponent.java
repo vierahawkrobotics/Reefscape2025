@@ -1,7 +1,5 @@
 package frc.robot.Components.PositionComponent;
 
-import java.util.Optional;
-
 import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
 
@@ -13,6 +11,8 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
+import frc.robot.Components.LimelightComponent;
+import frc.robot.Components.LimelightComponent.PoseWithTimestamp;
 import frc.robot.Components.PositionComponent.PositionComponentSettings.*;
 import frc.robot.Components.PositionTools.PositionTools;
 import frc.robot.Drivetrain.Drivetrain;
@@ -52,6 +52,10 @@ public class PositionComponent {
         }
         return instance;
     }
+    public static void zeroPos(){
+        gryoObject.zeroYaw();
+        poseEstimator.resetPose(new Pose2d(0,0,Rotation2d.fromRadians(0)));
+    }
     public static Pose2d getRobotPose() {
         return lastPose[0];
     }
@@ -81,17 +85,20 @@ public class PositionComponent {
         return gryoObject.getRotation2d().getDegrees();
     }
 
-    public static void updatePose(){
-        poseEstimator.addVisionMeasurement(getRobotPose(), edu.wpi.first.wpilibj.Timer.getFPGATimestamp());
+    public static void updatePose(LimelightComponent.PoseWithTimestamp limelightPos){
+        if(PositionTools.poseDist(getRobotPose(),limelightPos.pose) <= PositionComponentSettings.maxLimelightDistance){
+            poseEstimator.addVisionMeasurement(limelightPos.pose, limelightPos.timestamp);
+        }
     }
 
     public static void periodic(){
         poseEstimator.update(Rotation2d.fromDegrees(gryoObject.getAngle()), Drivetrain.getSwerveModulePositions());
+        PoseWithTimestamp pose = LimelightComponent.calcAprilTag();
+        if(pose != null) updatePose(pose);
         lastTimestamp[1] = lastTimestamp[0];
         lastTimestamp[0] = edu.wpi.first.wpilibj.RobotController.getFPGATime();
         lastPose[1] = lastPose[1];
-        lastPose[0] = poseEstimator.getEstimatedPosition();
-
+        lastPose[0] = poseEstimator.getEstimatedPosition().times(-1);
 
         // if(LimelightComponent.calcAprilTag() != null){
         //     updatePose();

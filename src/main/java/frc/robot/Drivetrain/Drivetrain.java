@@ -126,6 +126,7 @@ public class Drivetrain extends SubsystemBase{
     }
 //-------------------------------------------Drive Functions------------------------------------
     private void driveVelocity(){
+        updateDistance();
         setDrivetrain(velX, velY);
         velX = 0;
         velY = 0;
@@ -143,16 +144,21 @@ public class Drivetrain extends SubsystemBase{
         Vector T = new Vector(posX, posY);
         //normal vector
         Vector V = (T.subtract(R)).normalize();
-        double scaleFactor = distance>DrivetrainConstants.pointTolerance? 1: distance/DrivetrainConstants.pointTolerance;
+        double scaleFactor;
+        if (distance <= DrivetrainConstants.validRange) scaleFactor = 0;
+        else{
+            scaleFactor = distance>DrivetrainConstants.pointTolerance? 1: distance/DrivetrainConstants.pointTolerance;
+        }
         VxSB = V.x;
         VySB = V.y;
-        setDrivetrain(V.x*scaleFactor, V.y*scaleFactor);
+        setDrivetrain(V.x*scaleFactor*-1, V.y*scaleFactor*-1);
     }
     private void drivePositionRot(){
         updateRotDistance();
 
         double vr = Math.abs(rotDistance)>DrivetrainConstants.rotTolerance?
-        Math.signum(rotDistance): rotDistance/DrivetrainConstants.rotTolerance;
+        Math.signum(rotDistance): rotDistance/(DrivetrainConstants.decreaseRateRot);
+        if(rotDistance <= DrivetrainConstants.validRotDiff) vr = 0;
         setDrivetrainRot(vr);
     }
 //-------------------------------------Set Drivetrain based on Drive Functions-----------------------------
@@ -173,7 +179,7 @@ public class Drivetrain extends SubsystemBase{
     }
 //-------------------------------------------Apply Set Values------------------------------------
     private void applyDrivetrain(){
-        Rotation2d currentRotation = PositionComponent.getRobotPose().getRotation().times(-1);
+        Rotation2d currentRotation = PositionComponent.getRobotPose().getRotation();
         ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(appliedX, appliedY, appliedR, currentRotation);
         SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(speeds);
         

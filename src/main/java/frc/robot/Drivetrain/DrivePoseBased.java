@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 
 public class DrivePoseBased extends Command{
+    //note to self: y -> x, -x -> y, r -> r
     double x;
     double y;
     double r;
