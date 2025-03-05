@@ -41,6 +41,7 @@ public class ElevatorMovementCommand extends Command {
             } else { // Not at algae height or at AlgaeHigh
                 Robot.instance.armSubsystem.setHeightState(ArmConstants.HeightState.AlgaeLow);
             }
+            Robot.instance.armSubsystem.setAlgaeMotorSpeed(ArmConstants.AlgaeMotorState.Active);
         } else if (reset) { // Reset to Ground
             Robot.instance.armSubsystem.setHeightState(ArmConstants.HeightState.Ground);
         }

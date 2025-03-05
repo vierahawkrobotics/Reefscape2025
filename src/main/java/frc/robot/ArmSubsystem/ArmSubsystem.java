@@ -98,22 +98,24 @@ public class ArmSubsystem extends SubsystemBase {
     }
     
     /**
-     * THIS FUNCTION IS NOT CORRECT PLEASE FIX
-     * Set algae motor speed
      * @param motorState new algae motorState (Active or Inactive)
      * @author Christian M
      */
     public void setAlgaeMotorSpeed(ArmConstants.AlgaeMotorState motorState){
-       algaeState = AlgaeState.Eject;
+        if (motorState == ArmConstants.AlgaeMotorState.Active & algaeState != AlgaeState.Eject) {
+            algaeState = AlgaeState.Eject;
+            algaeStartTime = Timer.getFPGATimestamp();
+        } else {
+            algaeState = AlgaeState.Rest;
+        }
     }
 
     /**
-     * Move elevator arm up to eject algae
+     * Move elevator arm to height registered with HeightState
      * @param height target HeightState
      * @author Andrew S
      */
     public void setHeightState(ArmConstants.HeightState height) {
-        algaeStartTime = Timer.getFPGATimestamp();
         SetTargetHeight(height.getHeight());
     }
 

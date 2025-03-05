@@ -4,14 +4,20 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 
 public class CollectCoralCommand extends Command {
-    public CollectCoralCommand() {
+    private boolean interrupt;
+    public CollectCoralCommand(boolean interrupt) {
         addRequirements(Robot.instance.armSubsystem);
+        this.interrupt = interrupt;
     }
 
     @Override
     public void initialize() {
-        Robot.instance.armSubsystem.setHeightState(ArmConstants.HeightState.Collect);
-        Robot.instance.armSubsystem.setIntakeState(ArmConstants.IntakeState.Collect);
+        if (interrupt) {
+            end(interrupt);
+        } else {
+            Robot.instance.armSubsystem.setHeightState(ArmConstants.HeightState.Collect);
+            Robot.instance.armSubsystem.setIntakeState(ArmConstants.IntakeState.Collect);    
+        }
     }
 
     @Override

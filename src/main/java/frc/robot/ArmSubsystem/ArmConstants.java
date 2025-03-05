@@ -114,6 +114,7 @@ public class ArmConstants { // All heights in meters
     final public static double resetHeightModeBias = -0.06;
     final public static double containerCollectTime = 5; // Seconds
     final public static double containerDropTime = 1; // Seconds
+    final public static double algaeEjectTime = 2; // Seconds
 
     // Arm Constants
     final public static double autoResetHeight = 0.1; // Difference between current height and minimum arm height to automatically reset to zero
