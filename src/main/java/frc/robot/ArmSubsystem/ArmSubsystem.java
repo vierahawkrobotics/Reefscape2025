@@ -99,7 +99,7 @@ public class ArmSubsystem extends SubsystemBase {
     
     /**
      * @param motorState new algae motorState (Active or Inactive)
-     * @author Christian M
+     * @author Christian M + Andrew S
      */
     public void setAlgaeMotorSpeed(ArmConstants.AlgaeMotorState motorState){
         if (motorState == ArmConstants.AlgaeMotorState.Active & algaeState != AlgaeState.Eject) {
