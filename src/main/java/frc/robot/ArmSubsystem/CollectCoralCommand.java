@@ -1,23 +1,20 @@
 package frc.robot.ArmSubsystem;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import java.util.function.Supplier;
 import frc.robot.Robot;
 
 public class CollectCoralCommand extends Command {
-    private boolean interrupt;
-    public CollectCoralCommand(boolean interrupt) {
+    private Supplier<Boolean> interrupted;
+    public CollectCoralCommand(Supplier<Boolean> interrupted) {
         addRequirements(Robot.instance.armSubsystem);
-        this.interrupt = interrupt;
+        this.interrupted = interrupted;
     }
 
     @Override
     public void initialize() {
-        if (interrupt) {
-            end(interrupt);
-        } else {
-            Robot.instance.armSubsystem.setHeightState(ArmConstants.HeightState.Collect);
-            Robot.instance.armSubsystem.setIntakeState(ArmConstants.IntakeState.Collect);    
-        }
+        Robot.instance.armSubsystem.setHeightState(ArmConstants.HeightState.Collect);
+        Robot.instance.armSubsystem.setIntakeState(ArmConstants.IntakeState.Collect);
     }
 
     @Override
@@ -31,6 +28,6 @@ public class CollectCoralCommand extends Command {
 
     @Override
     public boolean isFinished() {
-        return Robot.instance.armSubsystem.getIntakeState() == ArmConstants.IntakeState.Rest;
+        return Robot.instance.armSubsystem.getIntakeState() == ArmConstants.IntakeState.Rest || interrupted.get();
     }
 }
