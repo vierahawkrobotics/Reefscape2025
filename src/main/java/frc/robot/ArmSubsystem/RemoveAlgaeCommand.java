@@ -1,5 +1,7 @@
 package frc.robot.ArmSubsystem;
 
+import java.util.function.Supplier;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 
@@ -16,7 +18,8 @@ enum RemoveAlgaeState {
 public class RemoveAlgaeCommand extends Command {
     private RemoveAlgaeState state = RemoveAlgaeState.SetupInit;
     double height;
-    public RemoveAlgaeCommand() {
+    private Supplier<Boolean> interrupted;
+    public RemoveAlgaeCommand(Supplier<Boolean> interrupted) {
         addRequirements(Robot.instance.armSubsystem);
         // addRequirements(Robot.instance.drivetrain);
         height = Robot.instance.armSubsystem.getTargetHeight();
@@ -79,6 +82,6 @@ public class RemoveAlgaeCommand extends Command {
     }
     @Override
     public boolean isFinished() {
-        return state == RemoveAlgaeState.End;
+        return state == RemoveAlgaeState.End || interrupted.get();
     }
 }
