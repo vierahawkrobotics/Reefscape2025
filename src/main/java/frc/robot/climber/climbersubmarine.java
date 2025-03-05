@@ -6,14 +6,11 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
-enum climberstate {
-    Close,
-    Open,
-}
-// defines the possible states of the climber subsystem
 
-public class climbersubmarine extends SubsystemBase{
+public class ClimberSubmarine extends SubsystemBase{
     private SparkFlex roborobotLeft;
     private SparkFlex roborobotRight;
     private RelativeEncoder encoder;
@@ -22,21 +19,44 @@ public class climbersubmarine extends SubsystemBase{
     private double posl;
     private PIDController pidr = new PIDController(Constants.p, Constants.i, Constants.d);
     private PIDController pidl = new PIDController(Constants.p2, Constants.i2, Constants.d2);
-    private climberstate state = climberstate.Open;
+    private ShuffleboardTab climberShuffleboardTab;
+    public climberstate state = climberstate.Open;
     // defines motors, pids, positions, and state variables
 
+    public enum climberstate {
+        Close,
+        Open;
+        public String thing(){
+            switch(this){
+                Close:
+                    return "Close";
+                    break;
+                Open:
+                    return "Open";
+                    break;
+                default:
+                    return "Whoopsies it would appear as if this code is very BORKEN OH NOOO";
+                    break;
+            }
+        }
+    }
+    // defines the possible states of the climber subsystem
+    
 
-
-    public climbersubmarine(){
+    public ClimberSubmarine(){
         System.out.println("Climber submarine initialized");
         roborobotLeft = new SparkFlex(Constants.MotorIdOne, MotorType.kBrushless);
         roborobotRight = new SparkFlex(Constants.MotorId2, MotorType.kBrushless);
+        climberShuffleboardTab = Shuffleboard.getTab("Climber");
+        climberShuffleboardTab.addDouble("Posr", ()->{return posr;});
+        climberShuffleboardTab.addDouble("Posr", ()->{return posl;});
+        climberShuffleboardTab.addDouble("Posr", ()->{return posr;});
+
         encoder = roborobotRight.getEncoder();
         encoder2 = roborobotLeft.getEncoder();
     }
     //initializing
     public void periodic() {
-        System.out.println("Periodic");
         calcPos();
         switch (state) {
             case Close:
@@ -59,23 +79,15 @@ public class climbersubmarine extends SubsystemBase{
                 
         }
     }
-    //periodically runs
-    public void setState(climberstate newstate) {
-        if (newstate == climberstate.Close){
-            System.out.println("Closing");
-        } else if (newstate == climberstate.Open) {
-            System.out.println("Opening");
-        }
-        System.out.println("State set");
-        state = newstate;
-    }
+    //periodically runs and sets motors based on pid values
+    
     //function to set state of the climber
     private void calcPos(){
-        System.out.println("Periodic Position Calculated");
+        //System.out.println("Periodic Position Calculated");
         posr = encoder.getPosition()*Constants.rotToRad;
-        System.out.printf("Posr: %d",posr);
+        //System.out.printf("Posr: %d",posr);
         posl = -encoder2.getPosition()*Constants.rotToRad;
-        System.out.printf("Posl: %d", posl);
+        //System.out.printf("Posl: %d", posl);
     }
     //calculates the position of the climber arms
 }

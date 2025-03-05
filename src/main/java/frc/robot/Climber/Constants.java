@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class Constants {
     public  double LiftSpeedInitial = 10;
     public static double OpenLimit = 0.1;
-    public static double rotToRad = 1;
+    public static double rotToRad = 400;
     public static double LiftSpeed = 12;    
     public static double LiftSpeedEnd = 0;    
     public static double OpenTarget = Math.PI/2;
