@@ -102,7 +102,9 @@ public class ArmSubsystem extends SubsystemBase {
      * @author Christian M + Andrew S
      */
     public void setAlgaeMotorSpeed(ArmConstants.AlgaeMotorState motorState){
-        if (motorState == ArmConstants.AlgaeMotorState.Active & algaeState != AlgaeState.Eject) {
+        if (motorState == ArmConstants.AlgaeMotorState.Active && algaeState != AlgaeState.Eject) {
+            algaeState = AlgaeState.Eject;
+        } else if (motorState == ArmConstants.AlgaeMotorState.ActiveTemp && algaeState != AlgaeState.Eject) {
             algaeState = AlgaeState.Eject;
             algaeStartTime = Timer.getFPGATimestamp();
         } else {
@@ -233,7 +235,7 @@ public class ArmSubsystem extends SubsystemBase {
                 break;
             case Collect:
                 limitSwitchOffset = isLimitSwitchPressed();
-                if (limitSwitchOffset != 0 || Timer.getFPGATimestamp()-startTime >= ArmConstants.containerCollectTime) {
+                if (limitSwitchOffset != 0) {
                     intakeState = ArmConstants.IntakeState.Rest;
                     container.set(0);
                     containerFollower.set(0);
@@ -279,8 +281,7 @@ public class ArmSubsystem extends SubsystemBase {
                 if (Timer.getFPGATimestamp()-algaeStartTime >= ArmConstants.algaeEjectTime) {
                     algaeState = AlgaeState.Rest;
                     algaeMotor.set(0);
-                }
-                else {
+                } else {
                     algaeMotor.set(ArmConstants.algaeMotorSpeed);
                 }
                 break;

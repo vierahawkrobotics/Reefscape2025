@@ -10,6 +10,7 @@ public class ElevatorMovementCommand extends Command {
     /**
      * @param move 2 = up, 1 = down, 0 = skip
      * @param algae true = change, false = skip
+     * @param algaePerm true = no time limit, false = time limit
      * @param reset true = reset, false = skip
      */
     public ElevatorMovementCommand(int move, boolean algae, boolean reset) {
@@ -28,13 +29,14 @@ public class ElevatorMovementCommand extends Command {
             } else { // Error, Ground, or aglae height
                 Robot.instance.armSubsystem.setHeightState(ArmConstants.HeightState.CoralLow);
             }
-            System.out.println("next: " + Robot.instance.armSubsystem.getTargetHeight());
+            Robot.instance.armSubsystem.setAlgaeMotorSpeed(ArmConstants.AlgaeMotorState.Inactive);
         } else if (this.move == 1) { // Check go down
             if (height == ArmConstants.HeightState.CoralHigh.getHeight()) {
                 Robot.instance.armSubsystem.setHeightState(ArmConstants.HeightState.CoralLow);
             } else { // Error, CoralLow, or algae height
                 Robot.instance.armSubsystem.setHeightState(ArmConstants.HeightState.Ground);
             }
+            Robot.instance.armSubsystem.setAlgaeMotorSpeed(ArmConstants.AlgaeMotorState.Inactive);
         } else if (algae) { // Cycle algae
             if (height == ArmConstants.HeightState.AlgaeLow.getHeight()) {
                 Robot.instance.armSubsystem.setHeightState(ArmConstants.HeightState.AlgaeHigh);
@@ -44,6 +46,7 @@ public class ElevatorMovementCommand extends Command {
             Robot.instance.armSubsystem.setAlgaeMotorSpeed(ArmConstants.AlgaeMotorState.Active);
         } else if (reset) { // Reset to Ground
             Robot.instance.armSubsystem.setHeightState(ArmConstants.HeightState.Ground);
+            Robot.instance.armSubsystem.setAlgaeMotorSpeed(ArmConstants.AlgaeMotorState.Inactive);
         }
     }
 

@@ -58,6 +58,7 @@ public class RemoveAlgaeCommand extends Command {
                 // } else {
                 //     Robot.instance.armSubsystem.setHeightState(ArmConstants.HeightState.AlgaeHigh);
                 // }
+                Robot.instance.armSubsystem.setAlgaeMotorSpeed(ArmConstants.AlgaeMotorState.ActiveTemp);
                 state = RemoveAlgaeState.EjectPeriodic;
                 break;
             case EjectPeriodic://check if at target height
@@ -65,7 +66,6 @@ public class RemoveAlgaeCommand extends Command {
                 //arm.ejectAlgae()
                 //rotate eject wheels and move arm up
                 //robot move back a foot
-                Robot.instance.armSubsystem.setAlgaeMotorSpeed(ArmConstants.AlgaeMotorState.Active);
                 if(Robot.instance.armSubsystem.AtTargetHeight()){
                     state = RemoveAlgaeState.End;
                 }

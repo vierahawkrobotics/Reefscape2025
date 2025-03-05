@@ -60,12 +60,14 @@ public class ArmConstants { // All heights in meters
         }
     }
     public enum AlgaeMotorState {
+        ActiveTemp,
         Active,
         Inactive;
 
         double getMotorState() {
             switch(this) {
                 case Active:
+                case ActiveTemp:
                     return algaeMotorSpeed;
                 case Inactive:
                 default:
@@ -112,7 +114,6 @@ public class ArmConstants { // All heights in meters
     final public static double elevatorMotorBias = 0;
     final public static double epsilon = 0.02;
     final public static double resetHeightModeBias = -0.06;
-    final public static double containerCollectTime = 5; // Seconds
     final public static double containerDropTime = 1; // Seconds
     final public static double algaeEjectTime = 2; // Seconds
 
