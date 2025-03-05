@@ -1,11 +1,11 @@
 package frc.robot.ArmSubsystem;
 
-// import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Robot;
+// import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 // import frc.robot.Components.PositionTools.PositionTools;
 // import frc.robot.Drivetrain.DrivePoseBased;
+// import edu.wpi.first.math.geometry.Pose2d;
 
 enum DropState {
     MoveInit,
@@ -17,7 +17,7 @@ enum DropState {
 
 public class DropCoralCommand extends Command {
     private DropState state = DropState.MoveInit;
-    private SequentialCommandGroup moveCommand;
+    // private SequentialCommandGroup moveCommand;
 
     public DropCoralCommand() {
         addRequirements(Robot.instance.armSubsystem);
@@ -31,10 +31,10 @@ public class DropCoralCommand extends Command {
         switch(state) {
             default:
             case MoveInit: // Set robot target position to reef
-                //Pose2d translatedPremove = PositionTools.getPoseTranslated(PositionTools.closestScorePoseEntry(false), ArmConstants.pose);
-                //Pose2d translateMove = PositionTools.getPoseTranslated(PositionTools.closestScorePose(false, Robot.instance.armSubsystem.limitSwitchOffset), ArmConstants.pose);
-                //moveCommand = new SequentialCommandGroup(new DrivePoseBased(translatedPremove,()->{return false;}), new DrivePoseBased(translateMove,()->{return false;}));
-                //moveCommand.schedule();
+                // Pose2d translatedPremove = PositionTools.getPoseTranslated(PositionTools.closestScorePoseEntry(false), ArmConstants.pose);
+                // Pose2d translateMove = PositionTools.getPoseTranslated(PositionTools.closestScorePose(false, Robot.instance.armSubsystem.limitSwitchOffset), ArmConstants.pose);
+                // moveCommand = new SequentialCommandGroup(new DrivePoseBased(translatedPremove,()->{return false;}), new DrivePoseBased(translateMove,()->{return false;}));
+                // moveCommand.schedule();
                 state = DropState.MovePeriodic;
                 break;
             case MovePeriodic: // Check target
