@@ -1,7 +1,7 @@
 package frc.robot.Components;
 
 import frc.robot.Components.AreaEffects.AreaEffectsHandler;
-import frc.robot.Components.CANdle.CANdleController;
+import frc.robot.Components.CANdleSubsystem.CANdleController;
 
 public class ComponentManager {
     static CANdleController CANdle;

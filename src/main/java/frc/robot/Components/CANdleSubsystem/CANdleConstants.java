@@ -1,4 +1,4 @@
-package frc.robot.Components.CANdle;
+package frc.robot.Components.CANdleSubsystem;
 
 public class CANdleConstants {
     public enum RobotStates {
@@ -6,6 +6,7 @@ public class CANdleConstants {
         Intaking,
         Dropping,
         AlgaeRemoval,
+        Climbing,
         RobotMoving;
     }
 

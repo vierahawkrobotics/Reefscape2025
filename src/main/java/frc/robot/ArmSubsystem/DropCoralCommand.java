@@ -2,7 +2,7 @@ package frc.robot.ArmSubsystem;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
-import frc.robot.Components.CANdle.*;
+import frc.robot.Components.CANdleSubsystem.*;
 
 enum DropState {
     PremoveInit,
@@ -54,7 +54,6 @@ public class DropCoralCommand extends Command {
             case DropInit: // Begin dropping
                 Robot.instance.armSubsystem.setIntakeState(ArmConstants.IntakeState.Drop);
                 state = DropState.DropPeriodic;
-                CANdleController.setState(CANdleConstants.RobotStates.Dropping);
                 break;
             case DropPeriodic: // Check done dropping
                 if(Robot.instance.armSubsystem.getIntakeState() == ArmConstants.IntakeState.Rest){
@@ -67,7 +66,6 @@ public class DropCoralCommand extends Command {
     public void end(boolean interrupted) {
         Robot.instance.armSubsystem.setHeightState(ArmConstants.HeightState.Ground);
         Robot.instance.armSubsystem.setIntakeState(ArmConstants.IntakeState.Rest);
-        CANdleController.setState(CANdleConstants.RobotStates.Dropping);
     }
     @Override
     public boolean isFinished() {

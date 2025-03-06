@@ -1,4 +1,4 @@
-package frc.robot.Components.CANdle;
+package frc.robot.Components.CANdleSubsystem;
 
 import com.ctre.phoenix.led.Animation;
 import com.ctre.phoenix.led.CANdle;
@@ -6,8 +6,9 @@ import com.ctre.phoenix.led.ColorFlowAnimation;
 import com.ctre.phoenix.led.FireAnimation;
 import com.ctre.phoenix.led.LarsonAnimation;
 import com.ctre.phoenix.led.RainbowAnimation;
+import com.ctre.phoenix.led.RgbFadeAnimation;
 
-import frc.robot.Components.CANdle.CANdleConstants.RobotStates;
+import frc.robot.Components.CANdleSubsystem.CANdleConstants.RobotStates;
 
 public class CANdleController {
     private static CANdle candle;
@@ -16,14 +17,14 @@ public class CANdleController {
     /**
      * Change state
      */
-    public static void setState(RobotStates state) {
+    public void setState(RobotStates state) {
         setAnimation(state);
     }
 
     /**
      * Change animation
      */
-    public static void setAnimation(RobotStates animation) {
+    public void setAnimation(RobotStates animation) {
         switch (animation) {
             case Intaking:
                 animate = new ColorFlowAnimation(128, 20, 70, 0, 0.7, CANdleConstants.numLED, ColorFlowAnimation.Direction.Forward);
@@ -36,9 +37,14 @@ public class CANdleController {
                 break;
             case RobotMoving:
                 animate = new RainbowAnimation(1, 0.1, CANdleConstants.numLED);
+                break;
+            case Climbing:
+                animate = new RgbFadeAnimation(0.7, 0.4, CANdleConstants.numLED);
+                break;
             case Idle:
             default:
                 animate = null;
+                break;
         }
     }
 

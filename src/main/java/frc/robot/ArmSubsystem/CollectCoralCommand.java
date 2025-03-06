@@ -2,7 +2,7 @@ package frc.robot.ArmSubsystem;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
-import frc.robot.Components.CANdle.*;
+import frc.robot.Components.CANdleSubsystem.*;
 
 public class CollectCoralCommand extends Command {
     public CollectCoralCommand() {
@@ -13,7 +13,6 @@ public class CollectCoralCommand extends Command {
     public void initialize() {
         Robot.instance.armSubsystem.setHeightState(ArmConstants.HeightState.Collect);
         Robot.instance.armSubsystem.setIntakeState(ArmConstants.IntakeState.Collect);
-        CANdleController.setState(CANdleConstants.RobotStates.Intaking);
     }
 
     @Override
@@ -23,7 +22,6 @@ public class CollectCoralCommand extends Command {
     public void end(boolean interrupted) {
         Robot.instance.armSubsystem.setHeightState(ArmConstants.HeightState.Ground);
         Robot.instance.armSubsystem.setIntakeState(ArmConstants.IntakeState.Rest);
-        CANdleController.setState(CANdleConstants.RobotStates.Idle);
     }
 
     @Override

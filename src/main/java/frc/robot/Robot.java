@@ -14,6 +14,7 @@ import frc.robot.Components.*;
 import frc.robot.Drivetrain.Drive3D;
 import frc.robot.Drivetrain.Drivetrain;
 import frc.robot.Drivetrain.DrivetrainConstants;
+import frc.robot.Components.CANdleSubsystem.CANdleController;
 import frc.robot.Match.*;
 import frc.robot.subsystemExample.ExampleSubsystem;
 import frc.robot.Testing.*;
@@ -24,6 +25,7 @@ public class Robot extends TimedRobot {
   public XboxController controller = new XboxController(0);
   public Drivetrain drivetrain = new Drivetrain();
   public ArmSubsystem armSubsystem;
+  public CANdleController candle = new CANdleController();
   public PositionComponent positionComponent = new PositionComponent(new Pose2d());
   @Override
   public void robotInit() {
