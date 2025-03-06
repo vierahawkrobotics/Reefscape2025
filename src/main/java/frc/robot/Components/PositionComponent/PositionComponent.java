@@ -86,15 +86,13 @@ public class PositionComponent {
     }
 
     public static void updatePose(LimelightComponent.PoseWithTimestamp limelightPos){
-        if(PositionTools.poseDist(getRobotPose(),limelightPos.pose) <= PositionComponentSettings.maxLimelightDistance){
-            poseEstimator.addVisionMeasurement(limelightPos.pose, limelightPos.timestamp);
-        }
+        poseEstimator.addVisionMeasurement(limelightPos.pose, limelightPos.timestamp);
     }
 
     public static void periodic(){
+        gryoObject.getDisplacementX();
         poseEstimator.update(Rotation2d.fromDegrees(gryoObject.getAngle()), Drivetrain.getSwerveModulePositions());
-        PoseWithTimestamp pose = LimelightComponent.calcAprilTag();
-        if(pose != null) updatePose(pose);
+        if(LimelightComponent.active() && LimelightComponent.calcAprilTag() != null) updatePose(LimelightComponent.calcAprilTag());
         lastTimestamp[1] = lastTimestamp[0];
         lastTimestamp[0] = edu.wpi.first.wpilibj.RobotController.getFPGATime();
         lastPose[1] = lastPose[1];
