@@ -2,15 +2,14 @@ package frc.robot.ArmSubsystem;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
-import frc.robot.Components.CANdleComponent.*;
+// import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+// import frc.robot.Components.PositionTools.PositionTools;
+// import frc.robot.Drivetrain.DrivePoseBased;
+// import edu.wpi.first.math.geometry.Pose2d;
 
 enum DropState {
-    PremoveInit,
-    PremovePeriodic,
     MoveInit,
     MovePeriodic,
-    AlignInit,
-    AlignPeriodic,
     DropInit,
     DropPeriodic,
     End
@@ -18,10 +17,11 @@ enum DropState {
 
 public class DropCoralCommand extends Command {
     private DropState state = DropState.MoveInit;
-    private ArmConstants.CoralDropState dropPos;
-    public DropCoralCommand(ArmConstants.CoralDropState dropPos) {
+    // private SequentialCommandGroup moveCommand;
+
+    public DropCoralCommand() {
         addRequirements(Robot.instance.armSubsystem);
-        this.dropPos = dropPos;
+        // addRequirements(Robot.instance.drivetrain);
     }
 
     @Override
@@ -30,26 +30,18 @@ public class DropCoralCommand extends Command {
     public void execute() {
         switch(state) {
             default:
-            case PremoveInit: // Set robot target position to where won't hit wall
-                Robot.instance.armSubsystem.setHeightState(dropPos.getHeight());
-                // drivetrain function move in front of place coral (include ArmConstants.armDistance)
+            case MoveInit: // Set robot target position to reef
+                // Pose2d translatedPremove = PositionTools.getPoseTranslated(PositionTools.closestScorePoseEntry(false), ArmConstants.pose);
+                // Pose2d translateMove = PositionTools.getPoseTranslated(PositionTools.closestScorePose(false, Robot.instance.armSubsystem.limitSwitchOffset), ArmConstants.pose);
+                // moveCommand = new SequentialCommandGroup(new DrivePoseBased(translatedPremove,()->{return false;}), new DrivePoseBased(translateMove,()->{return false;}));
+                // moveCommand.schedule();
                 state = DropState.MovePeriodic;
                 break;
-            case PremovePeriodic: // Check target placement
-                // if at target (drivetrain function)
-                //    state = DropState.AlignInit;
-                break;
-            case MoveInit: // Set robot target position in front of coral
-                break;
-            case MovePeriodic: // Check target placement
-                break;
-            case AlignInit: // Set robot align to reef
-                // drivetrain function align coral
-                state = DropState.AlignPeriodic;
-                break;
-            case AlignPeriodic: // Check alignment
-                // if aligned (drivetrain function)
+            case MovePeriodic: // Check target
+                //if (Robot.instance.drivetrain.getIsPointReached()) {
                 //    state = DropState.DropInit;
+                //}
+                state = DropState.DropInit;
                 break;
             case DropInit: // Begin dropping
                 Robot.instance.armSubsystem.setIntakeState(ArmConstants.IntakeState.Drop);

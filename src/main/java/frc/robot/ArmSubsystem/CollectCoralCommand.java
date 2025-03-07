@@ -1,12 +1,15 @@
 package frc.robot.ArmSubsystem;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import java.util.function.Supplier;
 import frc.robot.Robot;
 import frc.robot.Components.CANdleComponent.*;
 
 public class CollectCoralCommand extends Command {
-    public CollectCoralCommand() {
+    private Supplier<Boolean> interrupted;
+    public CollectCoralCommand(Supplier<Boolean> interrupted) {
         addRequirements(Robot.instance.armSubsystem);
+        this.interrupted = interrupted;
     }
 
     @Override
@@ -26,6 +29,6 @@ public class CollectCoralCommand extends Command {
 
     @Override
     public boolean isFinished() {
-        return Robot.instance.armSubsystem.getIntakeState() == ArmConstants.IntakeState.Rest;
+        return Robot.instance.armSubsystem.getIntakeState() == ArmConstants.IntakeState.Rest || interrupted.get();
     }
 }

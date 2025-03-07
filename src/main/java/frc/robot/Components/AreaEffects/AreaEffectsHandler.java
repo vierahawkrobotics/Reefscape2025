@@ -4,11 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Components.PositionComponent;
+import frc.robot.Components.PositionComponent.PositionComponent;
 
 /**
  * The area effect handler that holds all area effects and returns attributes based off of the current effect
- * @autor Darren Ringer
+ * It is a singleton class designed around utilizing static methods
+ * @author Darren Ringer
  */
 public class AreaEffectsHandler{
     private static AreaEffectsHandler instance;
@@ -40,7 +41,7 @@ public class AreaEffectsHandler{
         double currentPointX = currentPose.getX();
         double currentPointY = currentPose.getY();
         boolean exit = false;
-        if(currentEffect.onExitCommand != null && !currentEffect.shape.check(currentPointX,currentPointY)){
+        if(currentEffect != null && currentEffect.onExitCommand != null && !currentEffect.shape.check(currentPointX,currentPointY)){
             currentEffect.onExitCommand.schedule();
         }
         if(currentEffect == null || !currentEffect.shape.check(currentPointX,currentPointY)){
@@ -77,6 +78,9 @@ public class AreaEffectsHandler{
     }
     public static Command getExitCommand(){
         return currentEffect.onExitCommand;
+    }
+    public static boolean isAreaEffect(){
+        return !(currentEffect == null);
     }
 
 

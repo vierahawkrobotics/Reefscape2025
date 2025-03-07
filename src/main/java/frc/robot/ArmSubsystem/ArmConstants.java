@@ -1,5 +1,9 @@
 package frc.robot.ArmSubsystem;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import frc.robot.Components.PositionTools.PositionTools;
+
 public class ArmConstants { // All heights in meters
     public enum HeightState {
         CoralHigh,
@@ -55,34 +59,15 @@ public class ArmConstants { // All heights in meters
             }
         }
     }
-    public enum CoralDropState {
-        L3Left,
-        L3Right,
-        L2Left,
-        L2Right,
-        L1;
-
-        HeightState getHeight() {
-            switch(this) {
-                case L3Left:
-                case L3Right:
-                    return HeightState.CoralHigh;
-                case L2Left:
-                case L2Right:
-                    return HeightState.CoralLow;
-                case L1:
-                default:
-                    return HeightState.Ground;
-            }
-        }
-    }
     public enum AlgaeMotorState {
+        ActiveTemp,
         Active,
         Inactive;
 
         double getMotorState() {
             switch(this) {
                 case Active:
+                case ActiveTemp:
                     return algaeMotorSpeed;
                 case Inactive:
                 default:
@@ -106,36 +91,51 @@ public class ArmConstants { // All heights in meters
         }
     }
 
-    final public static int elevatorMotorID = -1;
-    final public static int elevatorFollowMotorID = -1;
-    final public static int containerMotorID = -1;
-    final public static int containerFollowMotorID = -1;
-    final public static int algaeMotorID = -1;
-    final public static double containerMotorSpeed = 99;
-    final public static double algaeMotorSpeed = 99;
+    // Motors Constants
+    final public static int elevatorMotorID = 11;
+    final public static int elevatorFollowMotorID = 12;
+    final public static int containerMotorID = 13; //bottom
+    final public static int containerFollowMotorID = 14; //top
+    final public static int algaeMotorID = 15;
+    final public static double algaeMotorSpeed = 1;
+    final public static double containerMotorSpeedBottomDrop = 0.1;
+    final public static double containerMotorSpeedTopDrop = 0.3;
+    final public static double containerMotorSpeedBottomCollect = -0.08;
+    final public static double containerMotorSpeedTopCollect = -0.08;
     public static final double encoderPositionFactor = (2 * Math.PI); // radians
     public static final double encoderVelocityFactor = (2 * Math.PI) / 60.0; // radians per second
+    public static final int maxAmp = 60;
 
-    final public static double elevatorP = 1;
+    // Elevator Constants
+    final public static double elevatorP = 3.8;
     final public static double elevatorI = 0;
     final public static double elevatorD = 0;
-    final public static double gearRadius = 0.02;
+    final public static double gearRadius = 0.02199;
     final public static double elevatorMotorBias = 0;
     final public static double epsilon = 0.02;
-    final public static double resetHeightModeBias = 0;
-    final public static double containerDropTime = 5; // Seconds
+    final public static double resetHeightModeBias = -0.06;
+    final public static double containerDropTime = 1; // Seconds
+    final public static double algaeEjectTime = 2; // Seconds
 
-    final public static double armHeight = -1; // Arm bottom distance from ground
-    final public static double armForwardOffset = 1; // Arm distance from center of robot
-    final public static double maxHeight = 100; // Arm max extension length
-    final public static double collectHeight = 1; // Height to intake from collecetion area
-    final public static double ground = 0; // Arm lowest height (L1)
+    // Arm Constants
+    final public static double autoResetHeight = 0.1; // Difference between current height and minimum arm height to automatically reset to zero
+    final public static double armHeight = 0.737; // Arm bottom distance from ground 28.75
+    final public static double armForwardOffset = 0.2921; // Arm distance from center of robot
+    final public static double maxHeight = 1.1938; // Arm max extension length
+    final public static double collectHeight = .95; // Height to intake from collection area
+    final public static double ground = 0.33; // L1
     final public static double low = 0.81; // L2
-    final public static double high = 1.83; // L3
+    final public static double high = 1.21; // L3
     final public static double algaeOffset = 0.1; // How much higher algae is than coral placement
 
+    // Intake Constants
     final public static double farLeftIntakeChannel = -1;
     final public static double middleLeftIntakeChannel = -0.5;
     final public static double middleRightIntakeChannel = 0.5;
     final public static double farRightIntakeChannel = 1;
+
+    // Other Constants
+    final public static Pose2d origin = new Pose2d();
+    final public static Pose2d offset = new Pose2d(0,armForwardOffset,Rotation2d.fromDegrees(0));
+    final public static Pose2d pose = PositionTools.getPoseTranslated(origin, offset);
 }
