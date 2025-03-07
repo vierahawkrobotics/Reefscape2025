@@ -2,6 +2,8 @@ package frc.robot.ArmSubsystem;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
+import frc.robot.Components.CANdleComponent.CANdleConstants;
+import frc.robot.Components.CANdleComponent.CANdleController;
 
 public class ElevatorMovementCommand extends Command {
     private int move;
@@ -20,7 +22,10 @@ public class ElevatorMovementCommand extends Command {
     }
 
     @Override
-    public void initialize() {
+    public void initialize() {}
+
+    @Override
+    public void execute() {
         double height = Robot.instance.armSubsystem.getTargetHeight();
         if (this.move == 2) { // Check go up
             if(height == ArmConstants.HeightState.CoralLow.getHeight()) {
@@ -47,17 +52,16 @@ public class ElevatorMovementCommand extends Command {
             Robot.instance.armSubsystem.setHeightState(ArmConstants.HeightState.Ground);
             Robot.instance.armSubsystem.setAlgaeMotorSpeed(ArmConstants.AlgaeMotorState.Inactive);
         }
+        CANdleController.setState(CANdleConstants.RobotStates.ElevatorMoving);
     }
 
     @Override
-    public void execute() {
+    public void end(boolean interrupted) {
+        CANdleController.setState(CANdleConstants.RobotStates.Idle);
     }
-
-    @Override
-    public void end(boolean interrupted) {}
     
     @Override
     public boolean isFinished() {
-        return true;
+        return Robot.instance.armSubsystem.AtTargetHeight();
     }
 }

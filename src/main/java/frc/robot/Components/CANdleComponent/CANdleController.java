@@ -7,6 +7,7 @@ import com.ctre.phoenix.led.FireAnimation;
 import com.ctre.phoenix.led.LarsonAnimation;
 import com.ctre.phoenix.led.RainbowAnimation;
 import com.ctre.phoenix.led.RgbFadeAnimation;
+import com.ctre.phoenix.led.SingleFadeAnimation;
 
 import frc.robot.Components.CANdleComponent.CANdleConstants.RobotStates;
 
@@ -35,11 +36,14 @@ public class CANdleController {
             case AlgaeRemoval:
                 animate = new LarsonAnimation(0, 255, 46, 0, 1, CANdleConstants.numLED, LarsonAnimation.BounceMode.Front, 3);
                 break;
-            case RobotMoving:
+            case ElevatorMoving:
                 animate = new RainbowAnimation(1, 0.1, CANdleConstants.numLED);
                 break;
-            case Climbing:
+            case RobotMoving:
                 animate = new RgbFadeAnimation(0.7, 0.4, CANdleConstants.numLED);
+                break;
+            case Climbing:
+                animate = new SingleFadeAnimation(50, 2, 200, 0, 0.5, CANdleConstants.numLED);
                 break;
             case Idle:
             default:

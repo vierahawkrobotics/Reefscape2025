@@ -6,6 +6,7 @@ public class CANdleConstants {
         Intaking,
         Dropping,
         AlgaeRemoval,
+        ElevatorMoving,
         Climbing,
         RobotMoving;
     }
