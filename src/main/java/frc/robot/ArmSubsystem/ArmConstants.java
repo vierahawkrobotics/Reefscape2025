@@ -36,6 +36,22 @@ public class ArmConstants { // All heights in meters
         Collect,
         Drop,
     }
+    public enum AlgaeMotorState {
+        ActiveTemp,
+        Active,
+        Inactive;
+
+        double getMotorState() {
+            switch(this) {
+                case Active:
+                case ActiveTemp:
+                    return algaeMotorSpeed;
+                case Inactive:
+                default:
+                    return 0;
+            }
+        }
+    }
     public enum ContainerLimitSwitchState {
         None,
         FarLeft,
@@ -56,37 +72,6 @@ public class ArmConstants { // All heights in meters
                 case None:
                 default:
                     return 0;
-            }
-        }
-    }
-    public enum AlgaeMotorState {
-        ActiveTemp,
-        Active,
-        Inactive;
-
-        double getMotorState() {
-            switch(this) {
-                case Active:
-                case ActiveTemp:
-                    return algaeMotorSpeed;
-                case Inactive:
-                default:
-                    return 0;
-            }
-        }
-    }
-    public enum AlgaeDropState {
-        High,
-        Low;
-
-        HeightState getHeight() {
-            switch(this) {
-                case High:
-                    return HeightState.AlgaeHigh;
-                case Low:
-                    return HeightState.AlgaeLow;
-                default:
-                    return HeightState.Ground;
             }
         }
     }
@@ -134,7 +119,7 @@ public class ArmConstants { // All heights in meters
     final public static double middleRightIntakeChannel = 0.5;
     final public static double farRightIntakeChannel = 1;
 
-    // Other Constants
+    // Pose2d Constants
     final public static Pose2d origin = new Pose2d();
     final public static Pose2d offset = new Pose2d(0,armForwardOffset,Rotation2d.fromDegrees(0));
     final public static Pose2d pose = PositionTools.getPoseTranslated(origin, offset);
