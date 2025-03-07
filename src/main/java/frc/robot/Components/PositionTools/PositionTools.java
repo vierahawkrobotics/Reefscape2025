@@ -4,7 +4,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import frc.robot.Robot;
-import frc.robot.Components.PositionComponent.PositionComponent;
+import frc.robot.Components.PositionComponent;
 
 public class PositionTools {
     private PositionTools(){}

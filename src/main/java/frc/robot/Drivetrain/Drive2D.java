@@ -1,10 +1,8 @@
 package frc.robot.Drivetrain;
 import java.util.function.Supplier;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
-import frc.robot.Components.AreaEffects.AreaEffectsHandler;
 public class Drive2D extends Command {
     
     //TO DO: this should be taken from the position subsystem
@@ -34,18 +32,18 @@ public class Drive2D extends Command {
         vyVal = (vyVal < DrivetrainConstants.inputDeadband) ? vyVal =0: vyVal;
 
         double vrVal;
-        // set vrVal based on area effects
-        Pose2d areaPose = AreaEffectsHandler.getTargetPose();
-        if (areaPose == null){
-         vrVal = (vr.get()< DrivetrainConstants.inputDeadband)?0: vr.get();
-         Robot.instance.drivetrain.setInputVelRot(vrVal);
-        }
-        else{
-            vrVal = areaPose.getRotation().getRadians();
-            Robot.instance.drivetrain.setTargetPosRot(vrVal);
-        }
+        //set vrVal based on area effects
+        // areaPose = Robot.instance.position.AreaEffectHandler.getPose();
+        // if (areaPose == null){
+        //  vrVal = (vr.get()< DrivetrainConstants.inputDeadband)?0: vr.get();
+        //  Robot.instance.drivetrain.setTargetVelRot(vrVal);
+        // }
+        // else{
+        //     vrVal = areaPose.getRotation();
+        //     Robot.instance.drivetrain.setTargetPosRot(vrVal);
+        // }
         
-        Robot.instance.drivetrain.setInputVel(vxVal, vyVal);
+        Robot.instance.drivetrain.setTargetVel(vxVal, vyVal, true);
     }
     @Override
     public void end(boolean interrupted) {}
