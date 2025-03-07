@@ -20,7 +20,10 @@ public class ElevatorMovementCommand extends Command {
     }
 
     @Override
-    public void initialize() {
+    public void initialize() {}
+
+    @Override
+    public void execute() {
         double height = Robot.instance.armSubsystem.getTargetHeight();
         if (this.move == 2) { // Check go up
             if(height == ArmConstants.HeightState.CoralLow.getHeight()) {
@@ -50,14 +53,10 @@ public class ElevatorMovementCommand extends Command {
     }
 
     @Override
-    public void execute() {
-    }
-
-    @Override
     public void end(boolean interrupted) {}
     
     @Override
     public boolean isFinished() {
-        return true;
+        return Robot.instance.armSubsystem.AtTargetHeight();
     }
 }
