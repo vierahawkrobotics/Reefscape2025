@@ -1,8 +1,7 @@
 package frc.robot.Climber;
 
-import frc.robot.Climber.ClimberSubmarine;
 
-public class ClimberSetState extends ClimberSubmarine{
+public class ClimberSetState extends climbersubmarine{
     public void setState(climberstate newstate) {
         if (newstate == climberstate.Close){
             System.out.println("Closing");
@@ -10,6 +9,6 @@ public class ClimberSetState extends ClimberSubmarine{
             System.out.println("Opening");
         }
         System.out.println("State set");
-        ClimberSubmarine.state = newstate;
+        state = newstate;
     }
 }

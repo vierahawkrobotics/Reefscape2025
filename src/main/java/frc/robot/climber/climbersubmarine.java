@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
 
-public class ClimberSubmarine extends SubsystemBase{
+public class climbersubmarine extends SubsystemBase{
     private SparkFlex roborobotLeft;
     private SparkFlex roborobotRight;
     private RelativeEncoder encoder;
@@ -27,30 +27,27 @@ public class ClimberSubmarine extends SubsystemBase{
         Close,
         Open;
         public String thing(){
-            switch(this){
-                Close:
+            switch(this) {
+                case Close:
                     return "Close";
-                    break;
-                Open:
+                case Open:
                     return "Open";
-                    break;
                 default:
                     return "Whoopsies it would appear as if this code is very BORKEN OH NOOO";
-                    break;
             }
         }
     }
     // defines the possible states of the climber subsystem
     
 
-    public ClimberSubmarine(){
+    public climbersubmarine(){
         System.out.println("Climber submarine initialized");
         roborobotLeft = new SparkFlex(Constants.MotorIdOne, MotorType.kBrushless);
         roborobotRight = new SparkFlex(Constants.MotorId2, MotorType.kBrushless);
         climberShuffleboardTab = Shuffleboard.getTab("Climber");
         climberShuffleboardTab.addDouble("Posr", ()->{return posr;});
-        climberShuffleboardTab.addDouble("Posr", ()->{return posl;});
-        climberShuffleboardTab.addDouble("Posr", ()->{return posr;});
+        climberShuffleboardTab.addDouble("Posl", ()->{return posl;});
+        climberShuffleboardTab.addString("State", ()->{return state.thing();});
 
         encoder = roborobotRight.getEncoder();
         encoder2 = roborobotLeft.getEncoder();
