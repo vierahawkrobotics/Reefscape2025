@@ -47,7 +47,7 @@ public class RobotState {
         //   Algae
         new JoystickButton(controller2, XboxController.Button.kX.value).onTrue(new RemoveAlgaeCommand(()->{return false;}));
         //   Climber
-        //climber command call (button X)
+        //climber command (X)
     }
     public static void Periodic() {
     }

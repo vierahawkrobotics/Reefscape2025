@@ -10,7 +10,6 @@ public class ElevatorMovementCommand extends Command {
     /**
      * @param move 2 = up, 1 = down, 0 = skip
      * @param algae true = change, false = skip
-     * @param algaePerm true = no time limit, false = time limit
      * @param reset true = reset, false = skip
      */
     public ElevatorMovementCommand(int move, boolean algae, boolean reset) {

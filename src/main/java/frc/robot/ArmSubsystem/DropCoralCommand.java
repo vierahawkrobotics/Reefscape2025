@@ -38,10 +38,9 @@ public class DropCoralCommand extends Command {
                 state = DropState.MovePeriodic;
                 break;
             case MovePeriodic: // Check target
-                //if (Robot.instance.drivetrain.getIsPointReached()) {
-                //    state = DropState.DropInit;
-                //}
-                state = DropState.DropInit;
+                // if (Robot.instance.drivetrain.getIsPointReached()) {
+                   state = DropState.DropInit;
+                // }
                 break;
             case DropInit: // Begin dropping
                 Robot.instance.armSubsystem.setIntakeState(ArmConstants.IntakeState.Drop);

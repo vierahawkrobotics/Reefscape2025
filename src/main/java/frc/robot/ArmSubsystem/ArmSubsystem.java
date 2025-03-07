@@ -3,8 +3,9 @@ package frc.robot.ArmSubsystem;
 import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkFlexConfig;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -16,15 +17,10 @@ enum ArmState {
     NormalOper
 }
 
-enum AlgaeState {
-    Rest,
-    Eject
-}
-
 public class ArmSubsystem extends SubsystemBase {
     private ShuffleboardTab armTab;
     private ArmState state = ArmState.ResetHeight; // Immediately reset height
-    private AlgaeState algaeState = AlgaeState.Rest;
+    private ArmConstants.AlgaeMotorState algaeState = ArmConstants.AlgaeMotorState.Inactive;
     private ArmConstants.IntakeState intakeState = ArmConstants.IntakeState.Rest;
     private SparkFlex elevator;
     private SparkFlex elevatorFollower;
@@ -39,8 +35,16 @@ public class ArmSubsystem extends SubsystemBase {
     public double algaeStartTime;
 
     public ArmSubsystem() {
+        // Shuffleboard Setup
         armTab = Shuffleboard.getTab("Arm Subsystem");
-
+        armTab.addNumber("Current Height", () -> {return curHeight;});
+        armTab.addNumber("Current Height Inches", () -> {return curHeight*39.37;});
+        armTab.addDouble("Elevator Height Radians", () -> {return elevatorFollower.getExternalEncoder().getPosition();});
+        armTab.addNumber("Target Height", () -> {return targetHeight;});
+        armTab.addString("Collector State", () -> {return intakeState.toString();});
+        armTab.addString("Algae State", () -> {return algaeState.toString();});
+        armTab.addBoolean("Limit Switch", () -> {return elevator.getReverseLimitSwitch().isPressed();});
+        
         // Elevator Motors Setup
         elevator = new SparkFlex(ArmConstants.elevatorMotorID, MotorType.kBrushless);
         elevatorFollower = new SparkFlex(ArmConstants.elevatorFollowMotorID, MotorType.kBrushless);
@@ -83,33 +87,30 @@ public class ArmSubsystem extends SubsystemBase {
         containerFollower.configure(containerFollowerConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kNoPersistParameters);
 
         // Algae Motor Setup
-        // algaeMotor = new SparkFlex(ArmConstants.algaeMotorID, MotorType.kBrushless);
-        // SparkBaseConfig algaeConfig = new SparkFlexConfig();
-        // algaeConfig.idleMode(IdleMode.kBrake);
-        // algaeMotor.configure(algaeConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kNoPersistParameters);
-
-        // Shuffleboard Setup
-        armTab.addNumber("Current Height", () -> {return curHeight;});
-        armTab.addNumber("Target Height", () -> {return targetHeight;});
-        armTab.addDouble("Elevator Radians", () -> {return elevatorFollower.getExternalEncoder().getPosition();});
-        armTab.addString("Collector State", () -> {return intakeState.toString();});
-        armTab.addBoolean("Limit Switch", () -> {return elevator.getReverseLimitSwitch().isPressed();});
-        armTab.addNumber("Current Height Inches", () -> {return curHeight*39.37;});
+        algaeMotor = new SparkFlex(ArmConstants.algaeMotorID, MotorType.kBrushless);
+        SparkFlexConfig algaeConfig = new SparkFlexConfig();
+        algaeConfig.idleMode(IdleMode.kBrake);
+        algaeMotor.configure(algaeConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kNoPersistParameters);
     }
     
     /**
+     * Change algae motor rotation speed based on motorState
      * @param motorState new algae motorState (Active or Inactive)
      * @author Christian M + Andrew S
      */
     public void setAlgaeMotorSpeed(ArmConstants.AlgaeMotorState motorState){
-        if (motorState == ArmConstants.AlgaeMotorState.Active && algaeState != AlgaeState.Eject) {
-            algaeState = AlgaeState.Eject;
-        } else if (motorState == ArmConstants.AlgaeMotorState.ActiveTemp && algaeState != AlgaeState.Eject) {
-            algaeState = AlgaeState.Eject;
+        if (motorState == ArmConstants.AlgaeMotorState.ActiveTemp && algaeState != motorState) {
             algaeStartTime = Timer.getFPGATimestamp();
-        } else {
-            algaeState = AlgaeState.Rest;
         }
+        algaeState = motorState;
+    }
+
+    /**
+     * @return current algae state
+     * @author Andrew S
+     */
+    public ArmConstants.AlgaeMotorState getAlgaeState() {
+        return algaeState;
     }
 
     /**
@@ -228,7 +229,7 @@ public class ArmSubsystem extends SubsystemBase {
     public void periodic() {
         curHeight = elevatorFollower.getExternalEncoder().getPosition()*ArmConstants.gearRadius + ArmConstants.armHeight;
         
-        switch (intakeState) { // Collect and Drop Periodic
+        switch (intakeState) { // Collect and Drop
             case Rest:
                 container.set(0);
                 containerFollower.set(0);
@@ -258,7 +259,7 @@ public class ArmSubsystem extends SubsystemBase {
                 break;
         }
 
-        switch (state) { // Elevator height periodic
+        switch (state) { // Elevator
             case ResetHeight:
                 RecallibrateHeight();
                 break;
@@ -272,15 +273,14 @@ public class ArmSubsystem extends SubsystemBase {
                 break;
         }
 
-        switch(algaeState) {
-            case Rest:
+        switch(algaeState) { // Algae
+            case Inactive:
                 algaeMotor.set(0);
                 break; 
-
-            case Eject:
+            case Active:
+            case ActiveTemp:
                 if (Timer.getFPGATimestamp()-algaeStartTime >= ArmConstants.algaeEjectTime) {
-                    algaeState = AlgaeState.Rest;
-                    algaeMotor.set(0);
+                    algaeState = ArmConstants.AlgaeMotorState.Inactive;
                 } else {
                     algaeMotor.set(ArmConstants.algaeMotorSpeed);
                 }
