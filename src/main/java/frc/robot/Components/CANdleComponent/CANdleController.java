@@ -1,4 +1,4 @@
-package frc.robot.Components.CANdleSubsystem;
+package frc.robot.Components.CANdleComponent;
 
 import com.ctre.phoenix.led.Animation;
 import com.ctre.phoenix.led.CANdle;
@@ -8,7 +8,7 @@ import com.ctre.phoenix.led.LarsonAnimation;
 import com.ctre.phoenix.led.RainbowAnimation;
 import com.ctre.phoenix.led.RgbFadeAnimation;
 
-import frc.robot.Components.CANdleSubsystem.CANdleConstants.RobotStates;
+import frc.robot.Components.CANdleComponent.CANdleConstants.RobotStates;
 
 public class CANdleController {
     private static CANdle candle;
@@ -17,14 +17,14 @@ public class CANdleController {
     /**
      * Change state
      */
-    public void setState(RobotStates state) {
+    public static void setState(RobotStates state) {
         setAnimation(state);
     }
 
     /**
-     * Change animation
+     * Change CANdle animation
      */
-    public void setAnimation(RobotStates animation) {
+    public static void setAnimation(RobotStates animation) {
         switch (animation) {
             case Intaking:
                 animate = new ColorFlowAnimation(128, 20, 70, 0, 0.7, CANdleConstants.numLED, ColorFlowAnimation.Direction.Forward);

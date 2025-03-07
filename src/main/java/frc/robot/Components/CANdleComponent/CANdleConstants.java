@@ -1,4 +1,4 @@
-package frc.robot.Components.CANdleSubsystem;
+package frc.robot.Components.CANdleComponent;
 
 public class CANdleConstants {
     public enum RobotStates {
