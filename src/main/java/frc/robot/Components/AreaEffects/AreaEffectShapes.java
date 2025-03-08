@@ -1,5 +1,7 @@
 package frc.robot.Components.AreaEffects;
 
+import java.util.List;
+
 /**
  * Shapes used for area effect targeting/designation
  * @author Darren Ringer
@@ -7,7 +9,7 @@ package frc.robot.Components.AreaEffects;
 
 public class AreaEffectShapes {
 
-    public class Point{
+    public static class Point{
         public double x;
         public double y;
         public Point(double x, double y){
@@ -20,7 +22,7 @@ public class AreaEffectShapes {
     /**
      * Parent generic class for area effects
      */
-    public class DefaultShape{
+    public static class DefaultShape{
         /**
          * Checks if (x,y) is inside the effect
          * @param point Point (x,y) to check
@@ -44,7 +46,7 @@ public class AreaEffectShapes {
      * Area effect circle shape
      * 
      */
-    public class Circle extends DefaultShape{
+    public static class Circle extends DefaultShape{
         private Point center;
         private double r;
         
@@ -66,7 +68,7 @@ public class AreaEffectShapes {
 
 
 
-    public class Polygon extends DefaultShape{
+    public static class Polygon extends DefaultShape{
         private Point[] pointList;
 
         public Polygon(Point[] pointList){
@@ -77,6 +79,17 @@ public class AreaEffectShapes {
             this.pointList = new Point[Math.min(xList.length,yList.length)];
             for(int i=0;i<Math.min(xList.length, yList.length);i++){
                 this.pointList[i] = new Point(xList[i], yList[i]);
+            }
+        }
+
+        public Polygon(List<Point> pointList){
+            this.pointList = pointList.toArray(new Point[pointList.size()]);
+        }
+
+        public Polygon(List<Double> xList, List<Double> yList){
+            this.pointList = new Point[Math.min(xList.size(),yList.size())];
+            for(int i=0;i<Math.min(xList.size(), yList.size());i++){
+                this.pointList[i] = new Point(xList.get(i), yList.get(i));
             }
         }
 

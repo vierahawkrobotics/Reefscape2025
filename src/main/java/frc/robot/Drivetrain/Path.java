@@ -48,7 +48,7 @@ public class Path {
     public Double getCurrentRot(){
         return currentPointRot;
     }
-    public boolean getPathStatus(){
+    public boolean getIsPathFinished(){
         return isPathFinished;
     }
     public double getRadiusFactor(){
