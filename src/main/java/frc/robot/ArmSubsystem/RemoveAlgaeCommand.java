@@ -1,11 +1,8 @@
 package frc.robot.ArmSubsystem;
 
 import java.util.function.Supplier;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
-import frc.robot.Components.CANdleComponent.CANdleConstants;
-import frc.robot.Components.CANdleComponent.CANdleController;
 
 enum RemoveAlgaeState {
     SetupInit,
@@ -46,7 +43,6 @@ public class RemoveAlgaeCommand extends Command {
                 break;
             case EjectInit: // Begin algae ejection
                 Robot.instance.armSubsystem.setAlgaeMotorSpeed(ArmConstants.AlgaeMotorState.ActiveTemp);
-                CANdleController.setState(CANdleConstants.RobotStates.AlgaeRemoval);
                 state = RemoveAlgaeState.EjectPeriodic;
                 break;
             case EjectPeriodic:// Check at target height
@@ -60,7 +56,6 @@ public class RemoveAlgaeCommand extends Command {
     public void end(boolean interrupted) {
         Robot.instance.armSubsystem.setHeightState(ArmConstants.HeightState.Ground);
         Robot.instance.armSubsystem.setAlgaeMotorSpeed(ArmConstants.AlgaeMotorState.Inactive);
-        CANdleController.setState(CANdleConstants.RobotStates.Idle);
     }
     @Override
     public boolean isFinished() {

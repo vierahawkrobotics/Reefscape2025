@@ -4,15 +4,10 @@ public class CANdleConstants {
     public enum RobotStates {
         Idle,
         Intaking,
-        Dropping,
-        AlgaeRemoval,
-        ElevatorMoving,
-        Climbing,
-        RobotMoving;
+        Dropping;
     }
 
-    public final static int CANdleID = -1;
-    public final static int numLED = -1;
-    public final static double offScalar = 0;
-    public final static double onScalar = 0.1;
+    public final static int CANdleID = 20;
+    public final static int numLED = 20;
+    public final static double onScalar = 1;
 }
