@@ -29,6 +29,7 @@ public class PositionComponent {
     private static long[] lastTimestamp = new long[2];
     private static PositionComponent instance;
     private static double gyroOffset = 0;
+    private static double currentRad = 0;
 
     private PositionComponent(Pose2d initialPose) {
         gryoObject = new AHRS(NavXComType.kMXP_SPI);
@@ -54,7 +55,7 @@ public class PositionComponent {
         return instance;
     }
     public static void zeroPos(){
-        gryoObject.zeroYaw();
+        gyroOffset = Math.toRadians(gryoObject.getAngle());
         poseEstimator.resetPose(new Pose2d(0,0,Rotation2d.fromRadians(0)));
     }
     public static Pose2d getRobotPose() {
@@ -86,19 +87,34 @@ public class PositionComponent {
         return gryoObject.getRotation2d().getDegrees();
     }
 
-    public static double getOffsetGyroRotation(){
-        return (gryoObject.getAngle() + gyroOffset + 360) % 360 - 180;
+    public static double getOffsetGyroRotationRad(){
+        double r = currentRad + gyroOffset + Math.PI;
+        r %= 2 * Math.PI;
+        r += 2 * Math.PI;
+        r %= 2 * Math.PI;
+        r -= Math.PI;
+        return r;
+    }
+    public static double getOffsetGyroRotation() {
+        return Math.toDegrees(getOffsetGyroRotationRad());
     }
 
     public static void updatePose(LimelightComponent.PoseWithTimestamp limelightPos){
         if(limelightPos == null) return;
-        if(!limelightPos.megaTag2) gyroOffset = limelightPos.pose.getRotation().getDegrees() - gryoObject.getAngle();
+        if(!limelightPos.megaTag2) {
+            double delta = limelightPos.pose.getRotation().getRadians() - getOffsetGyroRotationRad();
+            // System.out.println("lime " + limelightPos.pose.getRotation().getRadians());
+            // System.out.println("gyro " + getOffsetGyroRotationRad());
+            // System.out.println("delta " + delta);
+            gyroOffset += delta; 
+            gyroOffset %= 2 * Math.PI;
+        }
         poseEstimator.addVisionMeasurement(limelightPos.pose, limelightPos.timestamp);
     }
 
     public static void periodic(){
-        gryoObject.getDisplacementX();
-        poseEstimator.update(Rotation2d.fromDegrees(gryoObject.getAngle()+gyroOffset), Drivetrain.getSwerveModulePositions());
+        currentRad = -Math.toRadians(gryoObject.getAngle());
+        poseEstimator.update(Rotation2d.fromRadians(getOffsetGyroRotationRad()), Drivetrain.getSwerveModulePositions());
         if(LimelightComponent.active() && LimelightComponent.calcAprilTag() != null) updatePose(LimelightComponent.calcAprilTag());
         lastTimestamp[1] = lastTimestamp[0];
         lastTimestamp[0] = edu.wpi.first.wpilibj.RobotController.getFPGATime();
