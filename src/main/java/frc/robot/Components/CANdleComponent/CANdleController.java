@@ -11,15 +11,17 @@ public class CANdleController {
 
     /**
      * Change state
+     * @author Andrew S
      */
     public static void setState(RobotStates state) {
-        setAnimation(state);
+        setColor(state);
     }
 
     /**
-     * Change CANdle animation
+     * Change CANdle color
+     * @author Andrew S
      */
-    public static void setAnimation(RobotStates animation) {
+    public static void setColor(RobotStates animation) {
         switch (animation) {
             case Intaking:
                 candle.setLEDs(255, 23, 0);
@@ -34,17 +36,21 @@ public class CANdleController {
         }
     }
 
-    public static void Initialize() {
+    /**
+     * Initialization function
+     * @author Andrew S
+     * @author WPILib Example Code
+     */
+    public static void initialize() {
         candle = new CANdle(CANdleConstants.CANdleID);
         CANdleConfiguration configAll = new CANdleConfiguration();
         configAll.statusLedOffWhenActive = true;
         configAll.disableWhenLOS = false;
-        configAll.stripType = LEDStripType.RGB;
         configAll.brightnessScalar = CANdleConstants.onScalar;
         candle.configAllSettings(configAll, 100);
         candle.configLEDType(LEDStripType.RGB);
         candle.setLEDs(245, 34, 189);
     }
 
-    public static void Periodic() {}
+    public static void periodic() {}
 }
