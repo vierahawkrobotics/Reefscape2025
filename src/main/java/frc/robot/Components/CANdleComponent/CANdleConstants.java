@@ -8,6 +8,5 @@ public class CANdleConstants {
     }
 
     public final static int CANdleID = 20;
-    public final static int numLED = 20;
     public final static double onScalar = 1;
 }
