@@ -96,7 +96,8 @@ public class ArmSubsystem extends SubsystemBase {
     /**
      * Change algae motor rotation speed based on motorState
      * @param motorState new algae motorState (Active or Inactive)
-     * @author Christian M + Andrew S
+     * @author Christian M
+     * @author Andrew S
      */
     public void setAlgaeMotorSpeed(ArmConstants.AlgaeMotorState motorState){
         if (motorState == ArmConstants.AlgaeMotorState.ActiveTemp && algaeState != motorState) {
