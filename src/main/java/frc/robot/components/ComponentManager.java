@@ -11,7 +11,7 @@ import frc.robot.Components.PositionComponent.PositionComponentSettings;
 public class ComponentManager {
     private static ShuffleboardTab posTab;
     public static void Initialize() {
-        CANdleController.Initialize();
+        CANdleController.initialize();
         PositionComponent.initialize(new Pose2d());
         AreaEffectsHandler.initialize();
         HighwaySystem.initialize();
@@ -42,6 +42,6 @@ public class ComponentManager {
     public static void Periodic() {
         //PositionComponent.periodic();
         //AreaEffectsHandler.periodic();
-        CANdleController.Periodic();
+        CANdleController.periodic();
     }
 }
