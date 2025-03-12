@@ -26,6 +26,6 @@ public class AutonomousState {
     public static void periodic() {}
     public static void exit() {}
     public Command getAutonomousCommand(){
-        return new PathPlannerAuto("New Auto");
+        return new PathPlannerAuto("New Auto");//Gets auto based on auto name, more info on getting autos here https://pathplanner.dev/pplib-build-an-auto.html#create-a-sendablechooser-with-certain-autos-in-project
     }
 }

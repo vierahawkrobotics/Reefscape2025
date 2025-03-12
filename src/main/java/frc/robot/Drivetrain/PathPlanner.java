@@ -15,10 +15,22 @@ import frc.robot.Robot;
 import frc.robot.Components.PositionComponent.PositionComponent;
 public class PathPlanner extends Command {
     
+    /*
+     *Creates a robot config then in a try catch sets the value to something based on the robot settings
+     *in the application
+     *
+     *Configures the robot with the inputs of Supplier<Pose2d> Consumer<Pose2D> Supplier<ChassisSpeeds> 
+     *function to drive robot, PPHolonomicDriveController which has the PIDS,robot config, bool to flip 
+     *the auto or not, and the drivetrain instance
+     *
+     *driveRobotRelative uses the set functions in the drivetrain to set velocity 
+     *given from chassis speeds supplier and is called from the config 
+    */
     public PathPlanner() {
-        addRequirements(Robot.instance.exampleSubsystem);
+        addRequirements(Robot.instance.drivetrain);
     }
 
+    //Stuff for autobuilder to configure
     Supplier<Pose2d> getPose = () -> PositionComponent.getRobotPose();
     Consumer<Pose2d> resetPose = (Pose2d pose) -> PositionComponent.zeroPos();
     Supplier<ChassisSpeeds> getRobotRelativeSpeeds = () -> PositionComponent.getChassisSpeeds();
@@ -26,9 +38,9 @@ public class PathPlanner extends Command {
 
     @Override
     public void initialize() {
-        RobotConfig config = null;
+        RobotConfig config = null;//This is because java dosnt wanna believe anything in a try catch
       try{
-        config = RobotConfig.fromGUISettings();
+        config = RobotConfig.fromGUISettings();//gets config from Pathplanner application
       } catch (Exception e){
         e.printStackTrace();
       }
@@ -36,20 +48,20 @@ public class PathPlanner extends Command {
         getPose,//Pose supplier
         resetPose,//reset odomotry function
         getRobotRelativeSpeeds,//chassis speed supplier
-        (speeds, feedforwards) -> driveRobotRelative(speeds),
+        (speeds) -> driveRobotRelative(speeds),//Gives speed to Function to drive robot
         new PPHolonomicDriveController(
-          new PIDConstants(5.0, 0.0, 0.0),
+          new PIDConstants(5.0, 0.0, 0.0),//PIDS
           new PIDConstants(5.0, 0.0, 0.0)
         ),
-        config,
-        () ->{
+        config,//Robot config settings in the Pathplanner application
+        () ->{//Inverst auto command if alliance is red
           var alliance = DriverStation.getAlliance();
           if (alliance.isPresent()) {
             return alliance.get() == DriverStation.Alliance.Red;
           }
           return false;
         },
-        Robot.instance.drivetrain
+        Robot.instance.drivetrain //Drivetrain instance
       );
     }
     @Override
@@ -61,7 +73,7 @@ public class PathPlanner extends Command {
         return false;
     }
     private void driveRobotRelative(ChassisSpeeds speeds){
-        Robot.instance.drivetrain.setInputVel(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond);
-        Robot.instance.drivetrain.setInputVelRot(speeds.omegaRadiansPerSecond);
+        Robot.instance.drivetrain.setInputVel(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond);//Sets drivetrain x and y velocities in meters per second
+        Robot.instance.drivetrain.setInputVelRot(speeds.omegaRadiansPerSecond);//Sets drivetrain rotatiional velocity in radians per second
     }
 }
