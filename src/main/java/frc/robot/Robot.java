@@ -12,6 +12,7 @@ import frc.robot.ArmSubsystem.*;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Components.*;
+import frc.robot.Components.CANdleComponent.CANdleController;
 import frc.robot.Components.PositionComponent.PositionComponent;
 import frc.robot.Drivetrain.Drivetrain;
 import frc.robot.Match.*;

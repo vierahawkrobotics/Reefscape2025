@@ -4,12 +4,14 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.Components.AreaEffects.AreaEffectsHandler;
+import frc.robot.Components.CANdleComponent.CANdleController;
 import frc.robot.Components.PositionComponent.PositionComponent;
 import frc.robot.Components.PositionComponent.PositionComponentSettings;
 
 public class ComponentManager {
     private static ShuffleboardTab posTab;
     public static void Initialize() {
+        CANdleController.Initialize();
         PositionComponent.initialize(new Pose2d());
         AreaEffectsHandler.initialize();
         HighwaySystem.initialize();
@@ -40,5 +42,6 @@ public class ComponentManager {
     public static void Periodic() {
         //PositionComponent.periodic();
         //AreaEffectsHandler.periodic();
+        CANdleController.Periodic();
     }
 }

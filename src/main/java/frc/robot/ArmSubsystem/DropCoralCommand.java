@@ -6,6 +6,8 @@ import frc.robot.Robot;
 // import frc.robot.Components.PositionTools.PositionTools;
 // import frc.robot.Drivetrain.DrivePoseBased;
 // import edu.wpi.first.math.geometry.Pose2d;
+import frc.robot.Components.CANdleComponent.CANdleConstants;
+import frc.robot.Components.CANdleComponent.CANdleController;
 
 enum DropState {
     MoveInit,
@@ -35,6 +37,7 @@ public class DropCoralCommand extends Command {
                 // Pose2d translateMove = PositionTools.getPoseTranslated(PositionTools.closestScorePose(false, Robot.instance.armSubsystem.limitSwitchOffset), ArmConstants.pose);
                 // moveCommand = new SequentialCommandGroup(new DrivePoseBased(translatedPremove,()->{return false;}), new DrivePoseBased(translateMove,()->{return false;}));
                 // moveCommand.schedule();
+                // CANdleController.setState(CANdleConstants.RobotStates.RobotMoving);
                 state = DropState.MovePeriodic;
                 break;
             case MovePeriodic: // Check target
@@ -44,6 +47,7 @@ public class DropCoralCommand extends Command {
                 break;
             case DropInit: // Begin dropping
                 Robot.instance.armSubsystem.setIntakeState(ArmConstants.IntakeState.Drop);
+                CANdleController.setState(CANdleConstants.RobotStates.Dropping);
                 state = DropState.DropPeriodic;
                 break;
             case DropPeriodic: // Check done dropping
@@ -57,6 +61,7 @@ public class DropCoralCommand extends Command {
     public void end(boolean interrupted) {
         Robot.instance.armSubsystem.setHeightState(ArmConstants.HeightState.Ground);
         Robot.instance.armSubsystem.setIntakeState(ArmConstants.IntakeState.Rest);
+        CANdleController.setState(CANdleConstants.RobotStates.Idle);
     }
     @Override
     public boolean isFinished() {
