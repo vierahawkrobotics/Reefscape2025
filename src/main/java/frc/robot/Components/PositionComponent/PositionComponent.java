@@ -103,7 +103,7 @@ public class PositionComponent {
         lastTimestamp[1] = lastTimestamp[0];
         lastTimestamp[0] = edu.wpi.first.wpilibj.RobotController.getFPGATime();
         lastPose[1] = lastPose[1];
-        lastPose[0] = poseEstimator.getEstimatedPosition();
+        lastPose[0] = poseEstimator.getEstimatedPosition().times(-1);
 
         // if(LimelightComponent.calcAprilTag() != null){
         //     updatePose();
