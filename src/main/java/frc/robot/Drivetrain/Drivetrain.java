@@ -92,10 +92,10 @@ public class Drivetrain extends SubsystemBase{
 
         // drivetrainTab.addDouble("Set X Speed", () -> {return setVelX;});
         // drivetrainTab.addDouble("Set Y Speed", () -> {return setVelY;});
-        drivetrainTab.addDouble("V.x", () -> {return VxSB;});
-        drivetrainTab.addDouble("V.y", () -> {return VySB;});
+        // drivetrainTab.addDouble("V.x", () -> {return VxSB;});
+        // drivetrainTab.addDouble("V.y", () -> {return VySB;});
         drivetrainTab.addDouble("Distance From Point", () -> {return distanceShuffle;});
-        drivetrainTab.addString("tran state", () -> {return translateState.toString();});
+        // drivetrainTab.addString("tran state", () -> {return translateState.toString();});
     }
 //-------------------------------------------Periodic------------------------------------  
     @Override 
@@ -123,20 +123,21 @@ public class Drivetrain extends SubsystemBase{
                 break;
         }
         applyDrivetrain();
+        System.out.println(velX);
         //set values for shuffleboard
-        velTX = velX;
-        velTY = velY;
-        velTR = velR;
     }
 //-------------------------------------------Drive Functions------------------------------------
     private void driveVelocity(){
         updateDistance();
         setDrivetrain(velX, velY);
+        velTX = velX;
+        velTY = velY;
         velX = 0;
         velY = 0;
     }
     private void driveVelocityRot(){
         setDrivetrainRot(velR);
+        velTR = velR;
         velR = 0;
     }
     private void drivePosition(){
@@ -155,7 +156,7 @@ public class Drivetrain extends SubsystemBase{
         }
         VxSB = V.x;
         VySB = V.y;
-        setDrivetrain(V.x*scaleFactor*-1, V.y*scaleFactor*-1);
+        setDrivetrain(V.x*scaleFactor, V.y*scaleFactor);
     }
     private void drivePositionRot(){
         double vr;
@@ -178,8 +179,8 @@ public class Drivetrain extends SubsystemBase{
         // else 
             // scale = AreaEffectsHandler.getMaxSpeed();
         if(applySpeed){    
-            appliedX = vx*scale;
-            appliedY = vy*scale;
+            appliedX = -1 * vx*scale;
+            appliedY = -1 * vy*scale;
         }
         else{
             appliedX = Math.abs(vx) > DrivetrainConstants.physicalSpeedLimit? Math.signum(vx)*DrivetrainConstants.physicalSpeedLimit: vx;
@@ -197,7 +198,7 @@ public class Drivetrain extends SubsystemBase{
     }
 //-------------------------------------------Apply Set Values------------------------------------
     private void applyDrivetrain(){
-        Rotation2d currentRotation = PositionComponent.getRobotPose().getRotation();
+        Rotation2d currentRotation = PositionComponent.getRobotPose().getRotation().times(-1);
         ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(appliedX, appliedY, appliedR, currentRotation);
         SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(speeds);
         
@@ -281,7 +282,7 @@ public class Drivetrain extends SubsystemBase{
         distanceShuffle =  distance;
     }
     private void updateRotDistance(){
-        double currentAngle = PositionComponent.getRobotPose().getRotation().getRadians();
+        double currentAngle = PositionComponent.getRobotPose().getRotation().getRadians()*-1;
         rotDistance = mod(posR - currentAngle -Math.PI, 2*Math.PI) - Math.PI;
     }
     public boolean checkIsRobotStopped(){
