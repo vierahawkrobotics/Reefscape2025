@@ -28,6 +28,7 @@ public class PositionComponent {
     private static Pose2d[] lastPose = new Pose2d[2];
     private static long[] lastTimestamp = new long[2];
     private static PositionComponent instance;
+    private static double gyroOffset = 0;
 
     private PositionComponent(Pose2d initialPose) {
         gryoObject = new AHRS(NavXComType.kMXP_SPI);
@@ -85,16 +86,20 @@ public class PositionComponent {
         return gryoObject.getRotation2d().getDegrees();
     }
 
+    public static double getOffsetGyroRotation(){
+        return (gryoObject.getAngle() + gyroOffset + 360) % 360 - 180;
+    }
+
     public static void updatePose(LimelightComponent.PoseWithTimestamp limelightPos){
-        if(PositionTools.poseDist(getRobotPose(),limelightPos.pose) <= PositionComponentSettings.maxLimelightDistance){
-            poseEstimator.addVisionMeasurement(limelightPos.pose, limelightPos.timestamp);
-        }
+        if(limelightPos == null) return;
+        if(!limelightPos.megaTag2) gyroOffset = limelightPos.pose.getRotation().getDegrees() - gryoObject.getAngle();
+        poseEstimator.addVisionMeasurement(limelightPos.pose, limelightPos.timestamp);
     }
 
     public static void periodic(){
-        poseEstimator.update(Rotation2d.fromDegrees(gryoObject.getAngle()), Drivetrain.getSwerveModulePositions());
-        PoseWithTimestamp pose = LimelightComponent.calcAprilTag();
-        if(pose != null) updatePose(pose);
+        gryoObject.getDisplacementX();
+        poseEstimator.update(Rotation2d.fromDegrees(gryoObject.getAngle()+gyroOffset), Drivetrain.getSwerveModulePositions());
+        if(LimelightComponent.active() && LimelightComponent.calcAprilTag() != null) updatePose(LimelightComponent.calcAprilTag());
         lastTimestamp[1] = lastTimestamp[0];
         lastTimestamp[0] = edu.wpi.first.wpilibj.RobotController.getFPGATime();
         lastPose[1] = lastPose[1];
