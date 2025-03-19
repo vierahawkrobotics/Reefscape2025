@@ -16,6 +16,7 @@ public class ComponentManager {
         PositionComponent.initialize(new Pose2d());
         AreaEffectsHandler.initialize();
         HighwaySystem.initialize();
+        PDHManager.Initialize();
 
         //Shuffleboard stuff
         posTab = Shuffleboard.getTab("Position Data");
@@ -45,5 +46,6 @@ public class ComponentManager {
     public static void Periodic() {
         PositionComponent.periodic();
         AreaEffectsHandler.periodic();
+        PDHManager.Periodic();
     }
 }
