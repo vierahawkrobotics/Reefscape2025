@@ -18,8 +18,10 @@ import frc.robot.Components.PositionTools.PositionTools;
 import frc.robot.Drivetrain.Drivetrain;
 
 /**
- * @todo: Implement
- * @author:Richard Wright
+ * The component of the robot that controls positioning using 
+ * {@link LimelightComponent Limelight} and {@link SwerveDrivePoseEstimator WPILib Pose Estimator}
+ * @author Darren Ringer
+ * @author Richard Wright
  */
 public class PositionComponent {
     private static SwerveDrivePoseEstimator poseEstimator;
