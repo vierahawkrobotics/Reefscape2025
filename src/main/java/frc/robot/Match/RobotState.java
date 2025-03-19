@@ -41,8 +41,8 @@ public class RobotState {
         //   Elevator
         new Trigger(()->{return controller2.getPOV() == 0;}).onTrue(new ElevatorMovementCommand(2,false,false)); // Up
         new Trigger(()->{return controller2.getPOV() == 180;}).onTrue(new ElevatorMovementCommand(1,false,false)); // Down
-        new Trigger(()->{return controller2.getPOV() == 270;}).onTrue(new ElevatorMovementCommand(0,true,false))
-                                                              .onFalse(new RemoveAlgaeCommand(()->{return true;})); // Algae Cycle
+        // new Trigger(()->{return controller2.getPOV() == 270;}).onTrue(new ElevatorMovementCommand(0,true,false))
+        //                                                       .onFalse(new RemoveAlgaeCommand(()->{return true;})); // Algae Cycle
         new Trigger(()->{return controller2.getPOV() == 90;}).onTrue(new ElevatorMovementCommand(0,false,true)); // Reset
         //   Algae
         // new JoystickButton(controller2, XboxController.Button.kX.value).onTrue(new RemoveAlgaeCommand(()->{return false;}));
