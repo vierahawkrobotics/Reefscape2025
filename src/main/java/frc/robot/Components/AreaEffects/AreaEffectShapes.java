@@ -7,7 +7,7 @@ package frc.robot.Components.AreaEffects;
 
 public class AreaEffectShapes {
 
-    public class Point{
+    public static class Point{
         public double x;
         public double y;
         public Point(double x, double y){
@@ -20,7 +20,7 @@ public class AreaEffectShapes {
     /**
      * Parent generic class for area effects
      */
-    public class DefaultShape{
+    public static class DefaultShape{
         /**
          * Checks if (x,y) is inside the effect
          * @param point Point (x,y) to check
@@ -44,7 +44,7 @@ public class AreaEffectShapes {
      * Area effect circle shape
      * 
      */
-    public class Circle extends DefaultShape{
+    public static class Circle extends DefaultShape{
         private Point center;
         private double r;
         
@@ -66,7 +66,7 @@ public class AreaEffectShapes {
 
 
 
-    public class Polygon extends DefaultShape{
+    public static class Polygon extends DefaultShape{
         private Point[] pointList;
 
         public Polygon(Point[] pointList){

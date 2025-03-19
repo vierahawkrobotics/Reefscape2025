@@ -22,11 +22,12 @@ public class LimelightComponent {
     public static final double[] defaultArray = {};
     public static final Double[] defaultFiducials = new Double[10];
     public static final double minDist = 0;
-    public static final double maxDistMT1 = 1.0; // In meters, the maximum acceptable distance for an MT1 april tag
-    public static final double maxDistMT2 = 6.0; // In meters, the maximum acceptable distance for an MT1 april tag
+    public static final double maxDistMT1 = 1.0;    // In meters, the maximum acceptable distance for an MT1 april tag
+    public static final double maxDistMT2 = 6.0;    // In meters, the maximum acceptable distance for an MT1 april tag
     public static final double aprilTagHeight = Units.inchesToMeters(10.5); // In meters, the height of the april tag
-    public static final double limelightFOVX = Units.degreesToRadians(82); // In radians, the horizontal FOV of the limelight
-    public static final double limelightFOVY = Units.degreesToRadians(56.2); // In radians, the vertical FOV of the limelight
+    public static final double limelightFOVX = 82;      // In degrees, the horizontal FOV of the limelight
+    public static final double limelightFOVY = 56.2;    // In degrees, the vertical FOV of the limelight
+    public static final double detectionBuffer = 0;     // In degrees, the angular buffer
         
     //-------------------------------------------Last Data--------------------------------------------//
     public static double dist;
@@ -62,8 +63,8 @@ public class LimelightComponent {
     public static boolean tagIsValid(){
         RawFiducial[] fiducials = LimelightHelpers.getRawFiducials("");
         if(fiducials.length <= 0 || getTX() == null || getTY() == null) return false;
-        double tagAngularSize = Math.atan2(aprilTagHeight/2,LimelightHelpers.getRawFiducials(null)[0].distToCamera);
-        return !(Math.abs(getTX()) > limelightFOVX-tagAngularSize || Math.abs(getTY()) > limelightFOVY-tagAngularSize);
+        double tagAngularSize = Units.radiansToDegrees(Math.atan2(aprilTagHeight/2,LimelightHelpers.getRawFiducials(null)[0].distToCamera));
+        return !(Math.abs(getTX()) > limelightFOVX/2-tagAngularSize-detectionBuffer || Math.abs(getTY()) > limelightFOVY/2-tagAngularSize-detectionBuffer);
     }
 
 
