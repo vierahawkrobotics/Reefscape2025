@@ -37,7 +37,7 @@ public class RobotState {
                                                                        .onFalse(new CollectCoralCommand(()->{return true;}))
                                                                        .onFalse(new InstantCommand(()->{controller2.setRumble(RumbleType.kBothRumble, 0);}));
         new JoystickButton(controller2, XboxController.Button.kA.value).onTrue(new DropCoralCommand());
-        new JoystickButton(controller2, XboxController.Button.kB.value).onTrue(new RunCommand(()->{Robot.instance.armSubsystem.SetTargetHeight(1);}, Robot.instance.armSubsystem));
+        // new JoystickButton(controller2, XboxController.Button.kB.value).onTrue(new RunCommand(()->{Robot.instance.armSubsystem.SetTargetHeight(1);}, Robot.instance.armSubsystem));
         //   Elevator
         new Trigger(()->{return controller2.getPOV() == 0;}).onTrue(new ElevatorMovementCommand(2,false,false)); // Up
         new Trigger(()->{return controller2.getPOV() == 180;}).onTrue(new ElevatorMovementCommand(1,false,false)); // Down

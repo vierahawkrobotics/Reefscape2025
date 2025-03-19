@@ -34,6 +34,7 @@ public class DropCoralCommand extends Command {
     public void initialize() {}
     @Override
     public void execute() {
+        System.out.println("Drop");
         switch(state) {
             default:
             case MoveInit: // Set robot target position to reef

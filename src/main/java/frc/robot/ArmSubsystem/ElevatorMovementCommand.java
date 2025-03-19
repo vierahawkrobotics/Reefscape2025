@@ -20,12 +20,10 @@ public class ElevatorMovementCommand extends Command {
     }
 
     @Override
-    public void initialize() {}
-
-    @Override
-    public void execute() {
+    public void initialize() {
         double height = Robot.instance.armSubsystem.getTargetHeight();
         if (this.move == 2) { // Check go up
+            System.out.println("Up");
             if(height == ArmConstants.HeightState.CoralLow.getHeight()) {
                 Robot.instance.armSubsystem.setHeightState(ArmConstants.HeightState.CoralHigh);
             } else { // Error, Ground, or aglae height
@@ -33,24 +31,29 @@ public class ElevatorMovementCommand extends Command {
             }
             Robot.instance.armSubsystem.setAlgaeMotorSpeed(ArmConstants.AlgaeMotorState.Inactive);
         } else if (this.move == 1) { // Check go down
-            if (height == ArmConstants.HeightState.CoralHigh.getHeight()) {
+            System.out.println("Down");
+            if (height == ArmConstants.HeightState.CoralHigh.getHeight() || height == ArmConstants.maxHeight) {
                 Robot.instance.armSubsystem.setHeightState(ArmConstants.HeightState.CoralLow);
             } else { // Error, CoralLow, or algae height
                 Robot.instance.armSubsystem.setHeightState(ArmConstants.HeightState.Ground);
             }
             Robot.instance.armSubsystem.setAlgaeMotorSpeed(ArmConstants.AlgaeMotorState.Inactive);
-        } else if (algae) { // Cycle algae
+        } else if (this.algae) { // Cycle algae
             if (height == ArmConstants.HeightState.AlgaeLow.getHeight()) {
                 Robot.instance.armSubsystem.setHeightState(ArmConstants.HeightState.AlgaeHigh);
             } else { // Not at algae height or at AlgaeHigh
                 Robot.instance.armSubsystem.setHeightState(ArmConstants.HeightState.AlgaeLow);
             }
             Robot.instance.armSubsystem.setAlgaeMotorSpeed(ArmConstants.AlgaeMotorState.Active);
-        } else if (reset) { // Reset to Ground
+        } else if (this.reset) { // Reset to Ground
+            System.out.println("Reset");
             Robot.instance.armSubsystem.setHeightState(ArmConstants.HeightState.Ground);
             Robot.instance.armSubsystem.setAlgaeMotorSpeed(ArmConstants.AlgaeMotorState.Inactive);
         }
     }
+
+    @Override
+    public void execute() {}
 
     @Override
     public void end(boolean interrupted) {}
