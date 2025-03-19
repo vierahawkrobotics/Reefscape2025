@@ -11,8 +11,8 @@ public class DrivetrainConstants {
     public static double defaultRotSpeed = Math.PI/2;
 //-------------------------------------------Limits and Deadband-------------------------------------------
     public static double inputDeadband = 0.12;
-    // public static double physicalSpeedLimit = 3.5; // meters per second
-    // public static double physicalRotSpeedLimit = Math.PI; // rad per second
+    public static double physicalSpeedLimit = 2; // meters per second
+    public static double physicalRotSpeedLimit = Math.PI; // rad per second
     public static int drivingMotorCurrentLimit = 80; // amps
     public static int turningMotorCurrentLimit = 40; // amps
 

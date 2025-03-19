@@ -27,14 +27,14 @@ public class Drivetrain extends SubsystemBase{
     );
     //physical parts
     public static MAXSwerveModule[] maxSwerveModules = {
-        // new MAXSwerveModule(DrivetrainConstants.flDrivingID,DrivetrainConstants
-        // .flTurningID,DrivetrainConstants.flChassisAngularOffset),
-        // new MAXSwerveModule(DrivetrainConstants.frDrivingID,DrivetrainConstants
-        // .frTurningID,DrivetrainConstants.frChassisAngularOffset),
-        // new MAXSwerveModule(DrivetrainConstants.blDrivingID,DrivetrainConstants
-        // .blTurningID,DrivetrainConstants.blChassisAngularOffset),
-        // new MAXSwerveModule(DrivetrainConstants.brDrivingID,DrivetrainConstants
-        // .brTurningID,DrivetrainConstants.brChassisAngularOffset)
+        new MAXSwerveModule(DrivetrainConstants.flDrivingID,DrivetrainConstants
+        .flTurningID,DrivetrainConstants.flChassisAngularOffset),
+        new MAXSwerveModule(DrivetrainConstants.frDrivingID,DrivetrainConstants
+        .frTurningID,DrivetrainConstants.frChassisAngularOffset),
+        new MAXSwerveModule(DrivetrainConstants.blDrivingID,DrivetrainConstants
+        .blTurningID,DrivetrainConstants.blChassisAngularOffset),
+        new MAXSwerveModule(DrivetrainConstants.brDrivingID,DrivetrainConstants
+        .brTurningID,DrivetrainConstants.brChassisAngularOffset)
       };
     /*states for translation and rotation
     roatation state path doesn't do anything 
@@ -59,6 +59,10 @@ public class Drivetrain extends SubsystemBase{
     private double posX = 0; //meters
     private double posY =0; //meters
     private double posR =0; //radians
+
+    //are we using inputVel or vel with speed already added?
+    private boolean applySpeed = true;
+    private boolean applySpeedRot = true;
     //distance for pos based control
     private double distance = 0;
     private double rotDistance;
@@ -79,7 +83,7 @@ public class Drivetrain extends SubsystemBase{
     ShuffleboardTab drivetrainTab = Shuffleboard.getTab("Drivetrain");
     public Drivetrain(){
         // drivetrainTab.addDouble("Robot velR", () -> {return velTR;});
-        // drivetrainTab.addDouble("Robot velX", () -> {return velTX;});
+        drivetrainTab.addDouble("Robot velX", () -> {return velTX;});
         // drivetrainTab.addDouble("Robot velY", () -> {return velTY;});
 
         drivetrainTab.addDouble("Robot posR", () -> {return posR;});
@@ -88,51 +92,52 @@ public class Drivetrain extends SubsystemBase{
 
         // drivetrainTab.addDouble("Set X Speed", () -> {return setVelX;});
         // drivetrainTab.addDouble("Set Y Speed", () -> {return setVelY;});
-        drivetrainTab.addDouble("V.x", () -> {return VxSB;});
-        drivetrainTab.addDouble("V.y", () -> {return VySB;});
+        // drivetrainTab.addDouble("V.x", () -> {return VxSB;});
+        // drivetrainTab.addDouble("V.y", () -> {return VySB;});
         drivetrainTab.addDouble("Distance From Point", () -> {return distanceShuffle;});
-        drivetrainTab.addString("tran state", () -> {return translateState.toString();});
+        // drivetrainTab.addString("tran state", () -> {return translateState.toString();});
     }
 //-------------------------------------------Periodic------------------------------------  
     @Override 
     public void periodic(){
-        // switch(translateState){
-        //     case path:
-        //         //TODO: drivePath();
-        //         break;
-        //     case velocity:
-        //         driveVelocity();
-        //         break;
-        //     case position:
-        //         drivePosition();
-        //         break;
-        // }
-        // switch(rotationState){
-        //     case velocity:
-        //         driveVelocityRot();
-        //         break;
-        //     case position:
-        //         drivePositionRot();
-        //         break;
-        //     case path:
-        //         //this should NOT be used
-        //         break;
-        // }
-        // applyDrivetrain();
-        // //set values for shuffleboard
-        // velTX = velX;
-        // velTY = velY;
-        // velTR = velR;
+        switch(translateState){
+            case path:
+                //TODO: drivePath();
+                break;
+            case velocity:
+                driveVelocity();
+                break;
+            case position:
+                drivePosition();
+                break;
+        }
+        switch(rotationState){
+            case velocity:
+                driveVelocityRot();
+                break;
+            case position:
+                drivePositionRot();
+                break;
+            case path:
+                //this should NOT be used
+                break;
+        }
+        applyDrivetrain();
+        System.out.println(velX);
+        //set values for shuffleboard
     }
 //-------------------------------------------Drive Functions------------------------------------
     private void driveVelocity(){
         updateDistance();
         setDrivetrain(velX, velY);
+        velTX = velX;
+        velTY = velY;
         velX = 0;
         velY = 0;
     }
     private void driveVelocityRot(){
         setDrivetrainRot(velR);
+        velTR = velR;
         velR = 0;
     }
     private void drivePosition(){
@@ -151,18 +156,21 @@ public class Drivetrain extends SubsystemBase{
         }
         VxSB = V.x;
         VySB = V.y;
-        setDrivetrain(V.x*scaleFactor*-1, V.y*scaleFactor*-1);
+        setDrivetrain(V.x*scaleFactor, V.y*scaleFactor);
     }
     private void drivePositionRot(){
+        double vr;
         updateRotDistance();
 
-        double vr = Math.abs(rotDistance)>DrivetrainConstants.rotTolerance?
-        Math.signum(rotDistance): rotDistance/(DrivetrainConstants.decreaseRateRot);
         if(rotDistance <= DrivetrainConstants.validRotDiff) vr = 0;
+        else{
+            vr = Math.abs(rotDistance)>DrivetrainConstants.rotTolerance?
+            Math.signum(rotDistance): rotDistance/(DrivetrainConstants.decreaseRateRot);
+        }
         setDrivetrainRot(vr);
     }
 //-------------------------------------Set Drivetrain based on Drive Functions-----------------------------
-
+    
     //this allows translation and rotation to be seperated
     private void setDrivetrain(double vx, double vy){
         double scale = DrivetrainConstants.defaultMaxSpeed;
@@ -170,16 +178,27 @@ public class Drivetrain extends SubsystemBase{
         //     scale = DrivetrainConstants.defaultMaxSpeed;
         // else 
             // scale = AreaEffectsHandler.getMaxSpeed();
-        appliedX = vx*scale;
-        appliedY = vy*scale;
+        if(applySpeed){    
+            appliedX = -1 * vx*scale;
+            appliedY = -1 * vy*scale;
+        }
+        else{
+            appliedX = Math.abs(vx) > DrivetrainConstants.physicalSpeedLimit? Math.signum(vx)*DrivetrainConstants.physicalSpeedLimit: vx;
+            appliedY = Math.abs(vy) > DrivetrainConstants.physicalSpeedLimit? Math.signum(vy)*DrivetrainConstants.physicalSpeedLimit: vy;
+        }
 
     }
     private void setDrivetrainRot(double vr){
-        appliedR = vr*DrivetrainConstants.defaultRotSpeed;
+        if(applySpeedRot){
+            appliedR = vr*DrivetrainConstants.defaultRotSpeed;
+        }
+        else{
+            appliedR = Math.abs(vr) > DrivetrainConstants.physicalSpeedLimit? Math.signum(vr)*DrivetrainConstants.physicalSpeedLimit: vr;
+        }
     }
 //-------------------------------------------Apply Set Values------------------------------------
     private void applyDrivetrain(){
-        Rotation2d currentRotation = PositionComponent.getRobotPose().getRotation();
+        Rotation2d currentRotation = PositionComponent.getRobotPose().getRotation().times(-1);
         ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(appliedX, appliedY, appliedR, currentRotation);
         SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(speeds);
         
@@ -189,12 +208,14 @@ public class Drivetrain extends SubsystemBase{
             moduleStates[i].speedMetersPerSecond *= moduleStates[i].angle.minus(currentAngle).getCos();
         }
 
-        // for(int i = 0; i< 4; i++){
-        //     maxSwerveModules[i].turningPIDController.setReference(moduleStates[i].angle.getRadians(), ControlType.kPosition);
-        //     maxSwerveModules[i].drivingPIDController.setReference(moduleStates[i].speedMetersPerSecond, ControlType.kVelocity);
-        // }
+         for(int i = 0; i< 4; i++){
+            maxSwerveModules[i].turningPIDController.setReference(moduleStates[i].angle.getRadians(), ControlType.kPosition);
+            maxSwerveModules[i].drivingPIDController.setReference(moduleStates[i].speedMetersPerSecond, ControlType.kVelocity);
+        }
     }
 //------------------------------------------Setter Methods------------------------------------
+   
+    //Sets the velocity from -1 to 1. Multiplies it by the max speed later
     public void setInputVel(double vx, double vy){
         if (vx > 1) vx = 1;
         else if (vx < -1) vx = -1;
@@ -202,21 +223,37 @@ public class Drivetrain extends SubsystemBase{
         if (vy > 1) vy = 1;
         else if (vy < -1) vy = -1;
         velY = vy;
+        applySpeed = true;
         translateState = TranslateState.velocity;
     }
     public void setInputVelRot(double vr){
         if (vr > 1) vr = 1;
         else if (vr < -1) vr = -1;
         velR = vr;
+        applySpeedRot = true;
+        rotationState = RotationState.velocity;
+    }
+    //Sets the velocity including the speed.
+    public void setVel(double vx, double vy){
+        velX = vx;
+        velY = vy;
+        applySpeed = false;
+        translateState = TranslateState.velocity;
+    }
+    public void setVelRot(double vr){
+        velR = vr;
+        applySpeedRot = false;
         rotationState = RotationState.velocity;
     }
     public void setTargetPos(double px, double py){
         posX = px;
         posY = py;
+        applySpeed = true;
         translateState = TranslateState.position;
     }
     public void setTargetPosRot(double pr){
         posR = pr;
+        applySpeedRot = true;
         rotationState = RotationState.position;
     }
 //------------------------------------------Getter Methods------------------------------------
@@ -228,12 +265,11 @@ public class Drivetrain extends SubsystemBase{
     }
      public static SwerveModulePosition[] getSwerveModulePositions(){
         SwerveModulePosition[] swerveModulePositionList = {
-            // maxSwerveModules[0].getPosition(),
-            // maxSwerveModules[1].getPosition(),
-            // maxSwerveModules[2].getPosition(),
-            // maxSwerveModules[3].getPosition()
-        };
-            
+        maxSwerveModules[0].getPosition(),
+        maxSwerveModules[1].getPosition(),
+        maxSwerveModules[2].getPosition(),
+        maxSwerveModules[3].getPosition()};
+        
         return swerveModulePositionList;
     }
 //-------------------------------------------Misc Methods------------------------------------
@@ -246,7 +282,7 @@ public class Drivetrain extends SubsystemBase{
         distanceShuffle =  distance;
     }
     private void updateRotDistance(){
-        double currentAngle = PositionComponent.getRobotPose().getRotation().getRadians();
+        double currentAngle = PositionComponent.getRobotPose().getRotation().getRadians()*-1;
         rotDistance = mod(posR - currentAngle -Math.PI, 2*Math.PI) - Math.PI;
     }
     public boolean checkIsRobotStopped(){
