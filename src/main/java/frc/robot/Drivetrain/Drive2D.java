@@ -27,11 +27,18 @@ public class Drive2D extends Command {
     @Override
     public void execute() {
         //apply input deadband, input squaring, and scale input by the speed for x, y, and r
-        double vxVal = (vx.get() < 0) ? Math.pow(vx.get(),2)*(-1): Math.pow(vx.get(),2);
-        vxVal = (vxVal< DrivetrainConstants.inputDeadband)?vxVal=0: vxVal;
-
-        double vyVal = (vy.get() < 0) ? Math.pow(vy.get(),2)*(-1): Math.pow(vy.get(),2);
-        vyVal = (vyVal < DrivetrainConstants.inputDeadband) ? vyVal =0: vyVal;
+        double vxVal = vx.get();
+        double vyVal = vy.get();
+        double m = Math.sqrt(vxVal*vxVal+vyVal*vyVal);
+    
+        if(m <= DrivetrainConstants.inputDeadband) {
+            vxVal = 0;
+            vyVal = 0;
+        }
+        else {
+            vxVal *= m;
+            vyVal *= m;
+        }
 
         double vrVal;
         // set vrVal based on area effects

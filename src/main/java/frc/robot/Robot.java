@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -22,7 +24,7 @@ public class Robot extends TimedRobot {
   public ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
   public XboxController controller = new XboxController(0);
   public Drivetrain drivetrain = new Drivetrain();
-  public PositionComponent positionComponent = PositionComponent.getInstance();
+  public PositionComponent positionComponent = PositionComponent.initialize(new Pose2d(0,6.0307,Rotation2d.kZero));
   @Override
   public void robotInit() {
     GUI.initialize();

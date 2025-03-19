@@ -27,7 +27,7 @@ public class MAXSwerveModule{
     public SparkMaxConfig drivingConfig;
     public SparkMaxConfig turningConfig;
 
-    public MAXSwerveModule(int drivingMotorID,int turningMotorID,double chassisAngularOffset){
+    public MAXSwerveModule(int drivingMotorID,int turningMotorID,double chassisAngularOffset, boolean inverted){
 
       drivingMotorController = new SparkFlex(drivingMotorID, MotorType.kBrushless);
       turningMotorController = new SparkMax(turningMotorID, MotorType.kBrushless);
@@ -37,7 +37,7 @@ public class MAXSwerveModule{
       turningEncoder = turningMotorController.getAbsoluteEncoder();
       this.chassisAngularOffset = chassisAngularOffset;
 
-      SparkMaxConfig turningConfig = new SparkMaxConfig();
+      turningConfig = new SparkMaxConfig();
       turningConfig
       .idleMode(IdleMode.kBrake)
       .smartCurrentLimit(DrivetrainConstants.turningMotorCurrentLimit);
@@ -53,9 +53,9 @@ public class MAXSwerveModule{
       .outputRange(DrivetrainConstants.turningMinOutput, DrivetrainConstants.turningMaxOutput)
       .pid(DrivetrainConstants.turningP, DrivetrainConstants.turningI, DrivetrainConstants.turningD);
 
-      SparkMaxConfig drivingConfig = new SparkMaxConfig();
+      drivingConfig = new SparkMaxConfig();
       drivingConfig
-      .inverted(true)
+      .inverted(inverted)
       .idleMode(IdleMode.kBrake)
       .smartCurrentLimit(DrivetrainConstants.drivingMotorCurrentLimit);
       drivingConfig.encoder
