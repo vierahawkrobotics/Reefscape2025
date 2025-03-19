@@ -33,6 +33,7 @@ public class Robot extends TimedRobot {
 
     RobotState.Initialize();
 
+    
     //Reset Pose
     new JoystickButton(controller, 8).onTrue(new InstantCommand(PositionComponent::zeroPos));
   }

@@ -24,6 +24,8 @@ public class MAXSwerveModule{
     public RelativeEncoder drivingEncoder;
     public AbsoluteEncoder turningEncoder;
     private double chassisAngularOffset;
+    public SparkMaxConfig drivingConfig;
+    public SparkMaxConfig turningConfig;
 
     public MAXSwerveModule(int drivingMotorID,int turningMotorID,double chassisAngularOffset){
 

@@ -82,6 +82,10 @@ public class Drivetrain extends SubsystemBase{
 
     ShuffleboardTab drivetrainTab = Shuffleboard.getTab("Drivetrain");
     public Drivetrain(){
+        //invert back two driving motors
+        maxSwerveModules[2].drivingConfig.inverted(false);
+        maxSwerveModules[3].drivingConfig.inverted(false);
+
         // drivetrainTab.addDouble("Robot velR", () -> {return velTR;});
         drivetrainTab.addDouble("Robot velX", () -> {return velTX;});
         // drivetrainTab.addDouble("Robot velY", () -> {return velTY;});
