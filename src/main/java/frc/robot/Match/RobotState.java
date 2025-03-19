@@ -45,7 +45,7 @@ public class RobotState {
                                                               .onFalse(new RemoveAlgaeCommand(()->{return true;})); // Algae Cycle
         new Trigger(()->{return controller2.getPOV() == 90;}).onTrue(new ElevatorMovementCommand(0,false,true)); // Reset
         //   Algae
-        new JoystickButton(controller2, XboxController.Button.kX.value).onTrue(new RemoveAlgaeCommand(()->{return false;}));
+        // new JoystickButton(controller2, XboxController.Button.kX.value).onTrue(new RemoveAlgaeCommand(()->{return false;}));
         //   Climber
         //climber command (X)
     }

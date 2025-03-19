@@ -37,7 +37,6 @@ public class DropCoralCommand extends Command {
                 // Pose2d translateMove = PositionTools.getPoseTranslated(PositionTools.closestScorePose(false, Robot.instance.armSubsystem.limitSwitchOffset), ArmConstants.pose);
                 // moveCommand = new SequentialCommandGroup(new DrivePoseBased(translatedPremove,()->{return false;}), new DrivePoseBased(translateMove,()->{return false;}));
                 // moveCommand.schedule();
-                // CANdleController.setState(CANdleConstants.RobotStates.RobotMoving);
                 state = DropState.MovePeriodic;
                 break;
             case MovePeriodic: // Check target
