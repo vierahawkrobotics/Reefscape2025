@@ -87,10 +87,10 @@ public class ArmSubsystem extends SubsystemBase {
         containerFollower.configure(containerFollowerConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kNoPersistParameters);
 
         // Algae Motor Setup
-        algaeMotor = new SparkFlex(ArmConstants.algaeMotorID, MotorType.kBrushless);
-        SparkFlexConfig algaeConfig = new SparkFlexConfig();
-        algaeConfig.idleMode(IdleMode.kBrake);
-        algaeMotor.configure(algaeConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kNoPersistParameters);
+        // algaeMotor = new SparkFlex(ArmConstants.algaeMotorID, MotorType.kBrushless);
+        // SparkFlexConfig algaeConfig = new SparkFlexConfig();
+        // algaeConfig.idleMode(IdleMode.kBrake);
+        // algaeMotor.configure(algaeConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kNoPersistParameters);
     }
     
     /**

@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 public class PDHManager {
     private static PowerDistribution powerDistribution;
     public static void Initialize() {
-        powerDistribution = new PowerDistribution(0, ModuleType.kRev);
+        powerDistribution = new PowerDistribution(16, ModuleType.kRev);
     }
     public static void Periodic() {
 

@@ -27,14 +27,14 @@ public class Drivetrain extends SubsystemBase{
     );
     //physical parts
     public static MAXSwerveModule[] maxSwerveModules = {
-        // new MAXSwerveModule(DrivetrainConstants.flDrivingID,DrivetrainConstants
-        // .flTurningID,DrivetrainConstants.flChassisAngularOffset),
-        // new MAXSwerveModule(DrivetrainConstants.frDrivingID,DrivetrainConstants
-        // .frTurningID,DrivetrainConstants.frChassisAngularOffset),
-        // new MAXSwerveModule(DrivetrainConstants.blDrivingID,DrivetrainConstants
-        // .blTurningID,DrivetrainConstants.blChassisAngularOffset),
-        // new MAXSwerveModule(DrivetrainConstants.brDrivingID,DrivetrainConstants
-        // .brTurningID,DrivetrainConstants.brChassisAngularOffset)
+        new MAXSwerveModule(DrivetrainConstants.flDrivingID,DrivetrainConstants
+        .flTurningID,DrivetrainConstants.flChassisAngularOffset),
+        new MAXSwerveModule(DrivetrainConstants.frDrivingID,DrivetrainConstants
+        .frTurningID,DrivetrainConstants.frChassisAngularOffset),
+        new MAXSwerveModule(DrivetrainConstants.blDrivingID,DrivetrainConstants
+        .blTurningID,DrivetrainConstants.blChassisAngularOffset),
+        new MAXSwerveModule(DrivetrainConstants.brDrivingID,DrivetrainConstants
+        .brTurningID,DrivetrainConstants.brChassisAngularOffset)
       };
     /*states for translation and rotation
     roatation state path doesn't do anything 
@@ -228,10 +228,10 @@ public class Drivetrain extends SubsystemBase{
     }
      public static SwerveModulePosition[] getSwerveModulePositions(){
         SwerveModulePosition[] swerveModulePositionList = {
-            // maxSwerveModules[0].getPosition(),
-            // maxSwerveModules[1].getPosition(),
-            // maxSwerveModules[2].getPosition(),
-            // maxSwerveModules[3].getPosition()
+            maxSwerveModules[0].getPosition(),
+            maxSwerveModules[1].getPosition(),
+            maxSwerveModules[2].getPosition(),
+            maxSwerveModules[3].getPosition()
         };
             
         return swerveModulePositionList;
