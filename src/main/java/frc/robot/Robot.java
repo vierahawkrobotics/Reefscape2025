@@ -50,13 +50,19 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    DisabledState.Initialize();
+  }
 
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+    DisabledState.Periodic();
+  }
 
   @Override
-  public void disabledExit() {}
+  public void disabledExit() {
+    DisabledState.Exit();
+  }
 
   private Command autoCommand;
   @Override
