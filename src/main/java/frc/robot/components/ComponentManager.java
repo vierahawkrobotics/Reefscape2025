@@ -16,6 +16,7 @@ public class ComponentManager {
         PositionComponent.initialize(new Pose2d());
         AreaEffectsHandler.initialize();
         HighwaySystem.initialize();
+        PDHManager.Initialize();
 
         //Shuffleboard stuff
         posTab = Shuffleboard.getTab("Position Data");
@@ -40,10 +41,12 @@ public class ComponentManager {
         posTab.addDouble("Limelight Estimated Rotation (degrees)", ()->{return LimelightComponent.getLastAprilTag().getRotation().getDegrees();});
 
         posTab.addBoolean("Limelight Target Found", ()->{return LimelightComponent.active();});
+        posTab.addBoolean("AprilTag Validity", ()->{return LimelightComponent.tagIsValid();});
         posTab.addDouble("Limelight Distance", ()->{return LimelightComponent.dist;});
     }
     public static void Periodic() {
         PositionComponent.periodic();
         AreaEffectsHandler.periodic();
+        PDHManager.Periodic();
     }
 }
