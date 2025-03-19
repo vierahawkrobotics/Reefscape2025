@@ -28,13 +28,13 @@ public class Drivetrain extends SubsystemBase{
     //physical parts
     public static MAXSwerveModule[] maxSwerveModules = {
         new MAXSwerveModule(DrivetrainConstants.flDrivingID,DrivetrainConstants
-        .flTurningID,DrivetrainConstants.flChassisAngularOffset),
+        .flTurningID,DrivetrainConstants.flChassisAngularOffset, false),
         new MAXSwerveModule(DrivetrainConstants.frDrivingID,DrivetrainConstants
-        .frTurningID,DrivetrainConstants.frChassisAngularOffset),
+        .frTurningID,DrivetrainConstants.frChassisAngularOffset, true),
         new MAXSwerveModule(DrivetrainConstants.blDrivingID,DrivetrainConstants
-        .blTurningID,DrivetrainConstants.blChassisAngularOffset),
+        .blTurningID,DrivetrainConstants.blChassisAngularOffset, false),
         new MAXSwerveModule(DrivetrainConstants.brDrivingID,DrivetrainConstants
-        .brTurningID,DrivetrainConstants.brChassisAngularOffset)
+        .brTurningID,DrivetrainConstants.brChassisAngularOffset, false)
       };
     /*states for translation and rotation
     roatation state path doesn't do anything 
@@ -82,6 +82,8 @@ public class Drivetrain extends SubsystemBase{
 
     ShuffleboardTab drivetrainTab = Shuffleboard.getTab("Drivetrain");
     public Drivetrain(){
+        //invert back two driving motors
+
         // drivetrainTab.addDouble("Robot velR", () -> {return velTR;});
         drivetrainTab.addDouble("Robot velX", () -> {return velTX;});
         // drivetrainTab.addDouble("Robot velY", () -> {return velTY;});
@@ -123,7 +125,6 @@ public class Drivetrain extends SubsystemBase{
                 break;
         }
         applyDrivetrain();
-        System.out.println(velX);
         //set values for shuffleboard
     }
 //-------------------------------------------Drive Functions------------------------------------
