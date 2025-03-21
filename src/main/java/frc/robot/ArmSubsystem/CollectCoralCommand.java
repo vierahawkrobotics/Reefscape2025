@@ -4,8 +4,8 @@ import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
-import frc.robot.Components.CANdleComponent.CANdleConstants;
-import frc.robot.Components.CANdleComponent.CANdleController;
+// import frc.robot.Components.CANdleComponent.CANdleConstants;
+// import frc.robot.Components.CANdleComponent.CANdleController;
 
 public class CollectCoralCommand extends Command {
     private Supplier<Boolean> interrupted;
@@ -16,9 +16,10 @@ public class CollectCoralCommand extends Command {
 
     @Override
     public void initialize() {
+        System.out.println("Collect");
         Robot.instance.armSubsystem.setHeightState(ArmConstants.HeightState.Collect);
         Robot.instance.armSubsystem.setIntakeState(ArmConstants.IntakeState.Collect);
-        CANdleController.setState(CANdleConstants.RobotStates.Intaking);
+        // CANdleController.setState(CANdleConstants.RobotStates.Intaking);
     }
 
     @Override
@@ -28,7 +29,7 @@ public class CollectCoralCommand extends Command {
     public void end(boolean interrupted) {
         Robot.instance.armSubsystem.setHeightState(ArmConstants.HeightState.Ground);
         Robot.instance.armSubsystem.setIntakeState(ArmConstants.IntakeState.Rest);
-        CANdleController.setState(CANdleConstants.RobotStates.Idle);
+        // CANdleController.setState(CANdleConstants.RobotStates.Idle);
     }
 
     @Override

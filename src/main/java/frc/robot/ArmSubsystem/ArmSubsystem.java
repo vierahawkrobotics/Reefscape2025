@@ -27,7 +27,7 @@ public class ArmSubsystem extends SubsystemBase {
     public SparkFlex container;
     public SparkFlex containerFollower;
     public SparkFlex algaeMotor; 
-    private double targetHeight = ArmConstants.armHeight;
+    private double targetHeight = ArmConstants.minHeight;
     private double curHeight = 0;
     PIDController elevatorPID = new PIDController(ArmConstants.elevatorP, ArmConstants.elevatorI, ArmConstants.elevatorD);
     public double limitSwitchOffset;
@@ -87,10 +87,10 @@ public class ArmSubsystem extends SubsystemBase {
         containerFollower.configure(containerFollowerConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kNoPersistParameters);
 
         // Algae Motor Setup
-        algaeMotor = new SparkFlex(ArmConstants.algaeMotorID, MotorType.kBrushless);
-        SparkFlexConfig algaeConfig = new SparkFlexConfig();
-        algaeConfig.idleMode(IdleMode.kBrake);
-        algaeMotor.configure(algaeConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kNoPersistParameters);
+        // algaeMotor = new SparkFlex(ArmConstants.algaeMotorID, MotorType.kBrushless);
+        // SparkFlexConfig algaeConfig = new SparkFlexConfig();
+        // algaeConfig.idleMode(IdleMode.kBrake);
+        // algaeMotor.configure(algaeConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kNoPersistParameters);
     }
     
     /**
@@ -129,18 +129,18 @@ public class ArmSubsystem extends SubsystemBase {
      */
     public double isLimitSwitchPressed() {
         int pressed = 0;
-        if (container.getForwardLimitSwitch().isPressed()) {
+        if (!container.getForwardLimitSwitch().isPressed()) {
             pressed = 1;
         }
-        if (container.getReverseLimitSwitch().isPressed()) {
+        if (!container.getReverseLimitSwitch().isPressed()) {
             if(pressed != 0) System.out.println("ArmSubsystem.isLimitSwitchPressed - multiple limit switches pressed");
             pressed = 2;
         }
-        if (containerFollower.getForwardLimitSwitch().isPressed()) {
+        if (!containerFollower.getForwardLimitSwitch().isPressed()) {
             if(pressed != 0) System.out.println("ArmSubsystem.isLimitSwitchPressed - multiple limit switches pressed");
             pressed = 3;
         }
-        if (containerFollower.getReverseLimitSwitch().isPressed()) {
+        if (!containerFollower.getReverseLimitSwitch().isPressed()) {
             if(pressed != 0) System.out.println("ArmSubsystem.isLimitSwitchPressed - multiple limit switches pressed");
             pressed = 4;
         }
@@ -185,7 +185,7 @@ public class ArmSubsystem extends SubsystemBase {
      * @author Andrew S
      */
     public void SetTargetHeight(double targetHeight) {
-        this.targetHeight = Math.min(Math.max(targetHeight,ArmConstants.armHeight),ArmConstants.maxHeight);
+        this.targetHeight = Math.min(Math.max(targetHeight,ArmConstants.minHeight),ArmConstants.maxHeight);
     }
 
     /**
@@ -228,7 +228,7 @@ public class ArmSubsystem extends SubsystemBase {
     
     @Override
     public void periodic() {
-        curHeight = elevatorFollower.getExternalEncoder().getPosition()*ArmConstants.gearRadius + ArmConstants.armHeight;
+        curHeight = elevatorFollower.getExternalEncoder().getPosition()*ArmConstants.gearRadius + ArmConstants.minHeight;
         
         switch (intakeState) { // Collect and Drop
             case Rest:
@@ -265,7 +265,7 @@ public class ArmSubsystem extends SubsystemBase {
                 RecallibrateHeight();
                 break;
             case NormalOper:
-                if(!elevator.getReverseLimitSwitch().isPressed() && getHeight()-ArmConstants.armHeight < ArmConstants.autoResetHeight) {
+                if(!elevator.getReverseLimitSwitch().isPressed() && getHeight()-ArmConstants.minHeight < ArmConstants.autoResetHeight) {
                     elevator.getExternalEncoder().setPosition(0);
                 }
                 double v = elevatorPID.calculate(getHeight(),targetHeight)+ArmConstants.elevatorMotorBias;
@@ -274,19 +274,19 @@ public class ArmSubsystem extends SubsystemBase {
                 break;
         }
 
-        switch(algaeState) { // Algae
-            case Inactive:
-                algaeMotor.set(0);
-                break; 
-            case Active:
-            case ActiveTemp:
-                if (Timer.getFPGATimestamp()-algaeStartTime >= ArmConstants.algaeEjectTime) {
-                    algaeState = ArmConstants.AlgaeMotorState.Inactive;
-                } else {
-                    algaeMotor.set(ArmConstants.algaeMotorSpeed);
-                }
-                break;
-        }
+        // switch(algaeState) { // Algae
+        //     case Inactive:
+        //         algaeMotor.set(0);
+        //         break; 
+        //     case Active:
+        //     case ActiveTemp:
+        //         if (Timer.getFPGATimestamp()-algaeStartTime >= ArmConstants.algaeEjectTime) {
+        //             algaeState = ArmConstants.AlgaeMotorState.Inactive;
+        //         } else {
+        //             algaeMotor.set(ArmConstants.algaeMotorSpeed);
+        //         }
+        //         break;
+        // }
     }
     @Override
     public void simulationPeriodic() {}

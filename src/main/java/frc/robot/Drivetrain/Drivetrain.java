@@ -180,8 +180,8 @@ public class Drivetrain extends SubsystemBase{
         // else 
             // scale = AreaEffectsHandler.getMaxSpeed();
         if(applySpeed){    
-            appliedX = -1 * vx*scale;
-            appliedY = -1 * vy*scale;
+            appliedX = vx*scale;
+            appliedY = vy*scale;
         }
         else{
             appliedX = Math.abs(vx) > DrivetrainConstants.physicalSpeedLimit? Math.signum(vx)*DrivetrainConstants.physicalSpeedLimit: vx;
