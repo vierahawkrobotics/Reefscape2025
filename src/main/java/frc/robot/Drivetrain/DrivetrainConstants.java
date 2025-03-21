@@ -7,8 +7,8 @@ import edu.wpi.first.math.geometry.Translation2d;
 
 public class DrivetrainConstants {
 //speed setting- this is just default if no areaEffects are being triggered
-    public static double defaultMaxSpeed = 0.5;
-    public static double defaultRotSpeed = Math.PI/2;
+    public static double defaultMaxSpeed = 1000000000;
+    public static double defaultRotSpeed = Math.PI * 1000;
 //-------------------------------------------Limits and Deadband-------------------------------------------
     public static double inputDeadband = 0.12;
     public static double physicalSpeedLimit = 2; // meters per second
@@ -59,7 +59,7 @@ public class DrivetrainConstants {
     public static final double drivingEncoderVelocityFactor = ((wheelDiameterMeters * Math.PI) / drivingMotorReduction) / 60.0; // meters per second
 
     //------------------------------------------------PIDs-------------------------------------------------
-    public static double drivingP = 0.5;
+    public static double drivingP = 0.8;
     public static double drivingI = 0;
     public static double drivingD = 0;
     public static double drivingMinOutput = -1;
@@ -67,7 +67,7 @@ public class DrivetrainConstants {
     public static PersistMode drivingPersist = PersistMode.kNoPersistParameters;
     public static ResetMode drivingReset = ResetMode.kResetSafeParameters;
 
-    public static double turningP = 0.2;
+    public static double turningP = 0.3;
     public static double turningI = 0;
     public static double turningD = 0.08;
     //sets wrapping for the PIDController

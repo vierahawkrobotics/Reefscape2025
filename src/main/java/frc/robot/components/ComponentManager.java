@@ -1,21 +1,27 @@
 package frc.robot.Components;
 
+import java.util.Optional;
+import java.util.OptionalInt;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.Components.AreaEffects.AreaEffectsHandler;
 import frc.robot.Components.CANdleComponent.CANdleController;
 import frc.robot.Components.PositionComponent.PositionComponent;
 import frc.robot.Components.PositionComponent.PositionComponentSettings;
+import frc.robot.Components.PositionTools.PositionTools;
 
 public class ComponentManager {
     private static double[] defaultArray = new double[11];
     private static ShuffleboardTab posTab;
     public static void Initialize() {
         CANdleController.initialize();
-        PositionComponent.initialize(new Pose2d());
+        PositionComponent.initialize(PositionTools.getPoseFromAlliance());
         AreaEffectsHandler.initialize();
         HighwaySystem.initialize();
         PDHManager.Initialize();

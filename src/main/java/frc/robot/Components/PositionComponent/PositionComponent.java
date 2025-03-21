@@ -99,11 +99,12 @@ public class PositionComponent {
     }
     public static double getOffsetGyroRotation() {
         return Math.toDegrees(getOffsetGyroRotationRad());
+        //8.774176	4.0259
     }
 
     public static void updatePose(LimelightComponent.PoseWithTimestamp limelightPos){
         if(limelightPos == null) return;
-        if(!limelightPos.megaTag2) {
+        if(!limelightPos.noRotation) {
             double delta = limelightPos.pose.getRotation().getRadians() - getOffsetGyroRotationRad();
             // System.out.println("lime " + limelightPos.pose.getRotation().getRadians());
             // System.out.println("gyro " + getOffsetGyroRotationRad());
@@ -111,7 +112,8 @@ public class PositionComponent {
             gyroOffset += delta; 
             gyroOffset %= 2 * Math.PI;
         }
-        poseEstimator.addVisionMeasurement(limelightPos.pose, limelightPos.timestamp);
+        
+        poseEstimator.addVisionMeasurement(new Pose2d(limelightPos.pose.minus(new Pose2d(8.774176,4.0259,Rotation2d.kZero)).getTranslation(), limelightPos.pose.getRotation()), limelightPos.timestamp);
     }
 
     public static void periodic(){
@@ -121,7 +123,7 @@ public class PositionComponent {
         lastTimestamp[1] = lastTimestamp[0];
         lastTimestamp[0] = edu.wpi.first.wpilibj.RobotController.getFPGATime();
         lastPose[1] = lastPose[1];
-        lastPose[0] = poseEstimator.getEstimatedPosition().times(-1);
+        lastPose[0] = poseEstimator.getEstimatedPosition();
 
         // if(LimelightComponent.calcAprilTag() != null){
         //     updatePose();

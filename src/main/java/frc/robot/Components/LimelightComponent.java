@@ -33,10 +33,10 @@ public class LimelightComponent {
     public static double dist;
     private static Pose2d lPos = new Pose2d();
     public static class PoseWithTimestamp{
-        public PoseWithTimestamp(double t, Pose2d p,boolean mt2){this.timestamp=t;this.pose=p;this.megaTag2=mt2;}
+        public PoseWithTimestamp(double t, Pose2d p,boolean mt2){this.timestamp=t;this.pose=p;this.noRotation=mt2;}
         public double timestamp;
         public Pose2d pose;
-        public boolean megaTag2;
+        public boolean noRotation;
     }
     public static boolean active(){
         return LimelightHelpers.getRawFiducials("").length > 0;
@@ -69,7 +69,7 @@ public class LimelightComponent {
 
 
     public static PoseWithTimestamp calcAprilTag() {
-        boolean mt2 = false;
+        boolean noRotation = false;
         LimelightHelpers.PoseEstimate limelightMeasurement = null;
         Optional<Alliance> ally = DriverStation.getAlliance();
         //double tx = NetworkTableInstance.getDefault().getEntry("").getDoubleArray()[0];
@@ -84,10 +84,10 @@ public class LimelightComponent {
             }
             if(limelightMeasurement.rawFiducials[0].distToCamera < maxDistMT1){
                 // Continue as normal (MT1)
-                mt2 = false;
+                noRotation = false;
             }else if(limelightMeasurement.rawFiducials[0].distToCamera < maxDistMT2){
                 limelightMeasurement = LimelightHelpers.getBotPoseEstimate_wpiRed_MegaTag2("");
-                mt2 = true;
+                noRotation = true;
             }else{
                 limelightMeasurement = null;
             }
@@ -100,10 +100,10 @@ public class LimelightComponent {
             }
             if(limelightMeasurement.rawFiducials[0].distToCamera < maxDistMT1){
                 // Continue as normal (MT1)
-                mt2 = false;
+                noRotation = false;
             }else if(limelightMeasurement.rawFiducials[0].distToCamera < maxDistMT2){
                 limelightMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("");
-                mt2 = true;
+                noRotation = true;
             }else{
                 limelightMeasurement = null;
             }
@@ -112,7 +112,7 @@ public class LimelightComponent {
         if(limelightMeasurement != null){
             lPos = limelightMeasurement.pose;
             dist = limelightMeasurement.rawFiducials[0].distToCamera;
-            return new PoseWithTimestamp(limelightMeasurement.timestampSeconds, limelightMeasurement.pose,mt2);
+            return new PoseWithTimestamp(limelightMeasurement.timestampSeconds, limelightMeasurement.pose,noRotation);
         } else {
             dist = -1;
             return null;

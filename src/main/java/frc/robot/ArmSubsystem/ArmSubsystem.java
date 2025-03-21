@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Match.RobotState;
 
 enum ArmState {
     ResetHeight,
@@ -42,6 +43,7 @@ public class ArmSubsystem extends SubsystemBase {
         armTab.addDouble("Elevator Height Radians", () -> {return elevatorFollower.getExternalEncoder().getPosition();});
         armTab.addNumber("Target Height", () -> {return targetHeight;});
         armTab.addString("Collector State", () -> {return intakeState.toString();});
+        armTab.addString("Elv State", () -> {return state.toString();});
         armTab.addString("Algae State", () -> {return algaeState.toString();});
         armTab.addBoolean("Limit Switch", () -> {return elevator.getReverseLimitSwitch().isPressed();});
         
@@ -55,7 +57,7 @@ public class ArmSubsystem extends SubsystemBase {
         elevator.configure(elevatorConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kNoPersistParameters);
         SparkFlexConfig elevatorFollowerConfig = new SparkFlexConfig();
         elevatorFollowerConfig.externalEncoder
-            .measurementPeriod(50)
+            .measurementPeriod(40)
             .countsPerRevolution(8192)
             .positionConversionFactor(ArmConstants.encoderPositionFactor)
             .velocityConversionFactor(ArmConstants.encoderVelocityFactor);
@@ -165,8 +167,6 @@ public class ArmSubsystem extends SubsystemBase {
     public void setIntakeState(ArmConstants.IntakeState state) {
         if (state == ArmConstants.IntakeState.Drop && intakeState != ArmConstants.IntakeState.Drop) {
             startTime = Timer.getFPGATimestamp();
-        } else if (state == ArmConstants.IntakeState.Collect && intakeState != ArmConstants.IntakeState.Collect) {
-            startTime = Timer.getFPGATimestamp();
         }
         intakeState = state;
     }
@@ -268,7 +268,7 @@ public class ArmSubsystem extends SubsystemBase {
                 if(!elevator.getReverseLimitSwitch().isPressed() && getHeight()-ArmConstants.minHeight < ArmConstants.autoResetHeight) {
                     elevator.getExternalEncoder().setPosition(0);
                 }
-                double v = elevatorPID.calculate(getHeight(),targetHeight)+ArmConstants.elevatorMotorBias;
+                double v = elevatorPID.calculate(getHeight(),targetHeight + -RobotState.controller2.getLeftY() * 0.0254)+ArmConstants.elevatorMotorBias;
                 v = Math.min(Math.max(v,-0.2),.3);
                 elevator.set(v);
                 break;

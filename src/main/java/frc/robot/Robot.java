@@ -18,27 +18,24 @@ import frc.robot.Drivetrain.Drivetrain;
 import frc.robot.Match.*;
 import frc.robot.Testing.*;
 
-import frc.robot.subsystemExample.ExampleSubsystem;
-
 public class Robot extends TimedRobot {
   ///use a to climb
   public static Robot instance;
-  public ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
   public ArmSubsystem armSubsystem = new ArmSubsystem();
   public Drivetrain drivetrain = new Drivetrain();
-  public PositionComponent positionComponent = PositionComponent.initialize(new Pose2d(0,6.0307,Rotation2d.kZero));
   @Override
   public void robotInit() {
     GUI.initialize();
     ComponentManager.Initialize();
-    PositionComponent.zeroPos();
+    //TODO: check
+    // PositionComponent.zeroPos();
     instance = this;
 
     RobotState.Initialize();
 
     
     //Reset Pose
-    new JoystickButton(RobotState.controller1, 8).onTrue(new InstantCommand(PositionComponent::zeroPos));
+    // new JoystickButton(RobotState.controller1, 8).onTrue(new InstantCommand(PositionComponent::zeroPos));
   }
 
   @Override
@@ -79,8 +76,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousExit() {
-    //if (autoCommand != null) autoCommand.cancel();
-    //AutonomousState.exit();
+    if (autoCommand != null) autoCommand.cancel();
+    AutonomousState.exit();
   }
 
   @Override

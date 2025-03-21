@@ -4,7 +4,7 @@ import frc.robot.Robot;
 public class ExampleActionCommand extends Command {
     
     public ExampleActionCommand() {
-        addRequirements(Robot.instance.exampleSubsystem);
+        // addRequirements(Robot.instance.exampleSubsystem);
     }
 
     @Override

@@ -16,7 +16,8 @@ public class AutonomousState {
     public static Command getAutoCommand() {
         
         //input using NWU
-        return new DrivePoseBased(-6,-4,Math.PI/2);
+        return new DrivePoseBased(0,-2,Math.PI);
+        //return new PathPlannerAuto("New Auto");
     }
     public static void initialize() {
         pathPlanner.initialize();
@@ -25,7 +26,4 @@ public class AutonomousState {
     }
     public static void periodic() {}
     public static void exit() {}
-    public Command getAutonomousCommand(){
-        return new PathPlannerAuto("New Auto");//Gets auto based on auto name, more info on getting autos here https://pathplanner.dev/pplib-build-an-auto.html#create-a-sendablechooser-with-certain-autos-in-project
-    }
 }

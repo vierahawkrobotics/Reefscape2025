@@ -15,7 +15,7 @@ public class Drive2D extends Command {
     Supplier<Double> vr;
 
 
-    private Drive2D(Supplier<Double> vxInput, Supplier<Double> vyInput, Supplier<Double> vrInput) {
+    public Drive2D(Supplier<Double> vxInput, Supplier<Double> vyInput, Supplier<Double> vrInput) {
         addRequirements(Robot.instance.drivetrain);
         vx = vxInput;
         vy = vyInput;
