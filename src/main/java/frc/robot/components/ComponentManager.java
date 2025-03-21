@@ -43,6 +43,7 @@ public class ComponentManager {
         posTab.addDouble("Drive Estimated Rotation (degrees)", ()->{return PositionComponent.getRobotPose().getRotation().getDegrees();});
         posTab.addDouble("Gyroscope Estimated Rotation (degrees)", ()->{return PositionComponent.getGyroRotation();});
         posTab.addDouble("Gyro offset R", ()->{return PositionComponent.getOffsetGyroRotation();});
+        posTab.addDouble("gyro true offset", ()->{return PositionComponent.gyroOffset;});
 
         posTab.addDouble("Limelight Estimated X", ()->{return LimelightComponent.getLastAprilTag().getX();});
         posTab.addDouble("Limelight Estimated Y", ()->{return LimelightComponent.getLastAprilTag().getY();});

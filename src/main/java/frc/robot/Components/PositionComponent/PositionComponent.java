@@ -26,16 +26,18 @@ import frc.robot.Drivetrain.Drivetrain;
 public class PositionComponent {
     private static SwerveDrivePoseEstimator poseEstimator;
     private static SwerveModulePosition[] wheelPositions;
-    private static AHRS gryoObject;
+    private static AHRS gyroObject;
     private static Pose2d[] lastPose = new Pose2d[2];
     private static long[] lastTimestamp = new long[2];
     private static PositionComponent instance;
-    private static double gyroOffset = 0;
+    public static double gyroOffset = 0;
     private static double currentRad = 0;
 
     private PositionComponent(Pose2d initialPose) {
-        gryoObject = new AHRS(NavXComType.kMXP_SPI);
-        gryoObject.reset();
+        gyroObject = new AHRS(NavXComType.kMXP_SPI);
+        while(gyroObject.isCalibrating()) { Thread.yield();}
+        System.out.println(Math.toRadians(gyroObject.getAngle()));
+        gyroOffset = gyroObject.getRotation2d().getRadians();
         poseEstimator = new SwerveDrivePoseEstimator(Drivetrain.kinematics, initialPose.getRotation(), Drivetrain.getSwerveModulePositions(), initialPose); // Fix kinematics and modulePositions parameter
         lastPose[0] = poseEstimator.getEstimatedPosition();
         lastPose[1] = poseEstimator.getEstimatedPosition();
@@ -56,7 +58,7 @@ public class PositionComponent {
         return instance;
     }
     public static void zeroPos(){
-        gyroOffset = Math.toRadians(gryoObject.getAngle());
+        gyroOffset = Math.toRadians(gyroObject.getAngle());
         poseEstimator.resetPose(new Pose2d(0,0,Rotation2d.fromRadians(0)));
     }
     public static Pose2d getRobotPose() {
@@ -72,7 +74,7 @@ public class PositionComponent {
                 Transform2d delta = lastPose[0].minus(lastPose[1]).div((double)((lastTimestamp[0] - lastTimestamp[1])/1000000));
                 return new ChassisSpeeds(delta.getX(), delta.getY(), delta.getRotation().getRadians());
             case kGyroscope:
-                return new ChassisSpeeds(gryoObject.getVelocityX(), gryoObject.getVelocityY(), gryoObject.getVelocityZ());
+                return new ChassisSpeeds(gyroObject.getVelocityX(), gyroObject.getVelocityY(), gyroObject.getVelocityZ());
             case kAverage:
                 break;
             default:
@@ -85,7 +87,7 @@ public class PositionComponent {
     }
 
     public static double getGyroRotation(){
-        return gryoObject.getRotation2d().getDegrees();
+        return gyroObject.getRotation2d().getDegrees();
     }
 
     public static double getOffsetGyroRotationRad(){
@@ -104,10 +106,10 @@ public class PositionComponent {
     public static void updatePose(LimelightComponent.PoseWithTimestamp limelightPos){
         if(limelightPos == null) return;
         if(!limelightPos.noRotation) {
-            double delta = limelightPos.pose.getRotation().getRadians() - getOffsetGyroRotationRad();
+            double delta = -limelightPos.pose.getRotation().getRadians() - getOffsetGyroRotationRad();
             // System.out.println("lime " + limelightPos.pose.getRotation().getRadians());
             // System.out.println("gyro " + getOffsetGyroRotationRad());
-            // System.out.println("delta " + delta);
+            // System.out.println("delta " + delta);55
             gyroOffset += delta; 
             gyroOffset %= 2 * Math.PI;
         }
@@ -116,7 +118,7 @@ public class PositionComponent {
     }
 
     public static void periodic(){
-        currentRad = -Math.toRadians(gryoObject.getAngle()) + Math.PI / 2;
+        currentRad = -Math.toRadians(gyroObject.getAngle()) + Math.PI / 2;
         poseEstimator.update(Rotation2d.fromRadians(getOffsetGyroRotationRad()), Drivetrain.getSwerveModulePositions());
         if(LimelightComponent.active() && LimelightComponent.calcAprilTag() != null) updatePose(LimelightComponent.calcAprilTag());
         lastTimestamp[1] = lastTimestamp[0];

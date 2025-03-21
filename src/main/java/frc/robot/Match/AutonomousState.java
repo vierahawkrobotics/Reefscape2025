@@ -6,6 +6,7 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Components.ComponentManager;
 import frc.robot.Components.PositionTools.PositionTools;
 import frc.robot.Drivetrain.DrivePoseBased;
 import frc.robot.Drivetrain.PathPlanner;
