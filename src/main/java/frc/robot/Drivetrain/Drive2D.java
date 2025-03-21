@@ -44,8 +44,8 @@ public class Drive2D extends Command {
         // set vrVal based on area effects
         Pose2d areaPose = AreaEffectsHandler.getTargetPose();
         if (areaPose == null){
-         vrVal = (vr.get()< DrivetrainConstants.inputDeadband)?0: vr.get();
-         Robot.instance.drivetrain.setInputVelRot(vrVal);
+            vrVal = (vr.get()< DrivetrainConstants.inputDeadband)?0: vr.get();
+            Robot.instance.drivetrain.setInputVelRot(vrVal);
         }
         else{
             vrVal = areaPose.getRotation().getRadians();

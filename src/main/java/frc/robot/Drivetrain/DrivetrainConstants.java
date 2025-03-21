@@ -7,21 +7,21 @@ import edu.wpi.first.math.geometry.Translation2d;
 
 public class DrivetrainConstants {
 //speed setting- this is just default if no areaEffects are being triggered
-    public static double defaultMaxSpeed = 1000000000;
-    public static double defaultRotSpeed = Math.PI * 1000;
+    public static double defaultMaxSpeed = 0.5;
+    public static double defaultRotSpeed = Math.PI/2;
 //-------------------------------------------Limits and Deadband-------------------------------------------
-    public static double inputDeadband = 0.12;
-    public static double physicalSpeedLimit = 2; // meters per second
-    public static double physicalRotSpeedLimit = Math.PI; // rad per second
+    public static double inputDeadband = 0.06;
+    public static double physicalSpeedLimit = 20; // meters per second
+    public static double physicalRotSpeedLimit = Math.PI * 4; // rad per second
     public static int drivingMotorCurrentLimit = 80; // amps
-    public static int turningMotorCurrentLimit = 40; // amps
+    public static int turningMotorCurrentLimit = 25; // amps
 
 //-------------------------------------------Point Reached Ranges-------------------------------------------
     //The range at which the robot is considered to have reached a position
-    public static double validRange = 0.05; //translation in meters
-    public static double validRotDiff = 0.14; //rotation in radians
+    public static double validRange = 0.03; //translation in meters
+    public static double validRotDiff = 0.0524; //rotation in radians
      //the range at which the robot begins to slow down in DrivePosition()
-     public static double pointTolerance = 0.1; //meters
+     public static double pointTolerance = 0.4; //meters
      //the rotation version of what's above
      public static double rotTolerance = 0.60;//radians
      /*the speed(meters/second) at which the robot is considered stopped during

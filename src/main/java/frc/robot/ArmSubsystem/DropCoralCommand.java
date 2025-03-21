@@ -97,6 +97,7 @@ public class DropCoralCommand extends Command {
         Robot.instance.drivetrain.setVel(0,0);
         Robot.instance.drivetrain.setVelRot(0);
         CANdleController.setState(CANdleConstants.RobotStates.Idle);
+        System.out.println("end coral");
     }
     @Override
     public boolean isFinished() {

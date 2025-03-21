@@ -48,13 +48,29 @@ public class PositionTools {
 
         if(ally.isEmpty() || loc.isEmpty()) return new Pose2d();
         switch(loc.getAsInt()) {
-            case 3:
-                return new Pose2d(-1.2192, 0.8247, Rotation2d.fromDegrees(0));
-            case 2:
-                return new Pose2d(-1.2192, 2.111, Rotation2d.fromDegrees(0));
             case 1:
-                return new Pose2d(-1.2192,3.0056, Rotation2d.fromDegrees(0));
+                return new Pose2d(-1.2192,2.111, Rotation2d.fromDegrees(180));
+            case 2:
+                return new Pose2d(-1.2192, 0, Rotation2d.fromDegrees(180));
+            case 3:
+                return new Pose2d(-1.2192, -2.111, Rotation2d.fromDegrees(180));
         }
         return new Pose2d();
+    }
+
+    public static Pose2d getAutoPostFromAlliance() {
+        Optional<Alliance> ally = DriverStation.getAlliance();
+        OptionalInt loc = DriverStation.getLocation();
+
+        if(ally.isEmpty() || loc.isEmpty()) return new Pose2d();
+        switch(loc.getAsInt()) {
+            case 1:
+                return new Pose2d(-2.5,2.111, Rotation2d.fromDegrees(180));
+            case 2:
+                return new Pose2d(-2.5, 0, Rotation2d.fromDegrees(180));
+            case 3:
+                return new Pose2d(-2.5, -2.111, Rotation2d.fromDegrees(180));
+        }
+        return PositionComponent.getRobotPose();
     }
 }

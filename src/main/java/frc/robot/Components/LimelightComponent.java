@@ -49,20 +49,14 @@ public class LimelightComponent {
 
     //----------------------------------------Helper functions----------------------------------------//
     public static Double getTX(){
-        if(LimelightHelpers.getTX("") != 0.0) return LimelightHelpers.getTX("");
-        RawFiducial[] fiducials = LimelightHelpers.getRawFiducials("");
-        if(!(fiducials.length > 0)) return null;
-        return LimelightHelpers.getRawFiducials(null)[0].txnc;
+        return LimelightHelpers.getTX("");
     }
     public static Double getTY(){
-        if(LimelightHelpers.getTY("") != 0.0) return LimelightHelpers.getTY("");
-        RawFiducial[] fiducials = LimelightHelpers.getRawFiducials("");
-        if(!(fiducials.length > 0)) return null;
-        return LimelightHelpers.getRawFiducials(null)[0].txnc;
+        return LimelightHelpers.getTY("");
     }
     public static boolean tagIsValid(){
         RawFiducial[] fiducials = LimelightHelpers.getRawFiducials("");
-        if(fiducials.length <= 0 || getTX() == null || getTY() == null) return false;
+        if(fiducials == null || fiducials.length <= 0 || getTX() == null || getTY() == null) return false;
         double tagAngularSize = Units.radiansToDegrees(Math.atan2(aprilTagHeight/2,LimelightHelpers.getRawFiducials(null)[0].distToCamera));
         return !(Math.abs(getTX()) > limelightFOVX/2-tagAngularSize-detectionBuffer || Math.abs(getTY()) > limelightFOVY/2-tagAngularSize-detectionBuffer);
     }
@@ -79,9 +73,7 @@ public class LimelightComponent {
             limelightMeasurement = LimelightHelpers.getBotPoseEstimate_wpiRed("");
             LimelightHelpers.SetRobotOrientation("", PositionComponent.getOffsetGyroRotation() + 180, 0, 0, 0, 0, 0);
                 
-            if(!(limelightMeasurement.rawFiducials.length > 0)){
-                return null;
-            }
+            if(limelightMeasurement.rawFiducials == null || limelightMeasurement.rawFiducials.length <= 0) return null;
             if(limelightMeasurement.rawFiducials[0].distToCamera < maxDistMT1){
                 // Continue as normal (MT1)
                 noRotation = false;
@@ -95,9 +87,7 @@ public class LimelightComponent {
             limelightMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue("");
             LimelightHelpers.SetRobotOrientation("", PositionComponent.getOffsetGyroRotation(), 0, 0, 0, 0, 0);
                 
-            if(!(limelightMeasurement.rawFiducials.length > 0)){
-                return null;
-            }
+            if(limelightMeasurement.rawFiducials == null || limelightMeasurement.rawFiducials.length <= 0) return null;
             if(limelightMeasurement.rawFiducials[0].distToCamera < maxDistMT1){
                 // Continue as normal (MT1)
                 noRotation = false;

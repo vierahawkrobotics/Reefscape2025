@@ -28,13 +28,13 @@ public class Drivetrain extends SubsystemBase{
     //physical parts
     public static MAXSwerveModule[] maxSwerveModules = {
         new MAXSwerveModule(DrivetrainConstants.flDrivingID,DrivetrainConstants
-        .flTurningID,DrivetrainConstants.flChassisAngularOffset, false),
+        .flTurningID,DrivetrainConstants.flChassisAngularOffset, true),
         new MAXSwerveModule(DrivetrainConstants.frDrivingID,DrivetrainConstants
-        .frTurningID,DrivetrainConstants.frChassisAngularOffset, true),
+        .frTurningID,DrivetrainConstants.frChassisAngularOffset, false),
         new MAXSwerveModule(DrivetrainConstants.blDrivingID,DrivetrainConstants
-        .blTurningID,DrivetrainConstants.blChassisAngularOffset, false),
+        .blTurningID,DrivetrainConstants.blChassisAngularOffset, true),
         new MAXSwerveModule(DrivetrainConstants.brDrivingID,DrivetrainConstants
-        .brTurningID,DrivetrainConstants.brChassisAngularOffset, false)
+        .brTurningID,DrivetrainConstants.brChassisAngularOffset, true)
       };
     /*states for translation and rotation
     roatation state path doesn't do anything 
@@ -157,7 +157,7 @@ public class Drivetrain extends SubsystemBase{
         }
         VxSB = V.x;
         VySB = V.y;
-        setDrivetrain(V.x*scaleFactor, V.y*scaleFactor);
+        setDrivetrain(-V.x*scaleFactor, -V.y*scaleFactor);
     }
     private void drivePositionRot(){
         double vr;
@@ -200,7 +200,7 @@ public class Drivetrain extends SubsystemBase{
 //-------------------------------------------Apply Set Values------------------------------------
     private void applyDrivetrain(){
         Rotation2d currentRotation = PositionComponent.getRobotPose().getRotation().times(-1);
-        ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(appliedX, appliedY, appliedR, currentRotation);
+        ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(-appliedX, -appliedY, appliedR, currentRotation);
         SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(speeds);
         
         for(int i =0; i<4; i++){

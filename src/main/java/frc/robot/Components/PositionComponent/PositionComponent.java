@@ -36,8 +36,7 @@ public class PositionComponent {
     private PositionComponent(Pose2d initialPose) {
         gryoObject = new AHRS(NavXComType.kMXP_SPI);
         gryoObject.reset();
-        Rotation2d initialRot = Rotation2d.fromDegrees(gryoObject.getAngle());
-        poseEstimator = new SwerveDrivePoseEstimator(Drivetrain.kinematics, initialRot, Drivetrain.getSwerveModulePositions(), initialPose); // Fix kinematics and modulePositions parameter
+        poseEstimator = new SwerveDrivePoseEstimator(Drivetrain.kinematics, initialPose.getRotation(), Drivetrain.getSwerveModulePositions(), initialPose); // Fix kinematics and modulePositions parameter
         lastPose[0] = poseEstimator.getEstimatedPosition();
         lastPose[1] = poseEstimator.getEstimatedPosition();
 
@@ -117,7 +116,7 @@ public class PositionComponent {
     }
 
     public static void periodic(){
-        currentRad = -Math.toRadians(gryoObject.getAngle());
+        currentRad = -Math.toRadians(gryoObject.getAngle()) + Math.PI / 2;
         poseEstimator.update(Rotation2d.fromRadians(getOffsetGyroRotationRad()), Drivetrain.getSwerveModulePositions());
         if(LimelightComponent.active() && LimelightComponent.calcAprilTag() != null) updatePose(LimelightComponent.calcAprilTag());
         lastTimestamp[1] = lastTimestamp[0];

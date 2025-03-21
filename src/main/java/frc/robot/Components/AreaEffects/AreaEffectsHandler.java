@@ -48,6 +48,9 @@ public class AreaEffectsHandler{
             if(currentEffect.onExitCommand != null) {
                 currentEffect.onExitCommand.schedule();
             }
+            if(currentEffect.onEnterCommand != null) {
+                currentEffect.onEnterCommand.cancel();
+            }
             currentEffect = null;
         }
         if(currentEffect == null) {

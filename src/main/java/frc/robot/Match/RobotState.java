@@ -32,7 +32,7 @@ public class RobotState {
         }, () -> {
             return controller1.getLeftX();
         }, () -> { 
-            return controller1.getRightX();
+            return -controller1.getRightX();
         }));
 
         // Controller 2
