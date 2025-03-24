@@ -44,7 +44,6 @@ public class LimelightComponent {
     public static Pose2d getLastAprilTag(){
         //calcAprilTag();
         return lPos;
-
     }
 
     //----------------------------------------Helper functions----------------------------------------//

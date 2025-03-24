@@ -46,7 +46,7 @@ public class DropCoralCommand extends Command {
     public void initialize() {
         
         Pose2d origin = new Pose2d();
-        Double limit = Robot.instance.armSubsystem.isLimitSwitchPressed();
+        Double limit = Robot.instance.armSubsystem.getLimitSwitchOffset();
         if(limit == null) limit = 0.0;
         Pose2d offset = new Pose2d(-ArmConstants.armForwardOffset,-limit,Rotation2d.fromDegrees(0));
         pose = PositionTools.getPoseTranslated(origin, offset);

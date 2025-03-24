@@ -42,6 +42,10 @@ public class ArmSubsystem extends SubsystemBase {
         armTab.addNumber("Current Height Inches", () -> {return curHeight*39.37;});
         armTab.addDouble("Elevator Height Radians", () -> {return elevatorFollower.getExternalEncoder().getPosition();});
         armTab.addNumber("Target Height", () -> {return targetHeight;});
+        armTab.addNumber("Elevator Limit Offset", () -> {
+            if(getLimitSwitchOffset() == null) return 0;
+            return getLimitSwitchOffset().doubleValue();
+        });
         armTab.addString("Collector State", () -> {return intakeState.toString();});
         armTab.addString("Elv State", () -> {return state.toString();});
         armTab.addString("Algae State", () -> {return algaeState.toString();});
@@ -129,7 +133,7 @@ public class ArmSubsystem extends SubsystemBase {
      * @return left/right offset in meters based on limit switch pressed (0 if none pressed)
      * @author Andrew S
      */
-    public Double isLimitSwitchPressed() {
+    public Double getLimitSwitchOffset() {
         return limitSwitchOffset;
     }
 
