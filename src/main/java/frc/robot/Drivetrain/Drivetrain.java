@@ -161,8 +161,10 @@ public class Drivetrain extends SubsystemBase{
         else{
             scaleFactor = distance>DrivetrainConstants.pointTolerance? 1: distance/DrivetrainConstants.pointTolerance;
         }
-        VxSB = V.x * smoothScale;
-        VySB = V.y * smoothScale;
+        V.x *= smoothScale;
+        V.y *= smoothScale;
+        VxSB = V.x;
+        VySB = V.y;
         setDrivetrain(V.x*scaleFactor, V.y*scaleFactor);
     }
     private void drivePositionRot(){
