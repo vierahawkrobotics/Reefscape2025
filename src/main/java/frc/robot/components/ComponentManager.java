@@ -21,7 +21,7 @@ public class ComponentManager {
     private static ShuffleboardTab posTab;
     public static void Initialize() {
         CANdleController.initialize();
-        PositionComponent.initialize(PositionTools.getPoseFromAlliance());
+        PositionComponent.initialize();
         AreaEffectsHandler.initialize();
         HighwaySystem.initialize();
         PDHManager.Initialize();

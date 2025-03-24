@@ -32,25 +32,25 @@ public class PositionComponent {
     private static PositionComponent instance;
     public static double gyroOffset = 0;
     private static double currentRad = 0;
-    Pose2d initPose;
+    Pose2d initPose = null;
 
-    private PositionComponent(Pose2d initialPose) {
-        this.initPose = initialPose;
+    private PositionComponent() {
         gyroObject = new AHRS(NavXComType.kMXP_SPI);
         InitPose();
     }
-    public static PositionComponent initialize(Pose2d initialPose){
-        instance  = new PositionComponent(initialPose);
+    public static PositionComponent initialize(){
+        instance  = new PositionComponent();
         return instance;
     }
     public static PositionComponent getInstance(){
         if(instance == null){
-            initialize(new Pose2d());
+            initialize();
             (new Alert("Error: Trying to get instance of PositionComponent before initialization. Assuming no offset.", AlertType.kError)).set(true);
         }
         return instance;
     }
     public void InitPose() {
+        if(initPose == null) return;
         while(gyroObject.isCalibrating()) { Thread.yield();}
         System.out.println(Math.toRadians(gyroObject.getAngle()));
         gyroOffset = gyroObject.getRotation2d().getRadians() + initPose.getRotation().getRadians();
@@ -131,6 +131,15 @@ public class PositionComponent {
     }
 
     public static void periodic(){
+        if(instance.initPose == null) {
+            Pose2d p = PositionTools.getPoseFromAlliance();
+            if(p != null) {
+                instance.initPose = p;
+                instance.InitPose();
+            }
+        }
+
+
         currentRad = -gyroObject.getRotation2d().getRadians();
         poseEstimator.update(Rotation2d.fromRadians(getOffsetGyroRotationRad()), Drivetrain.getSwerveModulePositions());
         if(LimelightComponent.active() && LimelightComponent.calcAprilTag() != null) updatePose(LimelightComponent.calcAprilTag());

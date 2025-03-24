@@ -61,8 +61,6 @@ public class Drivetrain extends SubsystemBase{
     private double posR =0; //radians
 
     //are we using inputVel or vel with speed already added?
-    private boolean applySpeed = true;
-    private boolean applySpeedRot = true;
     //distance for pos based control
     private double distance = 0;
     private double rotDistance;
@@ -79,6 +77,8 @@ public class Drivetrain extends SubsystemBase{
     private double VxSB;
     private double VySB;
     private double distanceShuffle = 0;
+    private double smoothScale = DrivetrainConstants.defaultMaxSpeed;
+    private double smoothScaleRot = DrivetrainConstants.defaultRotSpeed;
 
     ShuffleboardTab drivetrainTab = Shuffleboard.getTab("Drivetrain");
     public Drivetrain(){
@@ -102,6 +102,13 @@ public class Drivetrain extends SubsystemBase{
 //-------------------------------------------Periodic------------------------------------  
     @Override 
     public void periodic(){
+        double scale = DrivetrainConstants.defaultMaxSpeed;
+        Double d = AreaEffectsHandler.getMaxSpeed();
+        if(AreaEffectsHandler.isAreaEffect() && d != null) {
+            scale = d;
+        }
+        smoothScale = smoothScale + DrivetrainConstants.smoothTransitionRate * (scale - smoothScale);
+
         switch(translateState){
             case path:
                 //TODO: drivePath();
@@ -154,8 +161,8 @@ public class Drivetrain extends SubsystemBase{
         else{
             scaleFactor = distance>DrivetrainConstants.pointTolerance? 1: distance/DrivetrainConstants.pointTolerance;
         }
-        VxSB = V.x;
-        VySB = V.y;
+        VxSB = V.x * smoothScale;
+        VySB = V.y * smoothScale;
         setDrivetrain(V.x*scaleFactor, V.y*scaleFactor);
     }
     private void drivePositionRot(){
@@ -167,34 +174,18 @@ public class Drivetrain extends SubsystemBase{
             vr = Math.abs(rotDistance)>DrivetrainConstants.rotTolerance?
             Math.signum(rotDistance): rotDistance/(DrivetrainConstants.decreaseRateRot);
         }
-        setDrivetrainRot(vr);
+        setDrivetrainRot(vr * smoothScaleRot);
     }
 //-------------------------------------Set Drivetrain based on Drive Functions-----------------------------
     
     //this allows translation and rotation to be seperated
     private void setDrivetrain(double vx, double vy){
-        double scale = DrivetrainConstants.defaultMaxSpeed;
-        // if(AreaEffectsHandler.isAreaEffect() == false || AreaEffectsHandler.getMaxSpeed() == null)
-        //     scale = DrivetrainConstants.defaultMaxSpeed;
-        // else 
-            // scale = AreaEffectsHandler.getMaxSpeed();
-        if(applySpeed){    
-            appliedX = vx*scale;
-            appliedY = vy*scale;
-        }
-        else{
-            appliedX = Math.abs(vx) > DrivetrainConstants.physicalSpeedLimit? Math.signum(vx)*DrivetrainConstants.physicalSpeedLimit: vx;
-            appliedY = Math.abs(vy) > DrivetrainConstants.physicalSpeedLimit? Math.signum(vy)*DrivetrainConstants.physicalSpeedLimit: vy;
-        }
+        appliedX = Math.abs(vx) > DrivetrainConstants.physicalSpeedLimit? Math.signum(vx)*DrivetrainConstants.physicalSpeedLimit: vx;
+        appliedY = Math.abs(vy) > DrivetrainConstants.physicalSpeedLimit? Math.signum(vy)*DrivetrainConstants.physicalSpeedLimit: vy;
 
     }
     private void setDrivetrainRot(double vr){
-        if(applySpeedRot){
-            appliedR = vr*DrivetrainConstants.defaultRotSpeed;
-        }
-        else{
-            appliedR = Math.abs(vr) > DrivetrainConstants.physicalSpeedLimit? Math.signum(vr)*DrivetrainConstants.physicalSpeedLimit: vr;
-        }
+        appliedR = Math.abs(vr) > DrivetrainConstants.physicalSpeedLimit? Math.signum(vr)*DrivetrainConstants.physicalSpeedLimit: vr;
     }
 //-------------------------------------------Apply Set Values------------------------------------
     private void applyDrivetrain(){
@@ -219,41 +210,36 @@ public class Drivetrain extends SubsystemBase{
     public void setInputVel(double vx, double vy){
         if (vx > 1) vx = 1;
         else if (vx < -1) vx = -1;
-        velX = vx;
+        velX = vx * smoothScale;
         if (vy > 1) vy = 1;
         else if (vy < -1) vy = -1;
-        velY = vy;
-        applySpeed = true;
+        velY = vy * smoothScale;
+        
         translateState = TranslateState.velocity;
     }
     public void setInputVelRot(double vr){
         if (vr > 1) vr = 1;
         else if (vr < -1) vr = -1;
-        velR = vr;
-        applySpeedRot = true;
+        velR = vr * smoothScaleRot;
         rotationState = RotationState.velocity;
     }
     //Sets the velocity including the speed.
-    public void setVel(double vx, double vy){
+    public void setVelocity(double vx, double vy){
         velX = vx;
         velY = vy;
-        applySpeed = false;
         translateState = TranslateState.velocity;
     }
-    public void setVelRot(double vr){
+    public void setVelocityRot(double vr){
         velR = vr;
-        applySpeedRot = false;
         rotationState = RotationState.velocity;
     }
     public void setTargetPos(double px, double py){
         posX = px;
         posY = py;
-        applySpeed = true;
         translateState = TranslateState.position;
     }
     public void setTargetPosRot(double pr){
         posR = pr;
-        applySpeedRot = true;
         rotationState = RotationState.position;
     }
 //------------------------------------------Getter Methods------------------------------------

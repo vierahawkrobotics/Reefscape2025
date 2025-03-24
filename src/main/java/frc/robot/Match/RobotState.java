@@ -28,7 +28,7 @@ public class RobotState {
 
         // Controller 1 (Update?)
         //   Left Joystick - Movement, Right Joystick - Rotation
-        Robot.instance.drivetrain.setDefaultCommand(new Drive3D(() -> {
+        Robot.instance.drivetrain.setDefaultCommand(new Drive2D(() -> {
             return -1*controller1.getLeftY();
         }, () -> {
             return -1*controller1.getLeftX();

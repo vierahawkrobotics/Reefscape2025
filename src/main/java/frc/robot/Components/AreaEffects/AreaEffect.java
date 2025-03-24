@@ -14,6 +14,9 @@ import frc.robot.Components.AreaEffects.AreaEffectShapes.DefaultShape;
 public class AreaEffect {
 
     public AreaEffect() {}
+    public AreaEffect(DefaultShape shape) {
+        this.shape = shape;
+    }
     public AreaEffect(DefaultShape shape, Rotation2d rot) {
         this.shape = shape;
         targetPose = new Pose2d(0,0, rot);

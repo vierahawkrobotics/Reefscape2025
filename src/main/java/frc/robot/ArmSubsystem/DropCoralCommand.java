@@ -31,9 +31,7 @@ public class DropCoralCommand extends Command {
     }
     private DropState state = DropState.MoveInit;
     private Supplier<Boolean> shouldEnd;
-    private Pose2d origin = new Pose2d();
-    private Pose2d offset = new Pose2d(-ArmConstants.armForwardOffset,-Robot.instance.armSubsystem.isLimitSwitchPressed(),Rotation2d.fromDegrees(0));
-    private Pose2d pose = PositionTools.getPoseTranslated(origin, offset);
+    private Pose2d pose;
     private HeightState height;
     private boolean isRight = false;
     public DropCoralCommand(Supplier<Boolean> shouldEnd, HeightState height, boolean isRight) {
@@ -46,6 +44,12 @@ public class DropCoralCommand extends Command {
 
     @Override
     public void initialize() {
+        
+        Pose2d origin = new Pose2d();
+        Double limit = Robot.instance.armSubsystem.isLimitSwitchPressed();
+        if(limit == null) limit = 0.0;
+        Pose2d offset = new Pose2d(-ArmConstants.armForwardOffset,-limit,Rotation2d.fromDegrees(0));
+        pose = PositionTools.getPoseTranslated(origin, offset);
         System.out.println("Drop");}
     @Override
     public void execute() {
@@ -94,8 +98,8 @@ public class DropCoralCommand extends Command {
     public void end(boolean interrupted) {
         Robot.instance.armSubsystem.setHeightState(ArmConstants.HeightState.Ground);
         Robot.instance.armSubsystem.setIntakeState(ArmConstants.IntakeState.Rest);
-        Robot.instance.drivetrain.setVel(0,0);
-        Robot.instance.drivetrain.setVelRot(0);
+        Robot.instance.drivetrain.setVelocity(0,0);
+        Robot.instance.drivetrain.setVelocityRot(0);
         CANdleController.setState(CANdleConstants.RobotStates.Idle);
         System.out.println("end coral");
     }

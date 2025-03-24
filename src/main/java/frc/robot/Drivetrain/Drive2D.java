@@ -49,13 +49,13 @@ public class Drive2D extends Command {
             vrVal = PositionTools.closestScorePoseEntry(false).getRotation().getRadians();
             Robot.instance.drivetrain.setTargetPosRot(vrVal);
         }
-        else if (areaPose == null){
-            vrVal = (vr.get()< DrivetrainConstants.inputDeadband)?0: vr.get();
-            Robot.instance.drivetrain.setInputVelRot(vrVal);
-        }
-        else{
+        else if (areaPose != null){
             vrVal = areaPose.getRotation().getRadians();
             Robot.instance.drivetrain.setTargetPosRot(vrVal);
+        }
+        else{
+            vrVal = (vr.get()< DrivetrainConstants.inputDeadband)?0: vr.get();
+            Robot.instance.drivetrain.setInputVelRot(vrVal);
         }
         
         Robot.instance.drivetrain.setInputVel(vxVal, vyVal);

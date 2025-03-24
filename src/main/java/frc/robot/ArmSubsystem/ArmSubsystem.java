@@ -31,7 +31,7 @@ public class ArmSubsystem extends SubsystemBase {
     private double targetHeight = ArmConstants.minHeight;
     private double curHeight = 0;
     PIDController elevatorPID = new PIDController(ArmConstants.elevatorP, ArmConstants.elevatorI, ArmConstants.elevatorD);
-    public double limitSwitchOffset;
+    public Double limitSwitchOffset;
     public double startTime;
     public double algaeStartTime;
 
@@ -129,34 +129,8 @@ public class ArmSubsystem extends SubsystemBase {
      * @return left/right offset in meters based on limit switch pressed (0 if none pressed)
      * @author Andrew S
      */
-    public double isLimitSwitchPressed() {
-        int pressed = 0;
-        if (!container.getForwardLimitSwitch().isPressed()) {
-            pressed = 1;
-        }
-        if (!container.getReverseLimitSwitch().isPressed()) {
-            if(pressed != 0) System.out.println("ArmSubsystem.isLimitSwitchPressed - multiple limit switches pressed");
-            pressed = 2;
-        }
-        if (!containerFollower.getForwardLimitSwitch().isPressed()) {
-            if(pressed != 0) System.out.println("ArmSubsystem.isLimitSwitchPressed - multiple limit switches pressed");
-            pressed = 3;
-        }
-        if (!containerFollower.getReverseLimitSwitch().isPressed()) {
-            if(pressed != 0) System.out.println("ArmSubsystem.isLimitSwitchPressed - multiple limit switches pressed");
-            pressed = 4;
-        }
-        if (pressed == 1) { // Far left channel pressed
-            return ArmConstants.farLeftIntakeChannel;
-        } else if (pressed == 2) { // Middle left channel pressed
-            return ArmConstants.middleLeftIntakeChannel;
-        } else if (pressed == 3) { // Middle right channel pressed
-            return ArmConstants.middleRightIntakeChannel;
-        } else if (pressed == 4) { // Far right channel pressed
-            return ArmConstants.farRightIntakeChannel;
-        } else { // none pressed
-            return 0;
-        }
+    public Double isLimitSwitchPressed() {
+        return limitSwitchOffset;
     }
 
     /**
@@ -230,14 +204,36 @@ public class ArmSubsystem extends SubsystemBase {
     public void periodic() {
         curHeight = elevatorFollower.getExternalEncoder().getPosition()*ArmConstants.gearRadius + ArmConstants.minHeight;
         
+        //limit switch
+        double sum = 0;
+        int total = 0;
+        if (!container.getForwardLimitSwitch().isPressed()) {
+            total++;
+            sum += ArmConstants.farLeftIntakeChannel;
+        }
+        if (!container.getReverseLimitSwitch().isPressed()) {
+            total++;
+            sum += ArmConstants.middleLeftIntakeChannel;
+        }
+        if (!containerFollower.getForwardLimitSwitch().isPressed()) {
+            total++;
+            sum += ArmConstants.middleRightIntakeChannel;
+        }
+        if (!containerFollower.getReverseLimitSwitch().isPressed()) {
+            total++;
+            sum +=ArmConstants.farRightIntakeChannel;
+        }
+        if(total == 0) limitSwitchOffset = null;
+        limitSwitchOffset = sum / total;
+
+
         switch (intakeState) { // Collect and Drop
             case Rest:
                 container.set(0);
                 containerFollower.set(0);
                 break;
             case Collect:
-                limitSwitchOffset = isLimitSwitchPressed();
-                if (limitSwitchOffset != 0) {
+                if (limitSwitchOffset != null) {
                     intakeState = ArmConstants.IntakeState.Rest;
                     container.set(0);
                     containerFollower.set(0);

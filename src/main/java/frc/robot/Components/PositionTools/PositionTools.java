@@ -46,7 +46,7 @@ public class PositionTools {
         Optional<Alliance> ally = DriverStation.getAlliance();
         OptionalInt loc = DriverStation.getLocation();
 
-        if(ally.isEmpty() || loc.isEmpty()) return new Pose2d();
+        if(ally.isEmpty() || loc.isEmpty()) return null;
         switch(loc.getAsInt()) {
             case 1:
                 return new Pose2d(-1.2192,2.111, Rotation2d.fromDegrees(180));
@@ -55,7 +55,7 @@ public class PositionTools {
             case 3:
                 return new Pose2d(-1.2192, -2.111, Rotation2d.fromDegrees(180));
         }
-        return new Pose2d();
+        return null;
     }
 
     public static Pose2d getAutoPostFromAlliance() {
