@@ -32,19 +32,12 @@ public class PositionComponent {
     private static PositionComponent instance;
     public static double gyroOffset = 0;
     private static double currentRad = 0;
+    Pose2d initPose;
 
     private PositionComponent(Pose2d initialPose) {
+        this.initPose = initialPose;
         gyroObject = new AHRS(NavXComType.kMXP_SPI);
-        while(gyroObject.isCalibrating()) { Thread.yield();}
-        System.out.println(Math.toRadians(gyroObject.getAngle()));
-        gyroOffset = gyroObject.getRotation2d().getRadians();
-        poseEstimator = new SwerveDrivePoseEstimator(Drivetrain.kinematics, initialPose.getRotation(), Drivetrain.getSwerveModulePositions(), initialPose); // Fix kinematics and modulePositions parameter
-        lastPose[0] = poseEstimator.getEstimatedPosition();
-        lastPose[1] = poseEstimator.getEstimatedPosition();
-
-        lastTimestamp[0] = edu.wpi.first.wpilibj.RobotController.getFPGATime();
-        lastTimestamp[1] = edu.wpi.first.wpilibj.RobotController.getFPGATime() - 20; 
-
+        InitPose();
     }
     public static PositionComponent initialize(Pose2d initialPose){
         instance  = new PositionComponent(initialPose);
@@ -57,9 +50,23 @@ public class PositionComponent {
         }
         return instance;
     }
+    public void InitPose() {
+        while(gyroObject.isCalibrating()) { Thread.yield();}
+        System.out.println(Math.toRadians(gyroObject.getAngle()));
+        gyroOffset = gyroObject.getRotation2d().getRadians() + initPose.getRotation().getRadians();
+        poseEstimator = new SwerveDrivePoseEstimator(Drivetrain.kinematics, initPose.getRotation(), Drivetrain.getSwerveModulePositions(), initPose); // Fix kinematics and modulePositions parameter
+        lastPose[0] = poseEstimator.getEstimatedPosition();
+        lastPose[1] = poseEstimator.getEstimatedPosition();
+
+        lastTimestamp[0] = edu.wpi.first.wpilibj.RobotController.getFPGATime();
+        lastTimestamp[1] = edu.wpi.first.wpilibj.RobotController.getFPGATime() - 20; 
+    }
     public static void zeroPos(){
         gyroOffset = Math.toRadians(gyroObject.getAngle());
         poseEstimator.resetPose(new Pose2d(0,0,Rotation2d.fromRadians(0)));
+    }
+    public static void ResetDirection() {
+        gyroOffset -= getOffsetGyroRotationRad();
     }
     public static Pose2d getRobotPose() {
         return lastPose[0];
@@ -86,15 +93,21 @@ public class PositionComponent {
         return getChassisSpeeds(PositionComponentSettings.defaultVelType);
     }
 
-    public static double getGyroRotation(){
+    private static double getGyroRotation(){
         return gyroObject.getRotation2d().getDegrees();
     }
 
     public static double getOffsetGyroRotationRad(){
+
+        // double r = (currentRad + gyroOffset + Math.PI) / (2 * Math.PI) - Math.PI;
         double r = currentRad + gyroOffset + Math.PI;
+        //-2 Pi <> 2 Pi
         r %= 2 * Math.PI;
+        //0 <> 4 Pi
         r += 2 * Math.PI;
+        //0 <> 2Pi
         r %= 2 * Math.PI;
+        //-Pi <> Pi
         r -= Math.PI;
         return r;
     }
@@ -106,7 +119,7 @@ public class PositionComponent {
     public static void updatePose(LimelightComponent.PoseWithTimestamp limelightPos){
         if(limelightPos == null) return;
         if(!limelightPos.noRotation) {
-            double delta = -limelightPos.pose.getRotation().getRadians() - getOffsetGyroRotationRad();
+            double delta = limelightPos.pose.getRotation().getRadians() - getOffsetGyroRotationRad();
             // System.out.println("lime " + limelightPos.pose.getRotation().getRadians());
             // System.out.println("gyro " + getOffsetGyroRotationRad());
             // System.out.println("delta " + delta);55
@@ -118,7 +131,7 @@ public class PositionComponent {
     }
 
     public static void periodic(){
-        currentRad = -Math.toRadians(gyroObject.getAngle()) + Math.PI / 2;
+        currentRad = -gyroObject.getRotation2d().getRadians();
         poseEstimator.update(Rotation2d.fromRadians(getOffsetGyroRotationRad()), Drivetrain.getSwerveModulePositions());
         if(LimelightComponent.active() && LimelightComponent.calcAprilTag() != null) updatePose(LimelightComponent.calcAprilTag());
         lastTimestamp[1] = lastTimestamp[0];

@@ -34,7 +34,7 @@ public  class Drive3D extends Command {
 
     double vxVal = vx.get();
     double vyVal = vy.get();
-    double m = Math.sqrt(vxVal*vxVal+vyVal*vyVal);
+    double m = Math.sqrt(vxVal * vxVal + vyVal * vyVal);
   
     if(m <= DrivetrainConstants.inputDeadband) {
       vxVal = 0;

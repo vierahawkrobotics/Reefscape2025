@@ -28,13 +28,13 @@ public class Drivetrain extends SubsystemBase{
     //physical parts
     public static MAXSwerveModule[] maxSwerveModules = {
         new MAXSwerveModule(DrivetrainConstants.flDrivingID,DrivetrainConstants
-        .flTurningID,DrivetrainConstants.flChassisAngularOffset, false),
+        .flTurningID,DrivetrainConstants.flChassisAngularOffset, true),
         new MAXSwerveModule(DrivetrainConstants.frDrivingID,DrivetrainConstants
-        .frTurningID,DrivetrainConstants.frChassisAngularOffset, true),
+        .frTurningID,DrivetrainConstants.frChassisAngularOffset, false),
         new MAXSwerveModule(DrivetrainConstants.blDrivingID,DrivetrainConstants
-        .blTurningID,DrivetrainConstants.blChassisAngularOffset, false),
+        .blTurningID,DrivetrainConstants.blChassisAngularOffset, true),
         new MAXSwerveModule(DrivetrainConstants.brDrivingID,DrivetrainConstants
-        .brTurningID,DrivetrainConstants.brChassisAngularOffset, false)
+        .brTurningID,DrivetrainConstants.brChassisAngularOffset, true)
       };
     /*states for translation and rotation
     roatation state path doesn't do anything 
@@ -84,7 +84,7 @@ public class Drivetrain extends SubsystemBase{
     public Drivetrain(){
         //invert back two driving motors
 
-        // drivetrainTab.addDouble("Robot velR", () -> {return velTR;});
+        drivetrainTab.addDouble("Robot velR", () -> {return velTR;});
         drivetrainTab.addDouble("Robot velX", () -> {return velTX;});
         // drivetrainTab.addDouble("Robot velY", () -> {return velTY;});
 
@@ -94,8 +94,8 @@ public class Drivetrain extends SubsystemBase{
 
         // drivetrainTab.addDouble("Set X Speed", () -> {return setVelX;});
         // drivetrainTab.addDouble("Set Y Speed", () -> {return setVelY;});
-        // drivetrainTab.addDouble("V.x", () -> {return VxSB;});
-        // drivetrainTab.addDouble("V.y", () -> {return VySB;});
+        drivetrainTab.addDouble("V.x", () -> {return VxSB;});
+        drivetrainTab.addDouble("V.y", () -> {return VySB;});
         drivetrainTab.addDouble("Distance From Point", () -> {return distanceShuffle;});
         // drivetrainTab.addString("tran state", () -> {return translateState.toString();});
     }
@@ -125,7 +125,6 @@ public class Drivetrain extends SubsystemBase{
                 break;
         }
         applyDrivetrain();
-        //set values for shuffleboard
     }
 //-------------------------------------------Drive Functions------------------------------------
     private void driveVelocity(){
@@ -157,7 +156,7 @@ public class Drivetrain extends SubsystemBase{
         }
         VxSB = V.x;
         VySB = V.y;
-        setDrivetrain(-V.x*scaleFactor, -V.y*scaleFactor);
+        setDrivetrain(V.x*scaleFactor, V.y*scaleFactor);
     }
     private void drivePositionRot(){
         double vr;
@@ -199,17 +198,17 @@ public class Drivetrain extends SubsystemBase{
     }
 //-------------------------------------------Apply Set Values------------------------------------
     private void applyDrivetrain(){
-        Rotation2d currentRotation = PositionComponent.getRobotPose().getRotation().times(-1);
-        ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(-appliedX, -appliedY, appliedR, currentRotation);
+        Rotation2d currentRotation = PositionComponent.getRobotPose().getRotation();
+        ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(appliedX,  appliedY, appliedR, currentRotation);
         SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(speeds);
         
-        for(int i =0; i<4; i++){
+        for(int i = 0; i < 4; i++){
             Rotation2d currentAngle = new Rotation2d(maxSwerveModules[i].turningEncoder.getPosition());
             moduleStates[i].optimize(currentAngle);
             moduleStates[i].speedMetersPerSecond *= moduleStates[i].angle.minus(currentAngle).getCos();
         }
 
-         for(int i = 0; i< 4; i++){
+         for(int i = 0; i < 4; i++){
             maxSwerveModules[i].turningPIDController.setReference(moduleStates[i].angle.getRadians(), ControlType.kPosition);
             maxSwerveModules[i].drivingPIDController.setReference(moduleStates[i].speedMetersPerSecond, ControlType.kVelocity);
         }

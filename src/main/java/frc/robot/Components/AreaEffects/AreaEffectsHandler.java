@@ -27,6 +27,7 @@ public class AreaEffectsHandler{
 
         areaEffects.add(new AreaEffect(new AreaEffectShapes.Circle(-7.923022,-3.37058, .84),Rotation2d.fromDegrees(306)));
         areaEffects.add(new AreaEffect(new AreaEffectShapes.Circle(-7.923022,3.37058, .84),Rotation2d.fromDegrees(54)));
+        areaEffects.add(new AreaEffect(new AreaEffectShapes.Circle(-4.284,0, 1),true));
     }
 
     public static AreaEffectsHandler getInstance(){
@@ -92,7 +93,10 @@ public class AreaEffectsHandler{
     public static boolean isAreaEffect(){
         return !(currentEffect == null);
     }
-
+    public static Boolean getIsAutoAlign() {
+        if(currentEffect == null) return null;
+        return currentEffect.autoAlign;
+    }
 
 
 }

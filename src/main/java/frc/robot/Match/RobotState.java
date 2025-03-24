@@ -17,6 +17,7 @@ import frc.robot.ArmSubsystem.RemoveAlgaeCommand;
 import frc.robot.ArmSubsystem.ArmConstants.HeightState;
 import frc.robot.Drivetrain.Drive2D;
 import frc.robot.Drivetrain.Drive3D;
+import frc.robot.Drivetrain.ResetHeading;
 
 public class RobotState {
     public static XboxController controller1;
@@ -32,7 +33,7 @@ public class RobotState {
         }, () -> {
             return -1*controller1.getLeftX();
         }, () -> { 
-            return controller1.getRightX();
+            return -1 *controller1.getRightX();
         }));
 
         // Controller 2
@@ -41,6 +42,7 @@ public class RobotState {
         controller2.setRumble(RumbleType.kBothRumble, 0);
         new JoystickButton(controller2, XboxController.Button.kY.value).onTrue(new CollectCoralCommand(()->{return !controller2.getYButton();}));
         new JoystickButton(controller2, XboxController.Button.kA.value).onTrue(new DropCoralRawCommand());
+        new JoystickButton(controller2, XboxController.Button.kX.value).onTrue(new ResetHeading());
 
         new JoystickButton(controller2, XboxController.Button.kRightBumper.value).onTrue(new DropCoralCommand(() -> {
             return controller2.getBButton();

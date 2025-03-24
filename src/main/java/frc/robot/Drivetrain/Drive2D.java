@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import frc.robot.Components.AreaEffects.AreaEffectsHandler;
+import frc.robot.Components.PositionTools.PositionTools;
 public class Drive2D extends Command {
     
     //TO DO: this should be taken from the position subsystem
@@ -43,7 +44,12 @@ public class Drive2D extends Command {
         double vrVal;
         // set vrVal based on area effects
         Pose2d areaPose = AreaEffectsHandler.getTargetPose();
-        if (areaPose == null){
+        Boolean autoAlign = AreaEffectsHandler.getIsAutoAlign();
+        if(autoAlign != null && autoAlign.booleanValue()) {
+            vrVal = PositionTools.closestScorePoseEntry(false).getRotation().getRadians();
+            Robot.instance.drivetrain.setTargetPosRot(vrVal);
+        }
+        else if (areaPose == null){
             vrVal = (vr.get()< DrivetrainConstants.inputDeadband)?0: vr.get();
             Robot.instance.drivetrain.setInputVelRot(vrVal);
         }

@@ -38,12 +38,11 @@ public class ComponentManager {
             PositionComponent.getChassisSpeeds(PositionComponentSettings.velType.kGyroscope).vyMetersPerSecond,
             PositionComponent.getChassisSpeeds(PositionComponentSettings.velType.kGyroscope).omegaRadiansPerSecond
         );});*/
-        posTab.addDouble("Drive Estimated X", ()->{return PositionComponent.getRobotPose().getX();});
-        posTab.addDouble("Drive Estimated Y", ()->{return PositionComponent.getRobotPose().getY();});
-        posTab.addDouble("Drive Estimated Rotation (degrees)", ()->{return PositionComponent.getRobotPose().getRotation().getDegrees();});
-        posTab.addDouble("Gyroscope Estimated Rotation (degrees)", ()->{return PositionComponent.getGyroRotation();});
-        posTab.addDouble("Gyro offset R", ()->{return PositionComponent.getOffsetGyroRotation();});
-        posTab.addDouble("gyro true offset", ()->{return PositionComponent.gyroOffset;});
+        posTab.addDouble("Pose Estimated X", ()->{return PositionComponent.getRobotPose().getX();});
+        posTab.addDouble("Pose Estimated Y", ()->{return PositionComponent.getRobotPose().getY();});
+        posTab.addDouble("Pose Estimated Rotation (degrees)", ()->{return PositionComponent.getRobotPose().getRotation().getDegrees();});
+        posTab.addDouble("Gyro R", ()->{return PositionComponent.getOffsetGyroRotation();});
+        posTab.addDouble("gyro offset", ()->{return PositionComponent.gyroOffset * 180 / Math.PI;});
 
         posTab.addDouble("Limelight Estimated X", ()->{return LimelightComponent.getLastAprilTag().getX();});
         posTab.addDouble("Limelight Estimated Y", ()->{return LimelightComponent.getLastAprilTag().getY();});

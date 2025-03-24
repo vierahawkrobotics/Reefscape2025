@@ -22,8 +22,8 @@ public class LimelightComponent {
     public static final double[] defaultArray = {};
     public static final Double[] defaultFiducials = new Double[10];
     public static final double minDist = 0;
-    public static final double maxDistMT1 = -1.0;    // In meters, the maximum acceptable distance for an MT1 april tag
-    public static final double maxDistMT2 = -6.0;    // In meters, the maximum acceptable distance for an MT1 april tag
+    public static final double maxDistMT1 = 1.0;    // In meters, the maximum acceptable distance for an MT1 april ta
+    public static final double maxDistMT2 = 6.0;    // In meters, the maximum acceptable distance for an MT1 april tag
     public static final double aprilTagHeight = Units.inchesToMeters(10.5); // In meters, the height of the april tag
     public static final double limelightFOVX = 82;      // In degrees, the horizontal FOV of the limelight
     public static final double limelightFOVY = 56.2;    // In degrees, the vertical FOV of the limelight
@@ -57,7 +57,7 @@ public class LimelightComponent {
     public static boolean tagIsValid(){
         RawFiducial[] fiducials = LimelightHelpers.getRawFiducials("");
         if(fiducials == null || fiducials.length <= 0 || getTX() == null || getTY() == null) return false;
-        double tagAngularSize = Units.radiansToDegrees(Math.atan2(aprilTagHeight/2,LimelightHelpers.getRawFiducials(null)[0].distToCamera));
+        double tagAngularSize = Units.radiansToDegrees(Math.atan2(aprilTagHeight/2,fiducials[0].distToCamera));
         return !(Math.abs(getTX()) > limelightFOVX/2-tagAngularSize-detectionBuffer || Math.abs(getTY()) > limelightFOVY/2-tagAngularSize-detectionBuffer);
     }
 

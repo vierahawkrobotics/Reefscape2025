@@ -18,11 +18,16 @@ public class AreaEffect {
         this.shape = shape;
         targetPose = new Pose2d(0,0, rot);
     }
+    public AreaEffect(DefaultShape shape, boolean autoAlign) {
+        this.shape = shape;
+        this.autoAlign = autoAlign;
+    }
 
     public DefaultShape shape;
     public Double maxArmHeight;
     public Double maxSpeed;
     public Pose2d targetPose;
+    public Boolean autoAlign;
     public Command onEnterCommand;
     public Command onExitCommand;
 }
