@@ -72,7 +72,7 @@ public class RobotState {
 
         //Jansen's alternative alignment 
         //Todo figure out what buttons he wants
-        Drive3DRotate alternativeDrive = new Drive3DRotate(
+        /*Drive3DRotate alternativeDrive = new Drive3DRotate(
             ()->{return controller1.getLeftY();},
             ()->{return controller1.getLeftX();},
             ()->{
@@ -84,7 +84,7 @@ public class RobotState {
             alternativeDrive
         ).onFalse(
             new InstantCommand(alternativeDrive::cancel)
-        );
+        );*/
     }
     public static void Periodic() {
     }
