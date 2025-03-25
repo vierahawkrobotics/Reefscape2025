@@ -41,16 +41,17 @@ public class ComponentManager {
         posTab.addDouble("Pose Estimated X", ()->{return PositionComponent.getRobotPose().getX();});
         posTab.addDouble("Pose Estimated Y", ()->{return PositionComponent.getRobotPose().getY();});
         posTab.addDouble("Pose Estimated Rotation (degrees)", ()->{return PositionComponent.getRobotPose().getRotation().getDegrees();});
-        posTab.addDouble("Gyro R", ()->{return PositionComponent.getOffsetGyroRotation();});
-        posTab.addDouble("gyro offset", ()->{return PositionComponent.gyroOffset * 180 / Math.PI;});
+        //posTab.addDouble("Gyro R", ()->{return PositionComponent.getOffsetGyroRotation();});
+        //posTab.addDouble("gyro offset", ()->{return PositionComponent.gyroOffset * 180 / Math.PI;});
 
-        posTab.addDouble("Limelight Estimated X", ()->{return LimelightComponent.getLastAprilTag().getX();});
-        posTab.addDouble("Limelight Estimated Y", ()->{return LimelightComponent.getLastAprilTag().getY();});
-        posTab.addDouble("Limelight Estimated Rotation (degrees)", ()->{return LimelightComponent.getLastAprilTag().getRotation().getDegrees();});
+        //posTab.addDouble("Limelight Estimated X", ()->{return LimelightComponent.getLastAprilTag().getX();});
+        //posTab.addDouble("Limelight Estimated Y", ()->{return LimelightComponent.getLastAprilTag().getY();});
+       // posTab.addDouble("Limelight Estimated Rotation (degrees)", ()->{return LimelightComponent.getLastAprilTag().getRotation().getDegrees();});
 
-        posTab.addBoolean("Limelight Target Found", ()->{return LimelightComponent.active();});
-        posTab.addBoolean("AprilTag Validity", ()->{return LimelightComponent.tagIsValid();});
-        posTab.addDouble("Limelight Distance", ()->{return LimelightComponent.dist;});
+        //posTab.addBoolean("Limelight Target Found", ()->{return LimelightComponent.active();});
+        //posTab.addBoolean("AprilTag Validity", ()->{return LimelightComponent.tagIsValid();});
+        //posTab.addDouble("Limelight Distance", ()->{return LimelightComponent.dist;});
+        posTab.addBoolean("In area effect", ()->{return AreaEffectsHandler.isAreaEffect();});
     }
     public static void Periodic() {
         CANdleController.periodic();

@@ -98,7 +98,7 @@ public class LimelightComponent {
             }
         }
         
-        if(limelightMeasurement != null){
+        if(limelightMeasurement != null && limelightMeasurement.rawFiducials != null && limelightMeasurement.rawFiducials.length >= 1){
             lPos = limelightMeasurement.pose;
             dist = limelightMeasurement.rawFiducials[0].distToCamera;
             return new PoseWithTimestamp(limelightMeasurement.timestampSeconds, limelightMeasurement.pose,noRotation);

@@ -8,10 +8,10 @@ import edu.wpi.first.math.geometry.Translation2d;
 public class DrivetrainConstants {
     public static double smoothTransitionRate = 0.04; // 0.5 s decay rate
 //speed setting- this is just default if no areaEffects are being
-    public static double defaultMaxSpeed = 0.25;// 0.25;
-    public static double defaultRotSpeed = Math.PI / 4;
+    public static double defaultMaxSpeed = 1;// 0.25;
+    public static double defaultRotSpeed = Math.PI * 1;
 //-------------------------------------------Limits and Deadband-------------------------------------------
-    public static double inputDeadband = 0.06;
+    public static double inputDeadband = 0.09;
     public static double physicalSpeedLimit = 20; // meters per second
     public static double physicalRotSpeedLimit = Math.PI * 4; // rad per second
     public static int drivingMotorCurrentLimit = 80; // amps
@@ -24,7 +24,7 @@ public class DrivetrainConstants {
      //the range at which the robot begins to slow down in DrivePosition()
      public static double pointTolerance = 0.4; //meters
      //the rotation version of what's above
-     public static double rotTolerance = 0.60;//radians
+     public static double rotTolerance = 0.10;//radians
      /*the speed(meters/second) at which the robot is considered stopped during
      a path, this will be checked on each SwerveModule individually*/
      public static double stoppedVelocity = 0.02;
@@ -49,10 +49,8 @@ public class DrivetrainConstants {
     public static int brTurningID = 8;
 
     public static final double wheelDiameterMeters = 0.0762;
-    public static final int drivingMotorPinionTeeth = 5;
-    public static final int drivingMotorSpurTeeth = 50;
     public static final double wheelCircumferenceMeters = wheelDiameterMeters * Math.PI;
-    public static final double drivingMotorReduction = (45.0 * drivingMotorSpurTeeth) / (drivingMotorPinionTeeth * 15);
+    public static final double drivingMotorReduction = 5.5;
 
     public static final double turningEncoderPositionFactor = (2 * Math.PI); // radians
     public static final double turningEncoderVelocityFactor = (2 * Math.PI) / 60.0; // radians per second
@@ -60,9 +58,9 @@ public class DrivetrainConstants {
     public static final double drivingEncoderVelocityFactor = ((wheelDiameterMeters * Math.PI) / drivingMotorReduction) / 60.0; // meters per second
 
     //------------------------------------------------PIDs-------------------------------------------------
-    public static double drivingP = 0.8;
+    public static double drivingP = 0.4;
     public static double drivingI = 0;
-    public static double drivingD = 0;
+    public static double drivingD = 0.02;
     public static double drivingMinOutput = -1;
     public static double drivingMaxOutput = 1;
     public static PersistMode drivingPersist = PersistMode.kNoPersistParameters;
@@ -70,7 +68,7 @@ public class DrivetrainConstants {
 
     public static double turningP = 0.3;
     public static double turningI = 0;
-    public static double turningD = 0.08;
+    public static double turningD = 0.05;
     //sets wrapping for the PIDController
     public static double turningPIDMinInput = 0; // radians
     public static double turningPIDMaxInput = turningEncoderPositionFactor; // radians

@@ -11,6 +11,7 @@ public class Vector {
         return new Vector(x-v2.x, y-v2.y);
     }
     public Vector normalize(){
+        if(magnitude() == 0) return new Vector(0, 0);
         return new Vector(x/magnitude(), y/magnitude());
     }
     public double magnitude(){

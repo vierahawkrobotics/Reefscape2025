@@ -54,7 +54,7 @@ public class Drive2D extends Command {
             Robot.instance.drivetrain.setTargetPosRot(vrVal);
         }
         else{
-            vrVal = (vr.get()< DrivetrainConstants.inputDeadband)?0: vr.get();
+            vrVal = (Math.abs(vr.get())< DrivetrainConstants.inputDeadband)?0: vr.get();
             Robot.instance.drivetrain.setInputVelRot(vrVal);
         }
         

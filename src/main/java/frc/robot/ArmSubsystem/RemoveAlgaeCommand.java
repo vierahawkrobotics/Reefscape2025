@@ -22,7 +22,9 @@ public class RemoveAlgaeCommand extends Command {
     }
 
     @Override
-    public void initialize() {}
+    public void initialize() {
+        state = RemoveAlgaeState.SetupInit;
+    }
     
     @Override
     public void execute() {

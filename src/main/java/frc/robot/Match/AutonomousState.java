@@ -25,7 +25,7 @@ public class AutonomousState {
     }
     public static void initialize() {
         //pathPlanner.initialize();
-        PositionComponent.getInstance().InitPose();
+        //PositionComponent.getInstance().InitPose();
         //autoChooser = AutoBuilder.buildAutoChooser();
         //SmartDashboard.putData("Auto Chooser", autoChooser);
     }
