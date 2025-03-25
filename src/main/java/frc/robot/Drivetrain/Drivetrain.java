@@ -96,8 +96,12 @@ public class Drivetrain extends SubsystemBase{
         // drivetrainTab.addDouble("Set Y Speed", () -> {return setVelY;});
         drivetrainTab.addDouble("V.x", () -> {return VxSB;});
         drivetrainTab.addDouble("V.y", () -> {return VySB;});
+        drivetrainTab.addDouble("a.x", () -> {return appliedX;});
+        drivetrainTab.addDouble("a.y", () -> {return appliedY;});
         drivetrainTab.addDouble("Distance From Point", () -> {return distanceShuffle;});
-        // drivetrainTab.addString("tran state", () -> {return translateState.toString();});
+        drivetrainTab.addDouble("Rot Distance From Point", () -> {return rotDistance;});
+        drivetrainTab.addDouble("Smooth vel", () -> {return smoothScale;});
+        drivetrainTab.addString("tran state", () -> {return translateState.toString();});
     }
 //-------------------------------------------Periodic------------------------------------  
     @Override 
@@ -171,7 +175,7 @@ public class Drivetrain extends SubsystemBase{
         double vr;
         updateRotDistance();
 
-        if(rotDistance <= DrivetrainConstants.validRotDiff) vr = 0;
+        if(Math.abs(rotDistance) <= DrivetrainConstants.validRotDiff) vr = 0;
         else{
             vr = Math.abs(rotDistance)>DrivetrainConstants.rotTolerance?
             Math.signum(rotDistance): rotDistance/(DrivetrainConstants.decreaseRateRot);
@@ -191,6 +195,7 @@ public class Drivetrain extends SubsystemBase{
     }
 //-------------------------------------------Apply Set Values------------------------------------
     private void applyDrivetrain(){
+
         Rotation2d currentRotation = PositionComponent.getRobotPose().getRotation();
         ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(appliedX,  appliedY, appliedR, currentRotation);
         SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(speeds);
@@ -270,8 +275,12 @@ public class Drivetrain extends SubsystemBase{
         distanceShuffle =  distance;
     }
     private void updateRotDistance(){
-        double currentAngle = PositionComponent.getRobotPose().getRotation().getRadians()*-1;
-        rotDistance = mod(posR - currentAngle -Math.PI, 2*Math.PI) - Math.PI;
+        double currentAngle = PositionComponent.getRobotPose().getRotation().getRadians();
+        rotDistance = posR - currentAngle;
+        double k = 2 * Math.PI + posR - currentAngle;
+        if(Math.abs(k) < Math.abs(rotDistance)) rotDistance = k;
+        k = -2 * Math.PI + posR - currentAngle;
+        if(Math.abs(k) < Math.abs(rotDistance)) rotDistance = k;
     }
     public boolean checkIsRobotStopped(){
         for(int i =0; i<4; i++){

@@ -38,19 +38,24 @@ public class DropCoralCommand extends Command {
         this.shouldEnd = shouldEnd;
         this.height = height;
         this.isRight = isRight;
+
         addRequirements(Robot.instance.armSubsystem);
         addRequirements(Robot.instance.drivetrain);
     }
 
     @Override
     public void initialize() {
-        
-        Pose2d origin = new Pose2d();
+        state = DropState.MoveInit;
+        System.out.println("Drop");
+    
+        Pose2d origin = new Pose2d(0, 0, Rotation2d.kZero);
         Double limit = Robot.instance.armSubsystem.getLimitSwitchOffset();
         if(limit == null) limit = 0.0;
         Pose2d offset = new Pose2d(-ArmConstants.armForwardOffset,-limit,Rotation2d.fromDegrees(0));
         pose = PositionTools.getPoseTranslated(origin, offset);
-        System.out.println("Drop");}
+        System.out.println(pose);
+        System.out.println(limit);
+    }
     @Override
     public void execute() {
         switch(state) {
@@ -69,8 +74,10 @@ public class DropCoralCommand extends Command {
                 }
                 break;
             case Move2Init:
+                Double d = Robot.instance.armSubsystem.limitSwitchOffset;
+                if(d == null) d = 0.0;
                 Pose2d translateMove = PositionTools.getPoseTranslated(PositionTools.closestScorePose(false, 
-                    Robot.instance.armSubsystem.limitSwitchOffset + (isRight ? ArmConstants.coralPipeDistance / 2: -ArmConstants.coralPipeDistance / 2)),
+                    d + (isRight ? ArmConstants.coralPipeDistance / 2: -ArmConstants.coralPipeDistance / 2)),
                     pose);
                 Robot.instance.drivetrain.setTargetPos(translateMove.getX(), translateMove.getY());
                 Robot.instance.drivetrain.setTargetPosRot(translateMove.getRotation().getRadians());

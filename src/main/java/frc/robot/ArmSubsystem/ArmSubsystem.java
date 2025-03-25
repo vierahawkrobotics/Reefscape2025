@@ -38,19 +38,19 @@ public class ArmSubsystem extends SubsystemBase {
     public ArmSubsystem() {
         // Shuffleboard Setup
         armTab = Shuffleboard.getTab("Arm Subsystem");
+        /*
         armTab.addNumber("Current Height", () -> {return curHeight;});
         armTab.addNumber("Current Height Inches", () -> {return curHeight*39.37;});
         armTab.addDouble("Elevator Height Radians", () -> {return elevatorFollower.getExternalEncoder().getPosition();});
         armTab.addNumber("Target Height", () -> {return targetHeight;});
+        armTab.addString("Collector State", () -> {return intakeState.toString();});
+        armTab.addString("Elv State", () -> {return state.toString();});
+        armTab.addString("Algae State", () -> {return algaeState.toString();});
+        armTab.addBoolean("Limit Switch", () -> {return elevator.getReverseLimitSwitch().isPressed();});*/
         armTab.addNumber("Elevator Limit Offset", () -> {
             if(getLimitSwitchOffset() == null) return 0;
             return getLimitSwitchOffset().doubleValue();
         });
-        armTab.addString("Collector State", () -> {return intakeState.toString();});
-        armTab.addString("Elv State", () -> {return state.toString();});
-        armTab.addString("Algae State", () -> {return algaeState.toString();});
-        armTab.addBoolean("Limit Switch", () -> {return elevator.getReverseLimitSwitch().isPressed();});
-        
         // Elevator Motors Setup
         elevator = new SparkFlex(ArmConstants.elevatorMotorID, MotorType.kBrushless);
         elevatorFollower = new SparkFlex(ArmConstants.elevatorFollowMotorID, MotorType.kBrushless);
@@ -150,7 +150,7 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     /**
-     * @return current intake state
+     * @return current intake  
      * @author Andrew S
      */
     public ArmConstants.IntakeState getIntakeState() {
@@ -228,7 +228,7 @@ public class ArmSubsystem extends SubsystemBase {
             sum +=ArmConstants.farRightIntakeChannel;
         }
         if(total == 0) limitSwitchOffset = null;
-        limitSwitchOffset = sum / total;
+        else limitSwitchOffset = sum / total;
 
 
         switch (intakeState) { // Collect and Drop
@@ -237,7 +237,7 @@ public class ArmSubsystem extends SubsystemBase {
                 containerFollower.set(0);
                 break;
             case Collect:
-                if (limitSwitchOffset != null) {
+                if (limitSwitchOffset == null) {
                     intakeState = ArmConstants.IntakeState.Rest;
                     container.set(0);
                     containerFollower.set(0);

@@ -45,19 +45,19 @@ public class RobotState {
         controller2.setRumble(RumbleType.kBothRumble, 0);
         new JoystickButton(controller2, XboxController.Button.kY.value).onTrue(new CollectCoralCommand(()->{return !controller2.getYButton();}));
         new JoystickButton(controller2, XboxController.Button.kA.value).onTrue(new DropCoralRawCommand());
-        new JoystickButton(controller2, XboxController.Button.kX.value).onTrue(new ResetHeading());
+        new JoystickButton(controller1, XboxController.Button.kX.value).onTrue(new ResetHeading());
 
-        new JoystickButton(controller2, XboxController.Button.kRightBumper.value).onTrue(new DropCoralCommand(() -> {
-            return controller2.getBButton();
+        new JoystickButton(controller1, XboxController.Button.kRightBumper.value).onTrue(new DropCoralCommand(() -> {
+            return controller1.getBButton();
         }, HeightState.CoralHigh, true));
-        new JoystickButton(controller2, XboxController.Button.kLeftBumper.value).onTrue(new DropCoralCommand(() -> {
-            return controller2.getBButton();
+        new JoystickButton(controller1, XboxController.Button.kLeftBumper.value).onTrue(new DropCoralCommand(() -> {
+            return controller1.getBButton();
         }, HeightState.CoralHigh, false));
-        new Trigger(()->{return controller2.getLeftTriggerAxis() > 0.9;}).onTrue(new DropCoralCommand(() -> {
-            return controller2.getBButton();
+        new Trigger(()->{return controller1.getLeftTriggerAxis() > 0.9;}).onTrue(new DropCoralCommand(() -> {
+            return controller1.getBButton();
         }, HeightState.CoralLow, true));
-        new Trigger(()->{return controller2.getRightTriggerAxis() > 0.9;}).onTrue(new DropCoralCommand(() -> {
-            return controller2.getBButton();
+        new Trigger(()->{return controller1.getRightTriggerAxis() > 0.9;}).onTrue(new DropCoralCommand(() -> {
+            return controller1.getBButton();
         }, HeightState.CoralLow, false));
         //   Elevator
         new Trigger(()->{return controller2.getPOV() == 0;}).onTrue(new ElevatorSetHeightCommand(ArmConstants.HeightState.CoralHigh)); // Up - top
