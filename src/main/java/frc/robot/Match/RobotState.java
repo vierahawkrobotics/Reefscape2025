@@ -1,5 +1,6 @@
 package frc.robot.Match;
 
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -17,6 +18,8 @@ import frc.robot.ArmSubsystem.RemoveAlgaeCommand;
 import frc.robot.ArmSubsystem.ArmConstants.HeightState;
 import frc.robot.Drivetrain.Drive2D;
 import frc.robot.Drivetrain.Drive3D;
+import frc.robot.Drivetrain.Drive3DRotate;
+import frc.robot.Drivetrain.DrivetrainConstants;
 import frc.robot.Drivetrain.ResetHeading;
 
 public class RobotState {
@@ -29,11 +32,11 @@ public class RobotState {
         // Controller 1 (Update?)
         //   Left Joystick - Movement, Right Joystick - Rotation
         Robot.instance.drivetrain.setDefaultCommand(new Drive2D(() -> {
-            return -1*controller1.getLeftY();
+            return -1*controller1.getLeftY()*(controller1.getRawButton(XboxController.Button.kLeftBumper.value) ? DrivetrainConstants.driveSlowingFactor : 1);
         }, () -> {
-            return -1*controller1.getLeftX();
+            return -1*controller1.getLeftX()*(controller1.getRawButton(XboxController.Button.kLeftBumper.value) ? DrivetrainConstants.driveSlowingFactor : 1);
         }, () -> { 
-            return -1 *controller1.getRightX();
+            return -1 *controller1.getRightX()*(controller1.getRawButton(XboxController.Button.kLeftBumper.value) ? DrivetrainConstants.rotSlowingFactor : 1);
         }));
 
         // Controller 2
@@ -63,9 +66,25 @@ public class RobotState {
         //                                                       .onFalse(new RemoveAlgaeCommand(()->{return true;})); // Algae Cycle
         new Trigger(()->{return controller2.getPOV() == 180;}).onTrue(new ElevatorSetHeightCommand(ArmConstants.HeightState.Ground)); // Down - bo'om
         //   Algae
-        // new JoystickButton(controller2, XboxController.Button.kX.value).onTrue(new RemoveAlgaeCommand(()->{return false;}));
+        //new JoystickButton(controller2, XboxController.Button.kX.value).onTrue(new RemoveAlgaeCommand(()->{return false;}));
         //   Climber
         //climber command (X)
+
+        //Jansen's alternative alignment 
+        //Todo figure out what buttons he wants
+        Drive3DRotate alternativeDrive = new Drive3DRotate(
+            ()->{return controller1.getLeftY();},
+            ()->{return controller1.getLeftX();},
+            ()->{
+                int theta = (int)Units.radiansToDegrees(Math.atan2(controller1.getRightY(),controller1.getRightX()));
+                return Units.degreesToRadians((double)((((theta-30)/60)%6+1)*60));
+            }
+        );
+        new JoystickButton(controller1, XboxController.Button.kRightBumper.value).onTrue(
+            alternativeDrive
+        ).onFalse(
+            new InstantCommand(alternativeDrive::cancel)
+        );
     }
     public static void Periodic() {
     }
