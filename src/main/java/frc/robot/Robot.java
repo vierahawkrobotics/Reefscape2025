@@ -4,37 +4,38 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.ArmSubsystem.*;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Components.*;
 import frc.robot.Components.PositionComponent.PositionComponent;
 import frc.robot.Drivetrain.Drivetrain;
 import frc.robot.Match.*;
-import frc.robot.subsystemExample.ExampleSubsystem;
 import frc.robot.Testing.*;
 
 public class Robot extends TimedRobot {
+  ///use a to climb
   public static Robot instance;
-  public ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
-  public XboxController controller = new XboxController(0);
+  public ArmSubsystem armSubsystem = new ArmSubsystem();
   public Drivetrain drivetrain = new Drivetrain();
-  public PositionComponent positionComponent = PositionComponent.getInstance();
   @Override
   public void robotInit() {
     GUI.initialize();
     ComponentManager.Initialize();
-    PositionComponent.zeroPos();
+    //TODO: check
+    // PositionComponent.zeroPos();
     instance = this;
-
 
     RobotState.Initialize();
 
+    
     //Reset Pose
-    new JoystickButton(controller, 8).onTrue(new InstantCommand(PositionComponent::zeroPos));
+    // new JoystickButton(RobotState.controller1, 8).onTrue(new InstantCommand(PositionComponent::zeroPos));
   }
 
   @Override
@@ -46,20 +47,26 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    DisabledState.Initialize();
+  }
 
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+    DisabledState.Periodic();
+  }
 
   @Override
-  public void disabledExit() {}
+  public void disabledExit() {
+    DisabledState.Exit();
+  }
 
   private Command autoCommand;
   @Override
   public void autonomousInit() {
-    //autoCommand = AutonomousState.getAutoCommand();
-    //if (autoCommand != null) autoCommand.schedule();
-    //AutonomousState.initialize();
+    autoCommand = AutonomousState.getAutoCommand();
+    if (autoCommand != null) autoCommand.schedule();
+    AutonomousState.initialize();
   }
 
   @Override
@@ -69,8 +76,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousExit() {
-    //if (autoCommand != null) autoCommand.cancel();
-    //AutonomousState.exit();
+    if (autoCommand != null) autoCommand.cancel();
+    AutonomousState.exit();
   }
 
   @Override

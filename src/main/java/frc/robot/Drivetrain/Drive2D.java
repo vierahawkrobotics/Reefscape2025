@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import frc.robot.Components.AreaEffects.AreaEffectsHandler;
+import frc.robot.Components.PositionTools.PositionTools;
 public class Drive2D extends Command {
     
     //TO DO: this should be taken from the position subsystem
@@ -15,7 +16,7 @@ public class Drive2D extends Command {
     Supplier<Double> vr;
 
 
-    private Drive2D(Supplier<Double> vxInput, Supplier<Double> vyInput, Supplier<Double> vrInput) {
+    public Drive2D(Supplier<Double> vxInput, Supplier<Double> vyInput, Supplier<Double> vrInput) {
         addRequirements(Robot.instance.drivetrain);
         vx = vxInput;
         vy = vyInput;
@@ -27,22 +28,34 @@ public class Drive2D extends Command {
     @Override
     public void execute() {
         //apply input deadband, input squaring, and scale input by the speed for x, y, and r
-        double vxVal = (vx.get() < 0) ? Math.pow(vx.get(),2)*(-1): Math.pow(vx.get(),2);
-        vxVal = (vxVal< DrivetrainConstants.inputDeadband)?vxVal=0: vxVal;
-
-        double vyVal = (vy.get() < 0) ? Math.pow(vy.get(),2)*(-1): Math.pow(vy.get(),2);
-        vyVal = (vyVal < DrivetrainConstants.inputDeadband) ? vyVal =0: vyVal;
+        double vxVal = vx.get();
+        double vyVal = vy.get();
+        double m = Math.sqrt(vxVal*vxVal+vyVal*vyVal);
+    
+        if(m <= DrivetrainConstants.inputDeadband) {
+            vxVal = 0;
+            vyVal = 0;
+        }
+        else {
+            vxVal *= m;
+            vyVal *= m;
+        }
 
         double vrVal;
         // set vrVal based on area effects
         Pose2d areaPose = AreaEffectsHandler.getTargetPose();
-        if (areaPose == null){
-         vrVal = (vr.get()< DrivetrainConstants.inputDeadband)?0: vr.get();
-         Robot.instance.drivetrain.setInputVelRot(vrVal);
+        Boolean autoAlign = AreaEffectsHandler.getIsAutoAlign();
+        if(autoAlign != null && autoAlign.booleanValue()) {
+            vrVal = PositionTools.closestScorePoseEntry(false).getRotation().getRadians();
+            Robot.instance.drivetrain.setTargetPosRot(vrVal);
         }
-        else{
+        else if (areaPose != null){
             vrVal = areaPose.getRotation().getRadians();
             Robot.instance.drivetrain.setTargetPosRot(vrVal);
+        }
+        else{
+            vrVal = (Math.abs(vr.get())< DrivetrainConstants.inputDeadband)?0: vr.get();
+            Robot.instance.drivetrain.setInputVelRot(vrVal);
         }
         
         Robot.instance.drivetrain.setInputVel(vxVal, vyVal);

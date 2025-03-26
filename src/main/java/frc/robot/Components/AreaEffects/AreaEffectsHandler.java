@@ -3,6 +3,7 @@ package frc.robot.Components.AreaEffects;
 import java.util.ArrayList;
 import java.util.List;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Components.PositionComponent.PositionComponent;
 
@@ -23,6 +24,15 @@ public class AreaEffectsHandler{
     public static void initialize(){
         if (instance == null)
             instance = new AreaEffectsHandler();
+
+        // input areas
+        areaEffects.add(new AreaEffect(new AreaEffectShapes.Circle(-7.923022,-3.37058, .84),Rotation2d.fromDegrees(306)));
+        areaEffects.add(new AreaEffect(new AreaEffectShapes.Circle(-7.923022,3.37058, .84),Rotation2d.fromDegrees(54)));
+        // center area
+        AreaEffect centerArea = new AreaEffect(new AreaEffectShapes.Circle(-4.284,0, 1.8));
+        centerArea.autoAlign = true;
+        centerArea.maxSpeed = 0.5;
+        areaEffects.add(centerArea);
     }
 
     public static AreaEffectsHandler getInstance(){
@@ -40,23 +50,24 @@ public class AreaEffectsHandler{
         Pose2d currentPose = PositionComponent.getRobotPose();
         double currentPointX = currentPose.getX();
         double currentPointY = currentPose.getY();
-        boolean exit = false;
-        if(currentEffect != null && currentEffect.onExitCommand != null && !currentEffect.shape.check(currentPointX,currentPointY)){
-            currentEffect.onExitCommand.schedule();
+        if(currentEffect != null && !currentEffect.shape.check(currentPointX,currentPointY)){
+            if(currentEffect.onExitCommand != null) {
+                currentEffect.onExitCommand.schedule();
+            }
+            if(currentEffect.onEnterCommand != null) {
+                currentEffect.onEnterCommand.cancel();
+            }
+            currentEffect = null;
         }
-        if(currentEffect == null || !currentEffect.shape.check(currentPointX,currentPointY)){
-            for(int i=0; i<areaEffects.size();i++){
+        if(currentEffect == null) {
+            for(int i = 0; i < areaEffects.size(); i++) {
                 if(areaEffects.get(i).shape.check(currentPointX,currentPointY)){
                     currentEffect = areaEffects.get(i);
-                    exit = true;
                     if(currentEffect.onEnterCommand != null){
                         currentEffect.onEnterCommand.schedule();
                     }
                     break;
                 }
-            }
-            if(!exit){
-                currentEffect = null;
             }
         }
     }
@@ -65,24 +76,32 @@ public class AreaEffectsHandler{
      Getter commands
      */
     public static Double getMaxArmHeight(){
+        if(currentEffect == null) return null;
         return currentEffect.maxArmHeight;
     }
     public static Double getMaxSpeed(){
+        if(currentEffect == null) return null;
         return currentEffect.maxSpeed;
     }
     public static Pose2d getTargetPose(){
+        if(currentEffect == null) return null;
         return currentEffect.targetPose;
     }
     public static Command getEnterCommand(){
+        if(currentEffect == null) return null;
         return currentEffect.onEnterCommand;
     }
     public static Command getExitCommand(){
+        if(currentEffect == null) return null;
         return currentEffect.onExitCommand;
     }
     public static boolean isAreaEffect(){
         return !(currentEffect == null);
     }
-
+    public static Boolean getIsAutoAlign() {
+        if(currentEffect == null) return null;
+        return currentEffect.autoAlign;
+    }
 
 
 }

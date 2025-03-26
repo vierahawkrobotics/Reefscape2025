@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import frc.robot.Components.PositionComponent.PositionComponent;
-public class PathPlanner extends Command {
+public class PathPlanner {
     
     /*
      *Creates a robot config then in a try catch sets the value to something based on the robot settings
@@ -27,7 +27,6 @@ public class PathPlanner extends Command {
      *given from chassis speeds supplier and is called from the config 
     */
     public PathPlanner() {
-        addRequirements(Robot.instance.drivetrain);
     }
 
     //Stuff for autobuilder to configure
@@ -36,7 +35,6 @@ public class PathPlanner extends Command {
     Supplier<ChassisSpeeds> getRobotRelativeSpeeds = () -> PositionComponent.getChassisSpeeds();
 
 
-    @Override
     public void initialize() {
         RobotConfig config = null;//This is because java dosnt wanna believe anything in a try catch
       try{
@@ -50,8 +48,8 @@ public class PathPlanner extends Command {
         getRobotRelativeSpeeds,//chassis speed supplier
         (speeds) -> driveRobotRelative(speeds),//Gives speed to Function to drive robot
         new PPHolonomicDriveController(
-          new PIDConstants(5.0, 0.0, 0.0),//PIDS
-          new PIDConstants(5.0, 0.0, 0.0)
+          new PIDConstants(DrivetrainConstants.drivingP, DrivetrainConstants.drivingI, DrivetrainConstants.drivingD),//PIDS
+          new PIDConstants(DrivetrainConstants.turningP, DrivetrainConstants.turningI, DrivetrainConstants.turningD)
         ),
         config,//Robot config settings in the Pathplanner application
         () ->{//Inverst auto command if alliance is red
@@ -63,14 +61,6 @@ public class PathPlanner extends Command {
         },
         Robot.instance.drivetrain //Drivetrain instance
       );
-    }
-    @Override
-    public void execute() {}
-    @Override
-    public void end(boolean interrupted) {}
-    @Override
-    public boolean isFinished() {
-        return false;
     }
     private void driveRobotRelative(ChassisSpeeds speeds){
         Robot.instance.drivetrain.setInputVel(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond);//Sets drivetrain x and y velocities in meters per second
