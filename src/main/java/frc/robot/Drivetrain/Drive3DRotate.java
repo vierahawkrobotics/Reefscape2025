@@ -13,6 +13,7 @@ public  class Drive3DRotate extends Command {
   double maxSpeed = 4;
   //TO DO: this should be taken from the position subsystem
   double robotAngle = 45.0;
+  double lastAngle = 0;
   
   Supplier<Double> vx;
   Supplier<Double> vy;
@@ -46,7 +47,12 @@ public  class Drive3DRotate extends Command {
     }
     
     Robot.instance.drivetrain.setInputVel(vxVal, vyVal);
-    Robot.instance.drivetrain.setTargetPosRot(r.get());
+    if(r.get() == null){
+        Robot.instance.drivetrain.setTargetPosRot(lastAngle);
+    } else {
+        Robot.instance.drivetrain.setTargetPosRot(r.get());
+        lastAngle = r.get();
+    }
   }
   @Override
   public void end(boolean interrupted) {}

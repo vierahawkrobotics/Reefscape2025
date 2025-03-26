@@ -16,8 +16,8 @@ public class DrivetrainConstants {
     public static double physicalRotSpeedLimit = Math.PI * 4; // rad per second
     public static int drivingMotorCurrentLimit = 80; // amps
     public static int turningMotorCurrentLimit = 25; // amps
-    public static double driveSlowingFactor = 0.1;
-    public static double rotSlowingFactor = 0.2;
+    public static double driveSlowingFactor = 0.25;
+    public static double rotSlowingFactor = 0.25;
 
 //-------------------------------------------Point Reached Ranges-------------------------------------------
     //The range at which the robot is considered to have reached a position

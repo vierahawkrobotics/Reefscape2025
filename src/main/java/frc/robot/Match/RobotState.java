@@ -47,7 +47,7 @@ public class RobotState {
         new JoystickButton(controller2, XboxController.Button.kA.value).onTrue(new DropCoralRawCommand());
         new JoystickButton(controller1, XboxController.Button.kX.value).onTrue(new ResetHeading());
 
-        new JoystickButton(controller1, XboxController.Button.kRightBumper.value).onTrue(new DropCoralCommand(() -> {
+        /*new JoystickButton(controller1, XboxController.Button.kRightBumper.value).onTrue(new DropCoralCommand(() -> {
             return controller1.getBButton();
         }, HeightState.CoralHigh, true));
         new JoystickButton(controller1, XboxController.Button.kLeftBumper.value).onTrue(new DropCoralCommand(() -> {
@@ -58,7 +58,7 @@ public class RobotState {
         }, HeightState.CoralLow, true));
         new Trigger(()->{return controller1.getRightTriggerAxis() > 0.9;}).onTrue(new DropCoralCommand(() -> {
             return controller1.getBButton();
-        }, HeightState.CoralLow, false));
+        }, HeightState.CoralLow, false));*/
         //   Elevator
         new Trigger(()->{return controller2.getPOV() == 0;}).onTrue(new ElevatorSetHeightCommand(ArmConstants.HeightState.CoralHigh)); // Up - top
         new Trigger(()->{return controller2.getPOV() == 90;}).onTrue(new ElevatorSetHeightCommand(ArmConstants.HeightState.CoralLow)); // Right - mid
@@ -72,10 +72,15 @@ public class RobotState {
 
         //Jansen's alternative alignment 
         //Todo figure out what buttons he wants
-        /*Drive3DRotate alternativeDrive = new Drive3DRotate(
+        double lTheta = 0;
+        Drive3DRotate alternativeDrive = new Drive3DRotate(
             ()->{return controller1.getLeftY();},
             ()->{return controller1.getLeftX();},
             ()->{
+                double y = controller1.getRightY();
+                double x = controller1.getRightX();
+                if(Math.sqrt(y*y+x*x) < 0.1) return null;
+                
                 int theta = (int)Units.radiansToDegrees(Math.atan2(controller1.getRightY(),controller1.getRightX()));
                 return Units.degreesToRadians((double)((((theta-30)/60)%6+1)*60));
             }
@@ -84,7 +89,7 @@ public class RobotState {
             alternativeDrive
         ).onFalse(
             new InstantCommand(alternativeDrive::cancel)
-        );*/
+        );
     }
     public static void Periodic() {
     }
