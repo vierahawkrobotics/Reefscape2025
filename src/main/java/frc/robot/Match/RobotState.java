@@ -77,11 +77,11 @@ public class RobotState {
             ()->{return controller1.getLeftY();},
             ()->{return controller1.getLeftX();},
             ()->{
-                double y = controller1.getRightY();
+                double y = -1*controller1.getRightY();
                 double x = controller1.getRightX();
                 if(Math.sqrt(y*y+x*x) < 0.1) return null;
                 
-                int theta = (int)Units.radiansToDegrees(Math.atan2(controller1.getRightY(),controller1.getRightX()));
+                int theta = (int)Units.radiansToDegrees(Math.atan2(x,y));
                 return Units.degreesToRadians((double)((((theta-30)/60)%6+1)*60));
             }
         );

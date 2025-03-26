@@ -8,9 +8,6 @@ import frc.robot.Components.AreaEffects.AreaEffectsHandler;
 import frc.robot.Components.PositionTools.PositionTools;
 public class Drive2D extends Command {
     
-    //TO DO: this should be taken from the position subsystem
-    double robotAngle = 45.0;
-    
     Supplier<Double> vx;
     Supplier<Double> vy;
     Supplier<Double> vr;

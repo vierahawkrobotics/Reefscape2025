@@ -22,9 +22,10 @@ public  class Drive3DRotate extends Command {
   public Drive3DRotate(Supplier<Double> vxInput, Supplier<Double> vyInput, Supplier<Double> rTarget) {
     vx = vxInput;
     vy = vyInput;
-    r=rTarget;
+    r= rTarget;
     addRequirements(Robot.instance.drivetrain);
   }
+
   @Override
   public void initialize() {
   }
