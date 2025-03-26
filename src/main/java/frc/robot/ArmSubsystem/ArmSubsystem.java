@@ -264,7 +264,7 @@ public class ArmSubsystem extends SubsystemBase {
                 containerFollower.set(0);
                 break;
             case Collect:
-                if (limitSwitchOffset == null) {
+                if (limitSwitchOffset != null) {
                     intakeState = ArmConstants.IntakeState.Rest;
                     container.set(0);
                     containerFollower.set(0);

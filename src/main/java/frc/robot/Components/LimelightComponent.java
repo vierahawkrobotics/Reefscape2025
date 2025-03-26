@@ -2,11 +2,13 @@ package frc.robot.Components;
 
 import frc.robot.LimelightHelpers;
 import frc.robot.Components.PositionComponent.PositionComponent;
+import frc.robot.Components.PositionTools.PositionTools;
 import frc.robot.LimelightHelpers.RawFiducial;
 
 import java.util.Optional;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -28,6 +30,7 @@ public class LimelightComponent {
     public static final double limelightFOVX = 82;      // In degrees, the horizontal FOV of the limelight
     public static final double limelightFOVY = 56.2;    // In degrees, the vertical FOV of the limelight
     public static final double detectionBuffer = 0;     // In degrees, the angular buffer
+    public static final Pose2d limelightOffset = new Pose2d(0.305, 0, Rotation2d.kZero); // Offset of limelight relative to center of Robot
         
     //-------------------------------------------Last Data--------------------------------------------//
     public static double dist;
@@ -101,7 +104,7 @@ public class LimelightComponent {
         if(limelightMeasurement != null && limelightMeasurement.rawFiducials != null && limelightMeasurement.rawFiducials.length >= 1){
             lPos = limelightMeasurement.pose;
             dist = limelightMeasurement.rawFiducials[0].distToCamera;
-            return new PoseWithTimestamp(limelightMeasurement.timestampSeconds, limelightMeasurement.pose,noRotation);
+            return new PoseWithTimestamp(limelightMeasurement.timestampSeconds, PositionTools.getPoseTranslated(limelightMeasurement.pose, limelightOffset.times(-1)),noRotation);
         } else {
             dist = -1;
             return null;
