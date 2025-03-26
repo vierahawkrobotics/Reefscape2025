@@ -15,6 +15,7 @@ import frc.robot.ArmSubsystem.ElevatorMovementCommand;
 import frc.robot.ArmSubsystem.ElevatorSetHeightCommand;
 import frc.robot.ArmSubsystem.RemoveAlgaeCommand;
 import frc.robot.ArmSubsystem.ArmConstants.HeightState;
+import frc.robot.Components.PositionComponent.PositionComponent;
 import frc.robot.Drivetrain.Drive2D;
 import frc.robot.Drivetrain.Drive3D;
 import frc.robot.Drivetrain.ResetHeading;
@@ -42,6 +43,7 @@ public class RobotState {
         controller2.setRumble(RumbleType.kBothRumble, 0);
         new JoystickButton(controller2, XboxController.Button.kY.value).onTrue(new CollectCoralCommand(()->{return !controller2.getYButton();}));
         new JoystickButton(controller2, XboxController.Button.kA.value).onTrue(new DropCoralRawCommand());
+        new JoystickButton(controller2, XboxController.Button.kX.value).onTrue(new RemoveAlgaeCommand(()->{return !controller2.getXButton();}));
         new JoystickButton(controller1, XboxController.Button.kX.value).onTrue(new ResetHeading());
 
         new JoystickButton(controller1, XboxController.Button.kRightBumper.value).onTrue(new DropCoralCommand(() -> {
@@ -67,6 +69,8 @@ public class RobotState {
         //   Climber
         //climber command (X)
     }
+    static int index = 0;
     public static void Periodic() {
+        if((index++ % 20) == 0) System.out.println("robo pose: " + PositionComponent.getRobotPose());
     }
 }

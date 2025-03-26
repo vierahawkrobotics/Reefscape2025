@@ -7,14 +7,18 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.ArmSubsystem.ArmConstants.HeightState;
+import frc.robot.Components.PositionComponent.PositionComponent;
 import frc.robot.Match.RobotState;
 
 enum ArmState {
     ResetHeight,
+    IntakeHeight,
     NormalOper
 }
 
@@ -93,10 +97,10 @@ public class ArmSubsystem extends SubsystemBase {
         containerFollower.configure(containerFollowerConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kNoPersistParameters);
 
         // Algae Motor Setup
-        // algaeMotor = new SparkFlex(ArmConstants.algaeMotorID, MotorType.kBrushless);
-        // SparkFlexConfig algaeConfig = new SparkFlexConfig();
-        // algaeConfig.idleMode(IdleMode.kBrake);
-        // algaeMotor.configure(algaeConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kNoPersistParameters);
+        algaeMotor = new SparkFlex(ArmConstants.algaeMotorID, MotorType.kBrushless);
+        SparkFlexConfig algaeConfig = new SparkFlexConfig();
+        algaeConfig.idleMode(IdleMode.kBrake);
+        algaeMotor.configure(algaeConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kNoPersistParameters);
     }
     
     /**
@@ -127,6 +131,17 @@ public class ArmSubsystem extends SubsystemBase {
      */
     public void setHeightState(ArmConstants.HeightState height) {
         SetTargetHeight(height.getHeight());
+    }
+
+    /**
+     * Move elevator arm to height registered with HeightState
+     * @param height target HeightState
+     * @author Andrew S
+     */
+    public void setHeightState(ArmConstants.HeightState height, boolean useAutoHeight) {
+        SetTargetHeight(height.getHeight());
+        if(!useAutoHeight) return;
+        if(state != ArmState.ResetHeight && height == HeightState.Collect) state = ArmState.IntakeHeight;
     }
 
     /**
@@ -163,6 +178,7 @@ public class ArmSubsystem extends SubsystemBase {
      * @author Andrew S
      */
     public void SetTargetHeight(double targetHeight) {
+        if(state != ArmState.ResetHeight) state = ArmState.NormalOper;
         this.targetHeight = Math.min(Math.max(targetHeight,ArmConstants.minHeight),ArmConstants.maxHeight);
     }
 
@@ -208,6 +224,17 @@ public class ArmSubsystem extends SubsystemBase {
     public void periodic() {
         curHeight = elevatorFollower.getExternalEncoder().getPosition()*ArmConstants.gearRadius + ArmConstants.minHeight;
         
+        Pose2d robot = PositionComponent.getRobotPose();
+        
+        if(state == ArmState.IntakeHeight) {
+            double x = robot.getX() + 7.923;
+            double y = robot.getY() + 3.371;
+            double d1 = Math.cos(-0.942) * x + Math.sin(-0.942) * y;
+            x = robot.getY() - 3.371;
+            double d2 = Math.cos(-5.341) * x + Math.sin(-5.341) * y;
+            SetTargetHeight(0.951-Math.min(d1,d2) * Math.tan(0.611));
+        }
+
         //limit switch
         double sum = 0;
         int total = 0;
@@ -260,33 +287,36 @@ public class ArmSubsystem extends SubsystemBase {
                 break;
         }
 
+        double v;
         switch (state) { // Elevator
             case ResetHeight:
                 RecallibrateHeight();
                 break;
+            case IntakeHeight:
             case NormalOper:
                 if(!elevator.getReverseLimitSwitch().isPressed() && getHeight()-ArmConstants.minHeight < ArmConstants.autoResetHeight) {
                     elevator.getExternalEncoder().setPosition(0);
                 }
-                double v = elevatorPID.calculate(getHeight(),targetHeight + -RobotState.controller2.getLeftY() * 0.0254)+ArmConstants.elevatorMotorBias;
+                v = elevatorPID.calculate(getHeight(),targetHeight + -RobotState.controller2.getLeftY() * 0.0254)+ArmConstants.elevatorMotorBias;
                 v = Math.min(Math.max(v,-0.2),.3);
                 elevator.set(v);
                 break;
         }
 
-        // switch(algaeState) { // Algae
-        //     case Inactive:
-        //         algaeMotor.set(0);
-        //         break; 
-        //     case Active:
-        //     case ActiveTemp:
-        //         if (Timer.getFPGATimestamp()-algaeStartTime >= ArmConstants.algaeEjectTime) {
-        //             algaeState = ArmConstants.AlgaeMotorState.Inactive;
-        //         } else {
-        //             algaeMotor.set(ArmConstants.algaeMotorSpeed);
-        //         }
-        //         break;
-        // }
+        switch(algaeState) { // Algae
+            case Inactive:
+                algaeMotor.set(0);
+                break; 
+            case Active:
+            case ActiveTemp:
+                if (Timer.getFPGATimestamp()-algaeStartTime >= ArmConstants.algaeEjectTime) {
+                    algaeState = ArmConstants.AlgaeMotorState.Inactive;
+                    algaeMotor.set(0);
+                } else {
+                    algaeMotor.set(ArmConstants.algaeMotorSpeed);
+                }
+                break;
+        }
     }
     @Override
     public void simulationPeriodic() {}

@@ -77,8 +77,8 @@ public class ArmConstants { // All heights in meters
     final public static int elevatorFollowMotorID = 12;
     final public static int containerMotorID = 13; // Bottom
     final public static int containerFollowMotorID = 14; // Top
-    // final public static int algaeMotorID = 15;
-    final public static double algaeMotorSpeed = 1;
+    final public static int algaeMotorID = 15;
+    final public static double algaeMotorSpeed = 0.1;
     final public static double containerMotorSpeedBottomDrop = 0.05;
     final public static double containerMotorSpeedTopDrop = 0.3;
     final public static double containerMotorSpeedBottomCollect = -0.12; //-0.08
@@ -101,7 +101,7 @@ public class ArmConstants { // All heights in meters
     // Arm Constants
     final public static double autoResetHeight = 0.1; // Maximum difference between curHeight and minimum arm height to automatically reset to zero
     final public static double minHeight = 0.7493; // Container bottom distance from ground
-    final public static double armForwardOffset = 0.4191; // Arm distance from center of robot
+    final public static double armForwardOffset = 0.05; // Arm distance from center of robot
     final public static double maxHeight = 1.121; // Arm max extension length
     final public static double collectHeight = .900; // Collection
     final public static double ground = 0.33; // L1

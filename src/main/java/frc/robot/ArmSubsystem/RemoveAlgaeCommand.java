@@ -19,11 +19,12 @@ public class RemoveAlgaeCommand extends Command {
     public RemoveAlgaeCommand(Supplier<Boolean> interrupted) {
         addRequirements(Robot.instance.armSubsystem);
         height = Robot.instance.armSubsystem.getTargetHeight();
+        this.interrupted = interrupted;
     }
 
     @Override
     public void initialize() {
-        state = RemoveAlgaeState.SetupInit;
+        state = RemoveAlgaeState.EjectInit;
     }
     
     @Override
@@ -61,6 +62,6 @@ public class RemoveAlgaeCommand extends Command {
     }
     @Override
     public boolean isFinished() {
-        return state == RemoveAlgaeState.End || interrupted.get();
+        return state == RemoveAlgaeState.End || (interrupted != null && interrupted.get());
     }
 }

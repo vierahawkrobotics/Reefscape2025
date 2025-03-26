@@ -18,15 +18,16 @@ public class PositionTools {
     }
     public static Pose2d closestScorePoseEntry(boolean isRotated){
         return getPoseTranslated(trueclosestScore(),
-        new Pose2d(0,-PositionConstants.ScoringLocations.backOffset,Rotation2d.fromDegrees(isRotated ? 90: 0)));
+        new Pose2d(-PositionConstants.ScoringLocations.backOffset,0,Rotation2d.fromDegrees(isRotated ? 90: 0)));
     }
 
     public static Pose2d closestScorePose(boolean isRotated, double limitOffset){
-        if(isRotated){
-            return getPoseTranslated(trueclosestScore(),
-            new Pose2d(limitOffset, 0, Rotation2d.fromDegrees(0)));
+        Pose2d p = trueclosestScore();
+        if(!isRotated){
+            return getPoseTranslated(p,
+            new Pose2d(0, limitOffset, Rotation2d.fromDegrees(0)));
         } else {
-            return trueclosestScore().rotateBy(Rotation2d.fromDegrees(90));
+            return new Pose2d(p.getTranslation(),p.getRotation().plus(Rotation2d.kCW_90deg)); //TODO: Figure out CW vs VVW
         }
     }
 

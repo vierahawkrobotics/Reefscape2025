@@ -53,8 +53,8 @@ public class DropCoralCommand extends Command {
         if(limit == null) limit = 0.0;
         Pose2d offset = new Pose2d(-ArmConstants.armForwardOffset,-limit,Rotation2d.fromDegrees(0));
         pose = PositionTools.getPoseTranslated(origin, offset);
-        System.out.println(pose);
-        System.out.println(limit);
+        System.out.println("pose: " + pose);
+        System.out.println("limit switch" + limit);
     }
     @Override
     public void execute() {
@@ -67,6 +67,7 @@ public class DropCoralCommand extends Command {
                 Robot.instance.drivetrain.setTargetPos(translatedPremove.getX(), translatedPremove.getY());
                 Robot.instance.drivetrain.setTargetPosRot(translatedPremove.getRotation().getRadians());
                 state = DropState.MovePeriodic;
+                System.out.println("premove: " + translatedPremove);
                 break;
             case MovePeriodic: // Check target
                 if (Robot.instance.drivetrain.getIsPointReached()) {
@@ -83,6 +84,7 @@ public class DropCoralCommand extends Command {
                 Robot.instance.drivetrain.setTargetPosRot(translateMove.getRotation().getRadians());
                 Robot.instance.armSubsystem.setHeightState(height);
                 state = DropState.Move2Periodic;
+                System.out.println("move: " + translateMove);
                 break;
             case Move2Periodic:
                 if (Robot.instance.drivetrain.getIsPointReached() && Robot.instance.armSubsystem.AtTargetHeight()) {
