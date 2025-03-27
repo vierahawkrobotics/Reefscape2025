@@ -36,7 +36,7 @@ public class PathPlanner {
 
 
     public void initialize() {
-      RobotConfig config = null;//This is because java dosnt wanna believe anything in a try catch
+      RobotConfig config = new RobotConfig(0, 0, null, 0);//This is because java dosnt wanna believe anything in a try catch
       try{
         config = RobotConfig.fromGUISettings();//gets config from Pathplanner application
       } catch (Exception e){

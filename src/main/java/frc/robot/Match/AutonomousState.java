@@ -26,16 +26,24 @@ import frc.robot.Drivetrain.PathPlanner;
 public class AutonomousState {
     private static SendableChooser<Command> autoChooser;
     private static PathPlanner pathPlanner = new PathPlanner();
+    static Supplier<Pose2d> getPose = () -> PositionComponent.getRobotPose();
+    static Consumer<Pose2d> resetPose = (Pose2d pose) -> PositionComponent.zeroPos();
+    static Supplier<ChassisSpeeds> getRobotRelativeSpeeds = () -> PositionComponent.getChassisSpeeds();
             
     public static Command getAutonomousCommand() {
         //input using NWU
         // return new DrivePoseBased(PositionTools.getAutoPostFromAlliance());
         //return new DrivePoseBased(PositionTools.getPoseFromAlliance());
         
-        Supplier<Pose2d> getPose = () -> PositionComponent.getRobotPose();
-        Consumer<Pose2d> resetPose = (Pose2d pose) -> PositionComponent.zeroPos();
-        Supplier<ChassisSpeeds> getRobotRelativeSpeeds = () -> PositionComponent.getChassisSpeeds();
         
+        
+        
+        PositionComponent.getInstance().InitPose();
+        autoChooser = AutoBuilder.buildAutoChooser();
+        SmartDashboard.putData("Auto Chooser", autoChooser);
+        return new PathPlannerAuto("New Auto");
+    }
+    public static void initialize() {
         RobotConfig config = null;//This is because java dosnt wanna believe anything in a try catch
         try{
             config = RobotConfig.fromGUISettings();//gets config from Pathplanner application
@@ -61,13 +69,7 @@ public class AutonomousState {
             },
             Robot.instance.drivetrain //Drivetrain instance
         );
-        PositionComponent.getInstance().InitPose();
-        autoChooser = AutoBuilder.buildAutoChooser();
-        SmartDashboard.putData("Auto Chooser", autoChooser);
-        return new PathPlannerAuto("New Auto");
-    }
-    public static void initialize() {
-        
+
     }
     public static void periodic() {}
     public static void exit() {}
