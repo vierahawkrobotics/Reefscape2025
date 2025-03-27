@@ -24,13 +24,15 @@ public class LimelightComponent {
     public static final double[] defaultArray = {};
     public static final Double[] defaultFiducials = new Double[10];
     public static final double minDist = 0;
-    public static final double maxDistMT1 = 1.0;    // In meters, the maximum acceptable distance for an MT1 april ta
-    public static final double maxDistMT2 = 6.0;    // In meters, the maximum acceptable distance for an MT1 april tag
+    public static final double minDistMT1 = 0.5;    // In meters, the min acceptable distance for an MT1 april tag
+    public static final double maxDistMT1 = 1.0;    // In meters, the maximum acceptable distance for an MT1 april tag
+    public static final double maxDistMT2 = 6.0;    // In meters, the maximum acceptable distance for an MT2 april tag
     public static final double aprilTagHeight = Units.inchesToMeters(10.5); // In meters, the height of the april tag
     public static final double limelightFOVX = 82;      // In degrees, the horizontal FOV of the limelight
     public static final double limelightFOVY = 56.2;    // In degrees, the vertical FOV of the limelight
-    public static final double detectionBuffer = 0;     // In degrees, the angular buffer
-    public static final Pose2d limelightOffset = new Pose2d(0.305, 0, Rotation2d.kZero); // Offset of limelight relative to center of Robot
+    public static final double detectionBuffer = 8;     // In degrees, the angular buffer
+    public static final Pose2d limelightOffset = new Pose2d(0, 0, Rotation2d.kZero); // Offset of limelight relative to center of Robot
+    public static final Pose2d absoluteOffset = new Pose2d(0.55,0,Rotation2d.kZero);
         
     //-------------------------------------------Last Data--------------------------------------------//
     public static double dist;
@@ -75,7 +77,7 @@ public class LimelightComponent {
             limelightMeasurement = LimelightHelpers.getBotPoseEstimate_wpiRed("");
             LimelightHelpers.SetRobotOrientation("", PositionComponent.getOffsetGyroRotation() + 180, 0, 0, 0, 0, 0);
                 
-            if(limelightMeasurement.rawFiducials == null || limelightMeasurement.rawFiducials.length <= 0) return null;
+            if(limelightMeasurement.rawFiducials == null || limelightMeasurement.rawFiducials.length <= 0 || limelightMeasurement.rawFiducials[0].distToCamera < minDistMT1) return null;
             if(limelightMeasurement.rawFiducials[0].distToCamera < maxDistMT1){
                 // Continue as normal (MT1)
                 noRotation = false;
@@ -89,7 +91,7 @@ public class LimelightComponent {
             limelightMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue("");
             LimelightHelpers.SetRobotOrientation("", PositionComponent.getOffsetGyroRotation(), 0, 0, 0, 0, 0);
                 
-            if(limelightMeasurement.rawFiducials == null || limelightMeasurement.rawFiducials.length <= 0) return null;
+            if(limelightMeasurement.rawFiducials == null || limelightMeasurement.rawFiducials.length <= 0|| limelightMeasurement.rawFiducials[0].distToCamera < minDistMT1) return null;
             if(limelightMeasurement.rawFiducials[0].distToCamera < maxDistMT1){
                 // Continue as normal (MT1)
                 noRotation = false;
@@ -104,7 +106,7 @@ public class LimelightComponent {
         if(limelightMeasurement != null && limelightMeasurement.rawFiducials != null && limelightMeasurement.rawFiducials.length >= 1){
             lPos = limelightMeasurement.pose;
             dist = limelightMeasurement.rawFiducials[0].distToCamera;
-            return new PoseWithTimestamp(limelightMeasurement.timestampSeconds, PositionTools.getPoseTranslated(limelightMeasurement.pose, limelightOffset.times(-1)),noRotation);
+            return new PoseWithTimestamp(limelightMeasurement.timestampSeconds, PositionTools.addPose(PositionTools.getPoseTranslated(limelightMeasurement.pose, limelightOffset.times(-1)), absoluteOffset),noRotation);
         } else {
             dist = -1;
             return null;

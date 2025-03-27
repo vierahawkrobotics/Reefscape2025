@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.ArmSubsystem.ArmConstants.HeightState;
+import frc.robot.ArmSubsystem.ArmConstants.IntakeState;
 import frc.robot.Components.PositionComponent.PositionComponent;
 import frc.robot.Match.RobotState;
 
@@ -38,6 +39,7 @@ public class ArmSubsystem extends SubsystemBase {
     public Double limitSwitchOffset;
     public double startTime;
     public double algaeStartTime;
+    private double prevOffset;
 
     public ArmSubsystem() {
         // Shuffleboard Setup
@@ -145,11 +147,18 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     /**
-     * @return left/right offset in meters based on limit switch pressed (0 if none pressed)
+     * @return left/right offset in meters based on limit switch pressed (null if none pressed)
      * @author Andrew S
      */
     public Double getLimitSwitchOffset() {
         return limitSwitchOffset;
+    }
+    /**
+     * @return left/right offset in meters based on limit switch pressed 
+     * @author Andrew S
+     */
+    public Double getPrevLimitSwitchOffset() {
+        return prevOffset;
     }
 
     /**
@@ -240,23 +249,25 @@ public class ArmSubsystem extends SubsystemBase {
         int total = 0;
         if (!container.getForwardLimitSwitch().isPressed()) {
             total++;
-            sum += ArmConstants.farLeftIntakeChannel;
+            sum += ArmConstants.middleLeftIntakeChannel;
         }
         if (!container.getReverseLimitSwitch().isPressed()) {
             total++;
-            sum += ArmConstants.middleLeftIntakeChannel;
+            sum += ArmConstants.farLeftIntakeChannel;
         }
         if (!containerFollower.getForwardLimitSwitch().isPressed()) {
             total++;
-            sum += ArmConstants.middleRightIntakeChannel;
+            sum += ArmConstants.farRightIntakeChannel;
         }
         if (!containerFollower.getReverseLimitSwitch().isPressed()) {
             total++;
-            sum +=ArmConstants.farRightIntakeChannel;
+            sum +=ArmConstants.middleRightIntakeChannel;
         }
         if(total == 0) limitSwitchOffset = null;
-        else limitSwitchOffset = sum / total;
-
+        else {
+            limitSwitchOffset = sum / total;
+            prevOffset = sum/total;
+        }
 
         switch (intakeState) { // Collect and Drop
             case Rest:
@@ -320,5 +331,10 @@ public class ArmSubsystem extends SubsystemBase {
     }
     @Override
     public void simulationPeriodic() {}
+
+    public void setAlgaeMotorSpeed(IntakeState drop) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'setAlgaeMotorSpeed'");
+    }
 }
  

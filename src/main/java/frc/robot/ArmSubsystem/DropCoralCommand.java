@@ -49,12 +49,10 @@ public class DropCoralCommand extends Command {
         System.out.println("Drop");
     
         Pose2d origin = new Pose2d(0, 0, Rotation2d.kZero);
-        Double limit = Robot.instance.armSubsystem.getLimitSwitchOffset();
-        if(limit == null) limit = 0.0;
-        Pose2d offset = new Pose2d(-ArmConstants.armForwardOffset,-limit,Rotation2d.fromDegrees(0));
+        Pose2d offset = new Pose2d(height == HeightState.CoralHigh ? -ArmConstants.armForwardOffsetHigh : -ArmConstants.armForwardOffsetLow,0,Rotation2d.fromDegrees(0));
         pose = PositionTools.getPoseTranslated(origin, offset);
         System.out.println("pose: " + pose);
-        System.out.println("limit switch" + limit);
+        System.out.println("limit switch" +  Robot.instance.armSubsystem.getPrevLimitSwitchOffset());
     }
     @Override
     public void execute() {
@@ -70,13 +68,12 @@ public class DropCoralCommand extends Command {
                 System.out.println("premove: " + translatedPremove);
                 break;
             case MovePeriodic: // Check target
-                if (Robot.instance.drivetrain.getIsPointReached()) {
+                if (Robot.instance.drivetrain.getIsPointReached(0.3)) {
                    state = DropState.Move2Init;
                 }
                 break;
             case Move2Init:
-                Double d = Robot.instance.armSubsystem.limitSwitchOffset;
-                if(d == null) d = 0.0;
+                double d = -Robot.instance.armSubsystem.getPrevLimitSwitchOffset();
                 Pose2d translateMove = PositionTools.getPoseTranslated(PositionTools.closestScorePose(false, 
                     d + (isRight ? ArmConstants.coralPipeDistance / 2: -ArmConstants.coralPipeDistance / 2)),
                     pose);
@@ -87,7 +84,8 @@ public class DropCoralCommand extends Command {
                 System.out.println("move: " + translateMove);
                 break;
             case Move2Periodic:
-                if (Robot.instance.drivetrain.getIsPointReached() && Robot.instance.armSubsystem.AtTargetHeight()) {
+                if (Robot.instance.drivetrain.getIsPointReached(0.03) && Robot.instance.drivetrain.getIsRotationReached() &&
+                 Robot.instance.drivetrain.checkIsRobotStopped() && Robot.instance.armSubsystem.AtTargetHeight()) {
                     state = DropState.DropInit;
                 }
                 break;

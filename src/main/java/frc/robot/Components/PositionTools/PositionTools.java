@@ -38,6 +38,10 @@ public class PositionTools {
         return new Pose2d(origin.getX() + x*theta.getCos()-y*theta.getSin(), origin.getY() + y*theta.getCos()+x*theta.getSin(), theta.plus(offset.getRotation()));
     }
 
+    public static Pose2d addPose(Pose2d origin, Pose2d offset){
+        return new Pose2d(origin.getTranslation().plus(offset.getTranslation()), origin.getRotation().plus(offset.getRotation()));
+    }
+
     public static double poseDist(Pose2d origin, Pose2d destination){
         Transform2d delta = origin.minus(destination);
         return Math.sqrt((delta.getX() * delta.getX()) + (delta.getY() * delta.getY()));

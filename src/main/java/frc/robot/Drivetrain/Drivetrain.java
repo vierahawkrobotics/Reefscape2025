@@ -253,8 +253,12 @@ public class Drivetrain extends SubsystemBase{
     public boolean getIsPointReached(){
         return distance < DrivetrainConstants.validRange;
     }
+    
+    public boolean getIsPointReached(double customRadiusMeters){
+        return distance < customRadiusMeters;
+    }
     public boolean getIsRotationReached(){
-        return rotDistance < DrivetrainConstants.validRotDiff;
+        return Math.abs(rotDistance) < DrivetrainConstants.validRotDiff;
     }
      public static SwerveModulePosition[] getSwerveModulePositions(){
         SwerveModulePosition[] swerveModulePositionList = {

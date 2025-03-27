@@ -11,6 +11,7 @@ import frc.robot.ArmSubsystem.ArmConstants;
 import frc.robot.ArmSubsystem.CollectCoralCommand;
 import frc.robot.ArmSubsystem.DropCoralCommand;
 import frc.robot.ArmSubsystem.DropCoralRawCommand;
+import frc.robot.ArmSubsystem.RemoveAlgaeRawCommand;
 import frc.robot.ArmSubsystem.ElevatorMovementCommand;
 import frc.robot.ArmSubsystem.ElevatorSetHeightCommand;
 import frc.robot.ArmSubsystem.RemoveAlgaeCommand;
@@ -52,10 +53,10 @@ public class RobotState {
         new JoystickButton(controller1, XboxController.Button.kLeftBumper.value).onTrue(new DropCoralCommand(() -> {
             return controller1.getBButton();
         }, HeightState.CoralHigh, false));
-        new Trigger(()->{return controller1.getLeftTriggerAxis() > 0.9;}).onTrue(new DropCoralCommand(() -> {
+        new Trigger(()->{return controller1.getRightTriggerAxis() > 0.9;}).onTrue(new DropCoralCommand(() -> {
             return controller1.getBButton();
         }, HeightState.CoralLow, true));
-        new Trigger(()->{return controller1.getRightTriggerAxis() > 0.9;}).onTrue(new DropCoralCommand(() -> {
+        new Trigger(()->{return controller1.getLeftTriggerAxis() > 0.9;}).onTrue(new DropCoralCommand(() -> {
             return controller1.getBButton();
         }, HeightState.CoralLow, false));
         //   Elevator
