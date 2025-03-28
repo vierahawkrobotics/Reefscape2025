@@ -54,8 +54,10 @@ public class ArmSubsystem extends SubsystemBase {
         armTab.addString("Algae State", () -> {return algaeState.toString();});
         armTab.addBoolean("Limit Switch", () -> {return elevator.getReverseLimitSwitch().isPressed();});*/
         armTab.addNumber("Elevator Limit Offset", () -> {
-            if(getLimitSwitchOffset() == null) return 0;
-            return getLimitSwitchOffset().doubleValue();
+            return prevOffset;
+        });
+        armTab.addBoolean("Elevator Limit On", () -> {
+            return limitSwitchOffset != null;
         });
         // Elevator Motors Setup
         elevator = new SparkFlex(ArmConstants.elevatorMotorID, MotorType.kBrushless);
@@ -249,7 +251,7 @@ public class ArmSubsystem extends SubsystemBase {
         int total = 0;
         if (!container.getForwardLimitSwitch().isPressed()) {
             total++;
-            sum += ArmConstants.middleLeftIntakeChannel;
+            sum += ArmConstants.middleRightIntakeChannel;
         }
         if (!container.getReverseLimitSwitch().isPressed()) {
             total++;
@@ -261,7 +263,7 @@ public class ArmSubsystem extends SubsystemBase {
         }
         if (!containerFollower.getReverseLimitSwitch().isPressed()) {
             total++;
-            sum +=ArmConstants.middleRightIntakeChannel;
+            sum +=ArmConstants.middleLeftIntakeChannel;
         }
         if(total == 0) limitSwitchOffset = null;
         else {

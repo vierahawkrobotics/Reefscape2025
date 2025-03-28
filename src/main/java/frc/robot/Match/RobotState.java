@@ -35,7 +35,9 @@ public class RobotState {
         }, () -> {
             return -1*controller1.getLeftX();
         }, () -> { 
-            return -1 *controller1.getRightX();
+            double m = Math.sqrt(controller1.getRightX()*controller1.getRightX()+controller1.getRightY()*controller1.getRightY());
+            if(m < 0.4) return null;
+            return Math.atan2(-controller1.getRightX(),-controller1.getRightY());
         }));
 
         // Controller 2
@@ -47,16 +49,16 @@ public class RobotState {
         new JoystickButton(controller2, XboxController.Button.kX.value).onTrue(new RemoveAlgaeCommand(()->{return !controller2.getXButton();}));
         new JoystickButton(controller1, XboxController.Button.kX.value).onTrue(new ResetHeading());
 
-        new JoystickButton(controller1, XboxController.Button.kRightBumper.value).onTrue(new DropCoralCommand(() -> {
-            return controller1.getBButton();
-        }, HeightState.CoralHigh, true));
         new JoystickButton(controller1, XboxController.Button.kLeftBumper.value).onTrue(new DropCoralCommand(() -> {
             return controller1.getBButton();
+        }, HeightState.CoralHigh, true));
+        new JoystickButton(controller1, XboxController.Button.kRightBumper.value).onTrue(new DropCoralCommand(() -> {
+            return controller1.getBButton();
         }, HeightState.CoralHigh, false));
-        new Trigger(()->{return controller1.getRightTriggerAxis() > 0.9;}).onTrue(new DropCoralCommand(() -> {
+        new Trigger(()->{return controller1.getLeftTriggerAxis() > 0.9;}).onTrue(new DropCoralCommand(() -> {
             return controller1.getBButton();
         }, HeightState.CoralLow, true));
-        new Trigger(()->{return controller1.getLeftTriggerAxis() > 0.9;}).onTrue(new DropCoralCommand(() -> {
+        new Trigger(()->{return controller1.getRightTriggerAxis() > 0.9;}).onTrue(new DropCoralCommand(() -> {
             return controller1.getBButton();
         }, HeightState.CoralLow, false));
         //   Elevator

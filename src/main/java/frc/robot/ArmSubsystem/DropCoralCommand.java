@@ -59,7 +59,7 @@ public class DropCoralCommand extends Command {
         switch(state) {
             default:
             case MoveInit: // Set robot target position to reef
-                Pose2d translatedPremove = PositionTools.getPoseTranslated(PositionTools.closestScorePoseEntry(false), pose);
+                Pose2d translatedPremove = PositionTools.getPoseTranslated(PositionTools.closestScorePoseEntry(false), Pose2d.kZero);
                 // moveCommand = new SequentialCommandGroup(new DrivePoseBased(translatedPremove,()->{return false;}), new DrivePoseBased(translateMove,()->{return false;}));
                 // moveCommand.schedule();
                 Robot.instance.drivetrain.setTargetPos(translatedPremove.getX(), translatedPremove.getY());
@@ -82,9 +82,10 @@ public class DropCoralCommand extends Command {
                 Robot.instance.armSubsystem.setHeightState(height);
                 state = DropState.Move2Periodic;
                 System.out.println("move: " + translateMove);
+                System.out.println("move d: " + d);
                 break;
             case Move2Periodic:
-                if (Robot.instance.drivetrain.getIsPointReached(0.03) && Robot.instance.drivetrain.getIsRotationReached() &&
+                if (Robot.instance.drivetrain.getIsPointReached(0.01) && Robot.instance.drivetrain.getIsRotationReached() &&
                  Robot.instance.drivetrain.checkIsRobotStopped() && Robot.instance.armSubsystem.AtTargetHeight()) {
                     state = DropState.DropInit;
                 }

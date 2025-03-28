@@ -161,10 +161,12 @@ public class Drivetrain extends SubsystemBase{
         //normal vector
         Vector V = (T.subtract(R)).normalize();
         double scaleFactor;
-        if (distance <= DrivetrainConstants.validRange) scaleFactor = 0;
-        else{
-            scaleFactor = distance>DrivetrainConstants.pointTolerance? 1: distance/DrivetrainConstants.pointTolerance;
-        }
+        // if (distance <= DrivetrainConstants.validRange) scaleFactor = 0;
+        // else{
+        //     scaleFactor = distance>DrivetrainConstants.pointTolerance? 1: distance/DrivetrainConstants.pointTolerance;
+        // }
+        double pt = smoothScale * DrivetrainConstants.pointTolerance;
+        scaleFactor = distance>pt? 1: distance/pt;
         V.x *= smoothScale;
         V.y *= smoothScale;
         VxSB = V.x;
@@ -175,11 +177,14 @@ public class Drivetrain extends SubsystemBase{
         double vr;
         updateRotDistance();
 
-        if(Math.abs(rotDistance) <= DrivetrainConstants.validRotDiff) vr = 0;
-        else{
-            vr = Math.abs(rotDistance)>DrivetrainConstants.rotTolerance?
-            Math.signum(rotDistance): rotDistance/(DrivetrainConstants.decreaseRateRot);
-        }
+        // if(Math.abs(rotDistance) <= DrivetrainConstants.validRotDiff) vr = 0;
+        // else{
+        //     vr = Math.abs(rotDistance)>DrivetrainConstants.rotTolerance?
+        //     Math.signum(rotDistance): rotDistance/(DrivetrainConstants.decreaseRateRot);
+        // }
+        double rt = smoothScaleRot * DrivetrainConstants.rotTolerance;
+        vr = Math.abs(rotDistance)> rt?
+        Math.signum(rotDistance): rotDistance/rt;
         setDrivetrainRot(vr * smoothScaleRot);
     }
 //-------------------------------------Set Drivetrain based on Drive Functions-----------------------------

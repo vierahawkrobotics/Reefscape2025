@@ -28,7 +28,7 @@ public class PositionConstants {
         public static Pose2d bottomRightReefEdge = new Pose2d(-3.869182,-0.719582,Rotation2d.fromDegrees(120));
         public static Pose2d reefEdges[] = {topRightReefEdge,topReefEdge,topLeftReefEdge,bottomLeftReefEdge,bottomReefEdge,bottomRightReefEdge};
 
-        public static double backOffset = 1; // How far back the robot should be from each scoring location (meters)
+        public static double backOffset = 0.9; // How far back the robot should be from each scoring location (meters)
     }
     public static class PoseGraphData {
         //TODO figure whatever this is out

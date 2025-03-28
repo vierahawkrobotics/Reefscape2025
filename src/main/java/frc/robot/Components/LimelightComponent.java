@@ -24,9 +24,9 @@ public class LimelightComponent {
     public static final double[] defaultArray = {};
     public static final Double[] defaultFiducials = new Double[10];
     public static final double minDist = 0;
-    public static final double minDistMT1 = 0.5;    // In meters, the min acceptable distance for an MT1 april tag
-    public static final double maxDistMT1 = 1.0;    // In meters, the maximum acceptable distance for an MT1 april tag
-    public static final double maxDistMT2 = 6.0;    // In meters, the maximum acceptable distance for an MT2 april tag
+    public static final double minDistMT1 = 0.6;    // In meters, the min acceptable distance for an MT1 april tag
+    public static final double maxDistMT1 = 0.95;    // In meters, the maximum acceptable distance for an MT1 april tag
+    public static final double maxDistMT2 = 10.0;    // In meters, the maximum acceptable distance for an MT2 april tag
     public static final double aprilTagHeight = Units.inchesToMeters(10.5); // In meters, the height of the april tag
     public static final double limelightFOVX = 82;      // In degrees, the horizontal FOV of the limelight
     public static final double limelightFOVY = 56.2;    // In degrees, the vertical FOV of the limelight
@@ -64,7 +64,9 @@ public class LimelightComponent {
         double tagAngularSize = Units.radiansToDegrees(Math.atan2(aprilTagHeight/2,fiducials[0].distToCamera));
         return !(Math.abs(getTX()) > limelightFOVX/2-tagAngularSize-detectionBuffer || Math.abs(getTY()) > limelightFOVY/2-tagAngularSize-detectionBuffer);
     }
-
+    public static void setSamplingRate(int delay){
+        NetworkTableInstance.getDefault().getTable("limelight").getEntry("crop").setInteger(delay);
+    }
 
     public static PoseWithTimestamp calcAprilTag() {
         boolean noRotation = false;

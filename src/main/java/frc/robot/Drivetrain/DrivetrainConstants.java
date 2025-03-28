@@ -19,16 +19,15 @@ public class DrivetrainConstants {
 
 //-------------------------------------------Point Reached Ranges-------------------------------------------
     //The range at which the robot is considered to have reached a position
-    public static double validRange = 0.03; //translation in meters
-    public static double validRotDiff = 0.014; //rotation in radians
+    public static double validRange = 0.05; //translation in meters
+    public static double validRotDiff = 0.03; //rotation in radians
      //the range at which the robot begins to slow down in DrivePosition()
-     public static double pointTolerance = 0.07; //meters
+     public static double pointTolerance = 0.5; //meters
      //the rotation version of what's above
-     public static double rotTolerance = 0.14;//radians
+     public static double rotTolerance = 0.18;//radians
      /*the speed(meters/second) at which the robot is considered stopped during
      a path, this will be checked on each SwerveModule individually*/
      public static double stoppedVelocity = 0.02;
-    public static double decreaseRateRot = 5;
     
 //-------------------------------------Mechanical Information, Reefscaoe Bot-----------------------------
 
@@ -60,7 +59,7 @@ public class DrivetrainConstants {
     //------------------------------------------------PIDs-------------------------------------------------
     public static double drivingP = 0.6;
     public static double drivingI = 0;
-    public static double drivingD = 0.04;
+    public static double drivingD = 0.06;
     public static double drivingMinOutput = -1;
     public static double drivingMaxOutput = 1;
     public static PersistMode drivingPersist = PersistMode.kNoPersistParameters;

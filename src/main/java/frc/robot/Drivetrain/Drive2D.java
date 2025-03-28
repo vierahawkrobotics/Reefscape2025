@@ -41,21 +41,23 @@ public class Drive2D extends Command {
             vyVal *= m;
         }
 
-        double vrVal;
         // set vrVal based on area effects
         Pose2d areaPose = AreaEffectsHandler.getTargetPose();
         Boolean autoAlign = AreaEffectsHandler.getIsAutoAlign();
         if(autoAlign != null && autoAlign.booleanValue()) {
+            double vrVal;
             vrVal = PositionTools.closestScorePoseEntry(false).getRotation().getRadians();
             Robot.instance.drivetrain.setTargetPosRot(vrVal);
         }
         else if (areaPose != null){
+            double vrVal;
             vrVal = areaPose.getRotation().getRadians();
             Robot.instance.drivetrain.setTargetPosRot(vrVal);
         }
         else{
-            vrVal = (Math.abs(vr.get())< DrivetrainConstants.inputDeadband)?0: vr.get();
-            Robot.instance.drivetrain.setInputVelRot(vrVal);
+            Double vrVal;
+            vrVal = vr.get();
+            if(vrVal != null) Robot.instance.drivetrain.setTargetPosRot(vrVal);
         }
         
         Robot.instance.drivetrain.setInputVel(vxVal, vyVal);

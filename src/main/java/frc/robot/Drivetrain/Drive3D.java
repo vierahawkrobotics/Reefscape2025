@@ -45,11 +45,11 @@ public  class Drive3D extends Command {
       vyVal *= m;
     }
 
-    double vrVal = vr.get();
-    vrVal = (Math.abs(vrVal) < DrivetrainConstants.inputDeadband)?vrVal=0: vrVal;
+    Double vrVal;
+    vrVal = vr.get();
+    if(vrVal != null) Robot.instance.drivetrain.setTargetPosRot(vrVal);
     
     Robot.instance.drivetrain.setInputVel(vxVal, vyVal);
-    Robot.instance.drivetrain.setInputVelRot(vrVal);
   }
   @Override
   public void end(boolean interrupted) {}
