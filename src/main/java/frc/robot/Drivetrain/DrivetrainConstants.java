@@ -8,14 +8,14 @@ import edu.wpi.first.math.geometry.Translation2d;
 public class DrivetrainConstants {
     public static double smoothTransitionRate = 0.04; // 0.5 s decay rate
 //speed setting- this is just default if no areaEffects are being
-    public static double defaultMaxSpeed = 1.6;// 0.25;
+    public static double defaultMaxSpeed = 1.8;// 0.25;
     public static double defaultRotSpeed = Math.PI * 1;
 //-------------------------------------------Limits and Deadband-------------------------------------------
-    public static double inputDeadband = 0.09;
+    public static double inputDeadband = 0.12;
     public static double physicalSpeedLimit = 20; // meters per second
     public static double physicalRotSpeedLimit = Math.PI * 4; // rad per second
-    public static int drivingMotorCurrentLimit = 80; // amps
-    public static int turningMotorCurrentLimit = 25; // amps
+    public static int drivingMotorCurrentLimit = 60; // amps
+    public static int turningMotorCurrentLimit = 20; // amps
 
 //-------------------------------------------Point Reached Ranges-------------------------------------------
     //The range at which the robot is considered to have reached a position

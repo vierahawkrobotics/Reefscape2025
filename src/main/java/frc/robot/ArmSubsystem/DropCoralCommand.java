@@ -69,7 +69,7 @@ public class DropCoralCommand extends Command {
                 System.out.println("premove: " + translatedPremove);
                 break;
             case MovePeriodic: // Check target
-                if (Robot.instance.drivetrain.getIsPointReached(0.3)) {
+                if (Robot.instance.drivetrain.getIsPointReached(0.05)) {
                    state = DropState.Move2Init;
                 }
                 break;
@@ -86,7 +86,7 @@ public class DropCoralCommand extends Command {
                 System.out.println("move d: " + d);
                 break;
             case Move2Periodic:
-                if (Robot.instance.drivetrain.getIsPointReached(0.01) && Robot.instance.drivetrain.getIsRotationReached(0.07) &&
+                if (Robot.instance.drivetrain.getIsPointReached(0.005) && Robot.instance.drivetrain.getIsRotationReached(0.07) &&
                  Robot.instance.drivetrain.checkIsRobotStopped() && Robot.instance.armSubsystem.AtTargetHeight()) {
                     state = DropState.DropInit;
                 }

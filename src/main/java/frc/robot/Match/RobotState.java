@@ -76,7 +76,7 @@ public class RobotState {
             return controller2.getPOV() == 270;
         }, HeightState.CoralLow, false));
 
-        new JoystickButton(controller1, XboxController.Button.kLeftBumper.value).onTrue(new ResetHeading());
+        new JoystickButton(controller1, XboxController.Button.kLeftStick.value).onTrue(new ResetHeading());
         new JoystickButton(controller1, XboxController.Button.kStart.value).onTrue(new LimelightEnable(false));
         //   Elevator
         new Trigger(()->{return controller2.getPOV() == 0;}).onTrue(new ElevatorSetHeightCommand(ArmConstants.HeightState.CoralHigh)); // Up - top
@@ -91,6 +91,6 @@ public class RobotState {
     }
     static int index = 0;
     public static void Periodic() {
-        if((index++ % 40) == 0) System.out.println("robo pose: " + PositionComponent.getRobotPose());
+        if((index++ % 100) == 0) System.out.println("robo pose: " + PositionComponent.getRobotPose());
     }
 }

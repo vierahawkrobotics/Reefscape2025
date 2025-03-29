@@ -84,24 +84,26 @@ public class Drivetrain extends SubsystemBase{
     public Drivetrain(){
         //invert back two driving motors
 
-        drivetrainTab.addDouble("Robot velR", () -> {return velTR;});
-        drivetrainTab.addDouble("Robot velX", () -> {return velTX;});
+        // drivetrainTab.addDouble("Robot velR", () -> {return velTR;});
+        // drivetrainTab.addDouble("Robot velX", () -> {return velTX;});
+        // drivetrainTab.addDouble("Robot velY", () -> {return velTX;});
         // drivetrainTab.addDouble("Robot velY", () -> {return velTY;});
 
-        drivetrainTab.addDouble("Robot posR", () -> {return posR;});
-        drivetrainTab.addDouble("Robot posX", () -> {return posX;});
-        drivetrainTab.addDouble("Robot posY", () -> {return posY;});
+        // drivetrainTab.addDouble("Robot posR", () -> {return posR;});
+        // drivetrainTab.addDouble("Robot posX", () -> {return posX;});
+        // drivetrainTab.addDouble("Robot posY", () -> {return posY;});
 
         // drivetrainTab.addDouble("Set X Speed", () -> {return setVelX;});
         // drivetrainTab.addDouble("Set Y Speed", () -> {return setVelY;});
-        drivetrainTab.addDouble("V.x", () -> {return VxSB;});
-        drivetrainTab.addDouble("V.y", () -> {return VySB;});
+        // drivetrainTab.addDouble("V.x", () -> {return VxSB;});
+        // drivetrainTab.addDouble("V.y", () -> {return VySB;});
         drivetrainTab.addDouble("a.x", () -> {return appliedX;});
         drivetrainTab.addDouble("a.y", () -> {return appliedY;});
-        drivetrainTab.addDouble("Distance From Point", () -> {return distanceShuffle;});
-        drivetrainTab.addDouble("Rot Distance From Point", () -> {return rotDistance;});
-        drivetrainTab.addDouble("Smooth vel", () -> {return smoothScale;});
-        drivetrainTab.addString("tran state", () -> {return translateState.toString();});
+        drivetrainTab.addDouble("a.r", () -> {return appliedR;});
+        // drivetrainTab.addDouble("Distance From Point", () -> {return distanceShuffle;});
+        // drivetrainTab.addDouble("Rot Distance From Point", () -> {return rotDistance;});
+        // drivetrainTab.addDouble("Smooth vel", () -> {return smoothScale;});
+        // drivetrainTab.addString("tran state", () -> {return translateState.toString();});
     }
 //-------------------------------------------Periodic------------------------------------  
     @Override 

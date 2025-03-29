@@ -28,6 +28,7 @@ public class RemoveAlgaeCommand extends Command {
     private Pose2d pose;
     public RemoveAlgaeCommand(ArmConstants.HeightState height, Supplier<Boolean> interrupted) {
         addRequirements(Robot.instance.armSubsystem);
+        addRequirements(Robot.instance.drivetrain);
         this.height = height;
         this.interrupted = interrupted;
     }
@@ -36,8 +37,9 @@ public class RemoveAlgaeCommand extends Command {
     public void initialize() {
         state = RemoveAlgaeState.MoveInit;
         Pose2d origin = new Pose2d(0, 0, Rotation2d.kZero);
-        Pose2d offset = new Pose2d(0,ArmConstants.algeaArmOffset,Rotation2d.fromDegrees(0));
+        Pose2d offset = new Pose2d(ArmConstants.algeaArmOffsetX,ArmConstants.algeaArmOffsetY,Rotation2d.fromDegrees(0));
         pose = PositionTools.getPoseTranslated(origin, offset);
+        System.out.println("algae");
         System.out.println("pose: " + pose);
         CANdleController.setColor(CANdleConstants.RobotStates.Dropping);
     }
@@ -56,7 +58,7 @@ public class RemoveAlgaeCommand extends Command {
                 System.out.println("premove: " + translatedPremove);
                 break;
             case MovePeriodic: // Check target
-                if (Robot.instance.drivetrain.getIsPointReached(0.3)) {
+                if (Robot.instance.drivetrain.getIsPointReached(0.1)) {
                    state = RemoveAlgaeState.Move2Init;
                 }
                 break;
@@ -66,19 +68,18 @@ public class RemoveAlgaeCommand extends Command {
                 Robot.instance.drivetrain.setTargetPos(translateMove.getX(), translateMove.getY());
                 Robot.instance.drivetrain.setTargetPosRot(translateMove.getRotation().getRadians());
                 Robot.instance.armSubsystem.setHeightState(height);
+                Robot.instance.armSubsystem.setAlgaeMotorSpeed(ArmConstants.AlgaeMotorState.ActiveTemp);
                 state = RemoveAlgaeState.Move2Periodic;
                 System.out.println("move: " + translateMove);
                 System.out.println("move d: " + d);
                 break;
             case Move2Periodic:
-                if (Robot.instance.drivetrain.getIsPointReached(0.08) && Robot.instance.drivetrain.getIsRotationReached() &&
+                if (Robot.instance.drivetrain.getIsPointReached(0.04) && Robot.instance.drivetrain.getIsRotationReached() &&
                  Robot.instance.drivetrain.checkIsRobotStopped() && Robot.instance.armSubsystem.AtTargetHeight()) {
                     state = RemoveAlgaeState.EjectInit;
                 }
                 break;
             case EjectInit: // Begin algae ejection
-                Robot.instance.armSubsystem.setHeightState(ArmConstants.HeightState.AlgaeLow);
-                Robot.instance.armSubsystem.setAlgaeMotorSpeed(ArmConstants.AlgaeMotorState.ActiveTemp);
                 state = RemoveAlgaeState.EjectPeriodic;
                 break;
             case EjectPeriodic:// Check at target height
@@ -92,6 +93,7 @@ public class RemoveAlgaeCommand extends Command {
     public void end(boolean interrupted) {
         Robot.instance.armSubsystem.setHeightState(ArmConstants.HeightState.Ground);
         Robot.instance.armSubsystem.setAlgaeMotorSpeed(ArmConstants.AlgaeMotorState.Inactive);
+        System.out.println("end algae");
         CANdleController.setColor(CANdleConstants.RobotStates.Idle);
     }
     @Override

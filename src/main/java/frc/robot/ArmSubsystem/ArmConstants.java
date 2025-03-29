@@ -102,7 +102,8 @@ public class ArmConstants { // All heights in meters
     final public static double autoResetHeight = 0.1; // Maximum difference between curHeight and minimum arm height to automatically reset to zero
     final public static double minHeight = 0.7493; // Container bottom distance from ground
     final public static double armForwardOffsetHigh = 0.53; // Arm distance from center of robot
-    final public static double algeaArmOffset = 0.48; // Arm distance from center of robot
+    final public static double algeaArmOffsetX = -0.6; // Arm distance from center of robot
+    final public static double algeaArmOffsetY = -1.2; // Arm distance from center of robot
     final public static double armForwardOffsetLow = 0.75; // Arm distance from center of robot
     final public static double maxHeight = 1.123; // Arm max extension length
     final public static double collectHeight = .900; // Collection
@@ -114,8 +115,8 @@ public class ArmConstants { // All heights in meters
 
     // Intake Constants
     //16.5 
-    final public static double farLeftIntakeChannel = 0.175;
+    final public static double farLeftIntakeChannel = 0.14;
     final public static double middleLeftIntakeChannel = 0.03175;
     final public static double middleRightIntakeChannel= -0.03175;
-    final public static double farRightIntakeChannel = -0.095;
+    final public static double farRightIntakeChannel = -0.15;
 }

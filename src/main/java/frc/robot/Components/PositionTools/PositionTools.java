@@ -18,7 +18,7 @@ public class PositionTools {
     }
     public static Pose2d closestScorePoseEntry(boolean isRotated){
         return getPoseTranslated(trueclosestScore(),
-        new Pose2d(-PositionConstants.ScoringLocations.backOffset,0,Rotation2d.fromDegrees(isRotated ? 90: 0)));
+        new Pose2d(-PositionConstants.ScoringLocations.backOffset,0,Rotation2d.fromDegrees(isRotated ? -90: 0)));
     }
 
     public static Pose2d closestScorePose(boolean isRotated, double limitOffset){

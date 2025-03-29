@@ -19,7 +19,7 @@ public class CollectCoralCommand extends Command {
     @Override
     public void initialize() {
         System.out.println("Collect");
-        Robot.instance.armSubsystem.setHeightState(ArmConstants.HeightState.Collect, true);
+        Robot.instance.armSubsystem.setHeightState(ArmConstants.HeightState.Collect, false);
         Robot.instance.armSubsystem.setIntakeState(ArmConstants.IntakeState.Collect);
         CANdleController.setState(CANdleConstants.RobotStates.Intaking);
         RobotState.controller1.setRumble(RumbleType.kBothRumble, 1);
