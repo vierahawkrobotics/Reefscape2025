@@ -4,20 +4,22 @@ import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
+import frc.robot.Components.LimelightComponent;
 import frc.robot.Components.PositionComponent.PositionComponent;
 
 /*LEFT TO DO:
  * change the robot angle to be taken from the position subSystem
  */
-public  class ResetHeading extends Command {
+public  class LimelightEnable extends Command {
 
-  public ResetHeading() {
+  boolean enableRotation;
+  public LimelightEnable(boolean enableRotation) {
+    this.enableRotation = enableRotation;
     addRequirements(Robot.instance.drivetrain);
   }
   @Override
   public void initialize() {
-    PositionComponent.ResetDirection();
-    Robot.instance.drivetrain.setTargetPosRot(0);
+    LimelightComponent.EnableRotControls(enableRotation);
   }
 
   @Override

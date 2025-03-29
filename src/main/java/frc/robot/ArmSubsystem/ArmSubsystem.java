@@ -333,10 +333,5 @@ public class ArmSubsystem extends SubsystemBase {
     }
     @Override
     public void simulationPeriodic() {}
-
-    public void setAlgaeMotorSpeed(IntakeState drop) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setAlgaeMotorSpeed'");
-    }
 }
  

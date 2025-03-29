@@ -8,7 +8,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 public class DrivetrainConstants {
     public static double smoothTransitionRate = 0.04; // 0.5 s decay rate
 //speed setting- this is just default if no areaEffects are being
-    public static double defaultMaxSpeed = 1.3;// 0.25;
+    public static double defaultMaxSpeed = 1.6;// 0.25;
     public static double defaultRotSpeed = Math.PI * 1;
 //-------------------------------------------Limits and Deadband-------------------------------------------
     public static double inputDeadband = 0.09;
@@ -22,7 +22,7 @@ public class DrivetrainConstants {
     public static double validRange = 0.05; //translation in meters
     public static double validRotDiff = 0.03; //rotation in radians
      //the range at which the robot begins to slow down in DrivePosition()
-     public static double pointTolerance = 0.5; //meters
+     public static double pointTolerance = 0.2; //meters
      //the rotation version of what's above
      public static double rotTolerance = 0.18;//radians
      /*the speed(meters/second) at which the robot is considered stopped during

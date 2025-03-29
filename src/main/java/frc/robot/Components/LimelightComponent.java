@@ -24,8 +24,8 @@ public class LimelightComponent {
     public static final double[] defaultArray = {};
     public static final Double[] defaultFiducials = new Double[10];
     public static final double minDist = 0;
-    public static final double minDistMT1 = 0.6;    // In meters, the min acceptable distance for an MT1 april tag
-    public static final double maxDistMT1 = 0.95;    // In meters, the maximum acceptable distance for an MT1 april tag
+    public static final double minDistMT1 = 0.5;    // In meters, the min acceptable distance for an MT1 april tag
+    public static final double maxDistMT1 = 0.8;    // In meters, the maximum acceptable distance for an MT1 april tag
     public static final double maxDistMT2 = 10.0;    // In meters, the maximum acceptable distance for an MT2 april tag
     public static final double aprilTagHeight = Units.inchesToMeters(10.5); // In meters, the height of the april tag
     public static final double limelightFOVX = 82;      // In degrees, the horizontal FOV of the limelight
@@ -37,6 +37,7 @@ public class LimelightComponent {
     //-------------------------------------------Last Data--------------------------------------------//
     public static double dist;
     private static Pose2d lPos = new Pose2d();
+    private static boolean shouldRot = true;
     public static class PoseWithTimestamp{
         public PoseWithTimestamp(double t, Pose2d p,boolean mt2){this.timestamp=t;this.pose=p;this.noRotation=mt2;}
         public double timestamp;
@@ -66,6 +67,13 @@ public class LimelightComponent {
     }
     public static void setSamplingRate(int delay){
         NetworkTableInstance.getDefault().getTable("limelight").getEntry("crop").setInteger(delay);
+    }
+
+    public static void EnableRotControls(boolean shouldRot) {
+        LimelightComponent.shouldRot = shouldRot;
+    }
+    public static void ToggleRotControls() {
+        LimelightComponent.shouldRot ^= true;
     }
 
     public static PoseWithTimestamp calcAprilTag() {
@@ -105,6 +113,7 @@ public class LimelightComponent {
             }
         }
         
+        if(!shouldRot) noRotation = true;
         if(limelightMeasurement != null && limelightMeasurement.rawFiducials != null && limelightMeasurement.rawFiducials.length >= 1){
             lPos = limelightMeasurement.pose;
             dist = limelightMeasurement.rawFiducials[0].distToCamera;

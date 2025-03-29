@@ -14,13 +14,15 @@ public class Drive2D extends Command {
     Supplier<Double> vx;
     Supplier<Double> vy;
     Supplier<Double> vr;
+    Supplier<Boolean> doAlign;
 
 
-    public Drive2D(Supplier<Double> vxInput, Supplier<Double> vyInput, Supplier<Double> vrInput) {
+    public Drive2D(Supplier<Double> vxInput, Supplier<Double> vyInput, Supplier<Double> vrInput, Supplier<Boolean> doAlign) {
         addRequirements(Robot.instance.drivetrain);
         vx = vxInput;
         vy = vyInput;
         vr = vrInput;
+        this.doAlign = doAlign;
     }
 
     @Override
@@ -44,12 +46,12 @@ public class Drive2D extends Command {
         // set vrVal based on area effects
         Pose2d areaPose = AreaEffectsHandler.getTargetPose();
         Boolean autoAlign = AreaEffectsHandler.getIsAutoAlign();
-        if(autoAlign != null && autoAlign.booleanValue()) {
+        if(doAlign.get() && autoAlign != null && autoAlign.booleanValue()) {
             double vrVal;
             vrVal = PositionTools.closestScorePoseEntry(false).getRotation().getRadians();
             Robot.instance.drivetrain.setTargetPosRot(vrVal);
         }
-        else if (areaPose != null){
+        else if (doAlign.get() && areaPose != null){
             double vrVal;
             vrVal = areaPose.getRotation().getRadians();
             Robot.instance.drivetrain.setTargetPosRot(vrVal);

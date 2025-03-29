@@ -95,19 +95,20 @@ public class ArmConstants { // All heights in meters
     final public static double elevatorMotorBias = 0;
     final public static double epsilon = 0.02;
     final public static double resetHeightModeBias = -0.06;
-    final public static double containerDropTime = 1; // Seconds
-    final public static double algaeEjectTime = 2; // Seconds
+    final public static double containerDropTime = 1.5; // Seconds
+    final public static double algaeEjectTime = 3; // Seconds
 
     // Arm Constants
     final public static double autoResetHeight = 0.1; // Maximum difference between curHeight and minimum arm height to automatically reset to zero
     final public static double minHeight = 0.7493; // Container bottom distance from ground
     final public static double armForwardOffsetHigh = 0.53; // Arm distance from center of robot
-    final public static double armForwardOffsetLow = 0.76; // Arm distance from center of robot
+    final public static double algeaArmOffset = 0.48; // Arm distance from center of robot
+    final public static double armForwardOffsetLow = 0.75; // Arm distance from center of robot
     final public static double maxHeight = 1.123; // Arm max extension length
     final public static double collectHeight = .900; // Collection
     final public static double ground = 0.33; // L1
     final public static double low = 0.75; // L2
-    final public static double high = 1.085; // L3
+    final public static double high = 1.115; // L3
     final public static double algaeOffset = 0.1; // Algae offset from coral
     final public static double coralPipeDistance = .329;
 

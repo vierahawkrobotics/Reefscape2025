@@ -53,6 +53,7 @@ public class DropCoralCommand extends Command {
         pose = PositionTools.getPoseTranslated(origin, offset);
         System.out.println("pose: " + pose);
         System.out.println("limit switch" +  Robot.instance.armSubsystem.getPrevLimitSwitchOffset());
+        CANdleController.setColor(CANdleConstants.RobotStates.Dropping);
     }
     @Override
     public void execute() {
@@ -85,7 +86,7 @@ public class DropCoralCommand extends Command {
                 System.out.println("move d: " + d);
                 break;
             case Move2Periodic:
-                if (Robot.instance.drivetrain.getIsPointReached(0.01) && Robot.instance.drivetrain.getIsRotationReached() &&
+                if (Robot.instance.drivetrain.getIsPointReached(0.01) && Robot.instance.drivetrain.getIsRotationReached(0.07) &&
                  Robot.instance.drivetrain.checkIsRobotStopped() && Robot.instance.armSubsystem.AtTargetHeight()) {
                     state = DropState.DropInit;
                 }
