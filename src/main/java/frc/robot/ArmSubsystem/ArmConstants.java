@@ -101,22 +101,22 @@ public class ArmConstants { // All heights in meters
     // Arm Constants
     final public static double autoResetHeight = 0.1; // Maximum difference between curHeight and minimum arm height to automatically reset to zero
     final public static double minHeight = 0.7493; // Container bottom distance from ground
-    final public static double armForwardOffsetHigh = 0.53; // Arm distance from center of robot
-    final public static double algeaArmOffsetX = -0.6; // Arm distance from center of robot
-    final public static double algeaArmOffsetY = -1.2; // Arm distance from center of robot
-    final public static double armForwardOffsetLow = 0.75; // Arm distance from center of robot
+    final public static double armForwardOffsetHigh = 0.4; // Arm distance from center of robot
+    final public static double algeaArmOffsetX = -0.37; // Arm distance from center of robot
+    final public static double algeaArmOffsetY = -0.41; // Arm distance from center of robot
+    final public static double armForwardOffsetLow = 0.68; // Arm distance from center of robot
     final public static double maxHeight = 1.123; // Arm max extension length
     final public static double collectHeight = .900; // Collection
     final public static double ground = 0.33; // L1
     final public static double low = 0.75; // L2
-    final public static double high = 1.115; // L3
-    final public static double algaeOffset = 0.1; // Algae offset from coral
-    final public static double coralPipeDistance = .329;
+    final public static double high = 1.10; // L3
+    final public static double algaeOffset = 0.14; // Algae offset from coral
+    final public static double coralPipeDistance = .331;
 
     // Intake Constants
     //16.5 
-    final public static double farLeftIntakeChannel = 0.14;
+    final public static double farLeftIntakeChannel = 0.08;
     final public static double middleLeftIntakeChannel = 0.03175;
     final public static double middleRightIntakeChannel= -0.03175;
-    final public static double farRightIntakeChannel = -0.15;
+    final public static double farRightIntakeChannel = -0.08;
 }

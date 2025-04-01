@@ -67,23 +67,24 @@ public class RemoveAlgaeCommand extends Command {
                 Pose2d translateMove = PositionTools.getPoseTranslated(PositionTools.closestScorePose(true, 0),pose);
                 Robot.instance.drivetrain.setTargetPos(translateMove.getX(), translateMove.getY());
                 Robot.instance.drivetrain.setTargetPosRot(translateMove.getRotation().getRadians());
-                Robot.instance.armSubsystem.setHeightState(height);
                 Robot.instance.armSubsystem.setAlgaeMotorSpeed(ArmConstants.AlgaeMotorState.ActiveTemp);
+                Robot.instance.armSubsystem.SetTargetHeight(0.851);
                 state = RemoveAlgaeState.Move2Periodic;
                 System.out.println("move: " + translateMove);
                 System.out.println("move d: " + d);
                 break;
             case Move2Periodic:
                 if (Robot.instance.drivetrain.getIsPointReached(0.04) && Robot.instance.drivetrain.getIsRotationReached() &&
-                 Robot.instance.drivetrain.checkIsRobotStopped() && Robot.instance.armSubsystem.AtTargetHeight()) {
+                 Robot.instance.drivetrain.checkIsRobotStopped()) {
                     state = RemoveAlgaeState.EjectInit;
                 }
                 break;
             case EjectInit: // Begin algae ejection
                 state = RemoveAlgaeState.EjectPeriodic;
+                Robot.instance.armSubsystem.setHeightState(height);
                 break;
             case EjectPeriodic:// Check at target height
-                if (Robot.instance.armSubsystem.getAlgaeState() == ArmConstants.AlgaeMotorState.Inactive) {
+                if (Robot.instance.armSubsystem.getAlgaeState() == ArmConstants.AlgaeMotorState.Inactive && Robot.instance.armSubsystem.AtTargetHeight()) {
                     state = RemoveAlgaeState.End;
                 }
                 break;

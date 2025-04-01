@@ -32,7 +32,7 @@ public class LimelightComponent {
     public static final double limelightFOVY = 56.2;    // In degrees, the vertical FOV of the limelight
     public static final double detectionBuffer = 8;     // In degrees, the angular buffer
     public static final Pose2d limelightOffset = new Pose2d(0, 0, Rotation2d.kZero); // Offset of limelight relative to center of Robot
-    public static final Pose2d absoluteOffset = new Pose2d(0.55,0,Rotation2d.kZero);
+    public static final Pose2d absoluteOffset = new Pose2d(0,0,Rotation2d.kZero);
     public static final double fieldLength = 17.55; // Distance from Red Alliance to Blue Alliance in meters
     public static final double fieldHeight = 8.05; // Other axis in meters
     private static RawFiducial[] fiducials = null;

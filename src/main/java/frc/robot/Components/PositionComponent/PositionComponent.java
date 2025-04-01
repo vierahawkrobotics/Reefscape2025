@@ -127,7 +127,8 @@ public class PositionComponent {
             gyroOffset %= 2 * Math.PI;
         }
         
-        poseEstimator.addVisionMeasurement(new Pose2d(limelightPos.pose.minus(new Pose2d(8.774176,4.0259,Rotation2d.kZero)).getTranslation(), limelightPos.pose.getRotation()), limelightPos.timestamp);
+        //Tentative offset: new Pose2d(8.774176,4.0259,Rotation2d.kZero)
+        poseEstimator.addVisionMeasurement(limelightPos.pose, limelightPos.timestamp);
     }
 
     private static int counter = 0;
