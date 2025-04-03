@@ -31,11 +31,13 @@ public class DropCoralCommand extends Command {
     }
     private DropState state = DropState.MoveInit;
     private Supplier<Boolean> shouldEnd;
+    private Supplier<Boolean> shouldNotShoot;
     private Pose2d pose;
     private HeightState height;
     private boolean isRight = false;
-    public DropCoralCommand(Supplier<Boolean> shouldEnd, HeightState height, boolean isRight) {
+    public DropCoralCommand(Supplier<Boolean> shouldNotShoot, Supplier<Boolean> shouldEnd, HeightState height, boolean isRight) {
         this.shouldEnd = shouldEnd;
+        this.shouldNotShoot = shouldNotShoot;
         this.height = height;
         this.isRight = isRight;
 
@@ -87,8 +89,13 @@ public class DropCoralCommand extends Command {
                 break;
             case Move2Periodic:
                 if (Robot.instance.drivetrain.getIsPointReached(0.005) && Robot.instance.drivetrain.getIsRotationReached(0.07) &&
-                 Robot.instance.drivetrain.checkIsRobotStopped() && Robot.instance.armSubsystem.AtTargetHeight()) {
-                    state = DropState.DropInit;
+                    Robot.instance.drivetrain.checkIsRobotStopped() && Robot.instance.armSubsystem.AtTargetHeight()) {
+                    if(shouldNotShoot != null && shouldNotShoot.get()) {
+                        state = DropState.End;
+                    }
+                    else {
+                        state = DropState.DropInit;
+                    }
                 }
                 break;
             case DropInit: // Begin dropping

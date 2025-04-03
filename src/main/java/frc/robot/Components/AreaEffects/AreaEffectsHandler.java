@@ -31,7 +31,7 @@ public class AreaEffectsHandler{
         // center area
         AreaEffect centerArea = new AreaEffect(new AreaEffectShapes.Circle((-3.11 - 4.77) / 2,0, 2.5));
         centerArea.autoAlign = true;
-        centerArea.maxSpeed = 0.7;
+        centerArea.maxSpeed = 1.1;
         areaEffects.add(centerArea);
     }
 

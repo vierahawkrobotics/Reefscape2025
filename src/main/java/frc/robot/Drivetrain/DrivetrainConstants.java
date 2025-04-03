@@ -8,8 +8,8 @@ import edu.wpi.first.math.geometry.Translation2d;
 public class DrivetrainConstants {
     public static double smoothTransitionRate = 0.04; // 0.5 s decay rate
 //speed setting- this is just default if no areaEffects are being
-    public static double defaultMaxSpeed = 1.8;// 0.25;
-    public static double defaultRotSpeed = Math.PI * 1;
+    public static double defaultMaxSpeed = 20;// 0.25;
+    public static double defaultRotSpeed = Math.PI * 4;
 //-------------------------------------------Limits and Deadband-------------------------------------------
     public static double inputDeadband = 0.12;
     public static double physicalSpeedLimit = 20; // meters per second

@@ -63,16 +63,16 @@ public class RobotState {
         new JoystickButton(controller2, XboxController.Button.kY.value).onTrue(new RemoveAlgaeCommand(ArmConstants.HeightState.AlgaeLow, ()->{
             return controller2.getPOV() == 270;
         })); // Up - top
-        new JoystickButton(controller2, XboxController.Button.kLeftBumper.value).onTrue(new DropCoralCommand(() -> {
+        new JoystickButton(controller2, XboxController.Button.kLeftBumper.value).onTrue(new DropCoralCommand(null,() -> {
             return controller2.getPOV() == 270;
         }, HeightState.CoralHigh, true));
-        new JoystickButton(controller2, XboxController.Button.kRightBumper.value).onTrue(new DropCoralCommand(() -> {
+        new JoystickButton(controller2, XboxController.Button.kRightBumper.value).onTrue(new DropCoralCommand(null, () -> {
             return controller2.getPOV() == 270;
         }, HeightState.CoralHigh, false));
-        new Trigger(()->{return controller2.getLeftTriggerAxis() > 0.9;}).onTrue(new DropCoralCommand(() -> {
+        new Trigger(()->{return controller2.getLeftTriggerAxis() > 0.9;}).onTrue(new DropCoralCommand(null, () -> {
             return controller2.getPOV() == 270;
         }, HeightState.CoralLow, true));
-        new Trigger(()->{return controller2.getRightTriggerAxis() > 0.9;}).onTrue(new DropCoralCommand(() -> {
+        new Trigger(()->{return controller2.getRightTriggerAxis() > 0.9;}).onTrue(new DropCoralCommand(null, () -> {
             return controller2.getPOV() == 270;
         }, HeightState.CoralLow, false));
 
