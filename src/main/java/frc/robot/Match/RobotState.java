@@ -99,6 +99,6 @@ public class RobotState {
     }
     static int index = 0;
     public static void Periodic() {
-        if((index++ % 100) == 0) System.out.println("robo pose: " + PositionComponent.getRobotPose());
+        if((index++ % 20) == 0) System.out.println("bot: " + PositionComponent.getRobotPose());
     }
 }
