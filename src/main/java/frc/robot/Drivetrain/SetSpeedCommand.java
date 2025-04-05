@@ -10,17 +10,15 @@ import frc.robot.Components.PositionComponent.PositionComponent;
 /*LEFT TO DO:
  * change the robot angle to be taken from the position subSystem
  */
-public  class LimelightEnable extends Command {
+public  class SetSpeedCommand extends Command {
 
-  boolean enableRotation;
-  public LimelightEnable(boolean enableRotation) {
-    this.enableRotation = enableRotation;
-    addRequirements(Robot.instance.drivetrain);
+  double speed;
+  public SetSpeedCommand(double speed) {
+    this.speed = speed;
   }
   @Override
   public void initialize() {
-    LimelightComponent.EnableRotControls(enableRotation);
-    System.out.println("disble rot control: " + enableRotation);
+    DrivetrainConstants.defaultMaxSpeed = speed;
   }
 
   @Override

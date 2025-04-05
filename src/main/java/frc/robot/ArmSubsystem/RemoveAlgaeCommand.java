@@ -68,7 +68,7 @@ public class RemoveAlgaeCommand extends Command {
                 Robot.instance.drivetrain.setTargetPos(translateMove.getX(), translateMove.getY());
                 Robot.instance.drivetrain.setTargetPosRot(translateMove.getRotation().getRadians());
                 Robot.instance.armSubsystem.setAlgaeMotorSpeed(ArmConstants.AlgaeMotorState.ActiveTemp);
-                Robot.instance.armSubsystem.SetTargetHeight(0.851);
+                Robot.instance.armSubsystem.setHeightState(ArmConstants.HeightState.Mid);
                 state = RemoveAlgaeState.Move2Periodic;
                 System.out.println("move: " + translateMove);
                 System.out.println("move d: " + d);

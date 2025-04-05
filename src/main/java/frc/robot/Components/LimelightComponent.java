@@ -24,8 +24,8 @@ public class LimelightComponent {
     public static final double[] defaultArray = {};
     public static final Double[] defaultFiducials = new Double[10];
     public static final double minDist = 0;
-    public static final double minDistMT1 = 0.4;    // In meters, the min acceptable distance for an MT1 april tag
-    public static final double maxDistMT1 = 0.8;    // In meters, the maximum acceptable distance for an MT1 april tag
+    public static final double minDistMT1 = 0.2;    // In meters, the min acceptable distance for an MT1 april tag
+    public static final double maxDistMT1 = 0.7;    // In meters, the maximum acceptable distance for an MT1 april tag
     public static final double maxDistMT2 = 10.0;    // In meters, the maximum acceptable distance for an MT2 april tag
     public static final double aprilTagHeight = Units.inchesToMeters(10.5); // In meters, the height of the april tag
     public static final double limelightFOVX = 82;      // In degrees, the horizontal FOV of the limelight
@@ -33,7 +33,7 @@ public class LimelightComponent {
     public static final double detectionBuffer = 8;     // In degrees, the angular buffer
     public static final Pose2d limelightOffset = new Pose2d(0, 0, Rotation2d.kZero); // Offset of limelight relative to center of Robot
     public static final Pose2d absoluteOffset = new Pose2d(0,0,Rotation2d.kZero);
-    public static final double fieldLength = 17.55; // Distance from Red Alliance to Blue Alliance in meters
+    public static final double fieldLength = 18.23; // Distance from Red Alliance to Blue Alliance in meters
     public static final double fieldHeight = 8.05; // Other axis in meters
     private static RawFiducial[] fiducials = null;
     //-------------------------------------------Last Data--------------------------------------------//
@@ -85,7 +85,12 @@ public class LimelightComponent {
         //double tx = NetworkTableInstance.getDefault().getEntry("").getDoubleArray()[0];
         if(!tagIsValid() || !active() || ally.isEmpty() || (ally.get() != Alliance.Red && ally.get() != Alliance.Blue) || fiducials[0].distToCamera < minDistMT1) return null;
 
-        LimelightHelpers.SetRobotOrientation("", PositionComponent.getOffsetGyroRotation(), 0, 0, 0, 0, 0);
+        if(ally.get() == Alliance.Red) {
+            LimelightHelpers.SetRobotOrientation("", 180+PositionComponent.getOffsetGyroRotation(), 0, 0, 0, 0, 0);
+        }
+        else {
+            LimelightHelpers.SetRobotOrientation("", PositionComponent.getOffsetGyroRotation(), 0, 0, 0, 0, 0);
+        }
 
         if(fiducials[0].distToCamera < maxDistMT1){
             limelightMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue("");
@@ -100,13 +105,16 @@ public class LimelightComponent {
         if(ally.get() == Alliance.Blue){
             offset = PositionTools.addPose(absoluteOffset, new Pose2d(-fieldLength/2, -fieldHeight/2, Rotation2d.kZero));
         } else {
-            offset = PositionTools.addPose(absoluteOffset, new Pose2d(fieldLength/2,fieldHeight/2,Rotation2d.k180deg));
+            offset = PositionTools.addPose(absoluteOffset, new Pose2d(fieldLength/2,fieldHeight/2,Rotation2d.kZero));
         }
         if(!shouldRot) noRotation = true;
         if(limelightMeasurement != null && limelightMeasurement.rawFiducials != null && limelightMeasurement.rawFiducials.length >= 1){
             lPos = limelightMeasurement.pose;
             dist = limelightMeasurement.rawFiducials[0].distToCamera;
-            return new PoseWithTimestamp(limelightMeasurement.timestampSeconds, PositionTools.addPose(PositionTools.getPoseTranslated(limelightMeasurement.pose, limelightOffset.times(-1)), offset),noRotation);
+            Pose2d p = new Pose2d(limelightMeasurement.pose.getX() * (ally.get() == Alliance.Blue ? 1 : -1), 
+            limelightMeasurement.pose.getY() * (ally.get() == Alliance.Blue ? 1 : -1),
+            limelightMeasurement.pose.getRotation().plus(ally.get() == Alliance.Blue ? Rotation2d.kZero : Rotation2d.k180deg));
+            return new PoseWithTimestamp(limelightMeasurement.timestampSeconds, PositionTools.addPose(PositionTools.getPoseTranslated(p, limelightOffset.times(-1)), offset),noRotation);
         } else {
             dist = -1;
             return null;

@@ -3,6 +3,7 @@ package frc.robot.Components.PositionComponent;
 import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
 
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -12,6 +13,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import frc.robot.Components.LimelightComponent;
+import frc.robot.Components.ShuffleboardTools;
 import frc.robot.Components.LimelightComponent.PoseWithTimestamp;
 import frc.robot.Components.PositionComponent.PositionComponentSettings.*;
 import frc.robot.Components.PositionTools.PositionTools;
@@ -25,7 +27,6 @@ import frc.robot.Drivetrain.Drivetrain;
  */
 public class PositionComponent {
     private static SwerveDrivePoseEstimator poseEstimator;
-    private static SwerveModulePosition[] wheelPositions;
     private static AHRS gyroObject;
     private static Pose2d[] lastPose = new Pose2d[2];
     private static long[] lastTimestamp = new long[2];
@@ -50,11 +51,15 @@ public class PositionComponent {
         return instance;
     }
     public void InitPose() {
+
+        lastPose[0] = Pose2d.kZero;
+        lastPose[1] = Pose2d.kZero;
+
         if(initPose == null) return;
         while(gyroObject.isCalibrating()) { Thread.yield();}
         System.out.println(Math.toRadians(gyroObject.getAngle()));
         gyroOffset = gyroObject.getRotation2d().getRadians() + initPose.getRotation().getRadians();
-        poseEstimator = new SwerveDrivePoseEstimator(Drivetrain.kinematics, initPose.getRotation(), Drivetrain.getSwerveModulePositions(), initPose); // Fix kinematics and modulePositions parameter
+        poseEstimator = new SwerveDrivePoseEstimator(Drivetrain.kinematics, initPose.getRotation(), Drivetrain.getSwerveModulePositions(), initPose, VecBuilder.fill(0.1, 0.1, 0.1), VecBuilder.fill(0.1, 0.1, 0.1)); // Fix kinematics and modulePositions parameter
         lastPose[0] = poseEstimator.getEstimatedPosition();
         lastPose[1] = poseEstimator.getEstimatedPosition();
 
@@ -138,6 +143,9 @@ public class PositionComponent {
             if(p != null) {
                 instance.initPose = p;
                 instance.InitPose();
+            }
+            else {
+                return;
             }
         }
 

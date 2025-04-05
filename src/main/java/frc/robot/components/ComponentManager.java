@@ -20,6 +20,7 @@ public class ComponentManager {
     private static double[] defaultArray = new double[11];
     private static ShuffleboardTab posTab;
     public static void Initialize() {
+        ShuffleboardTools.Initialize();
         CANdleController.initialize();
         PositionComponent.initialize();
         AreaEffectsHandler.initialize();

@@ -29,9 +29,9 @@ public class AreaEffectsHandler{
         areaEffects.add(new AreaEffect(new AreaEffectShapes.Circle(-7.923022,-3.37058, .84),Rotation2d.fromDegrees(306)));
         areaEffects.add(new AreaEffect(new AreaEffectShapes.Circle(-7.923022,3.37058, .84),Rotation2d.fromDegrees(54)));
         // center area
-        AreaEffect centerArea = new AreaEffect(new AreaEffectShapes.Circle((-3.11 - 4.77) / 2,0, 2));
+        AreaEffect centerArea = new AreaEffect(new AreaEffectShapes.Circle((-5.12 - 3.45) / 2,0, 2));
         centerArea.autoAlign = true;
-        centerArea.maxSpeed = 1.1;
+        //centerArea.maxSpeed = 1.1;
         areaEffects.add(centerArea);
     }
 

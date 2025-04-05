@@ -77,7 +77,7 @@ public class Drivetrain extends SubsystemBase{
     private double VxSB;
     private double VySB;
     private double distanceShuffle = 0;
-    private double smoothScale = DrivetrainConstants.defaultMaxSpeed;
+    public double smoothScale = DrivetrainConstants.defaultMaxSpeed;
     private double smoothScaleRot = DrivetrainConstants.defaultRotSpeed;
 
     ShuffleboardTab drivetrainTab = Shuffleboard.getTab("Drivetrain");

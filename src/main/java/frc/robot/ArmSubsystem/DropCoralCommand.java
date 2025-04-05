@@ -34,12 +34,12 @@ public class DropCoralCommand extends Command {
     private Supplier<Boolean> shouldNotShoot;
     private Pose2d pose;
     private HeightState height;
-    private boolean isRight = false;
-    public DropCoralCommand(Supplier<Boolean> shouldNotShoot, Supplier<Boolean> shouldEnd, HeightState height, boolean isRight) {
+    private ArmConstants.ReefOffset offset;
+    public DropCoralCommand(Supplier<Boolean> shouldNotShoot, Supplier<Boolean> shouldEnd, HeightState height, ArmConstants.ReefOffset offset) {
         this.shouldEnd = shouldEnd;
         this.shouldNotShoot = shouldNotShoot;
         this.height = height;
-        this.isRight = isRight;
+        this.offset = offset;
 
         addRequirements(Robot.instance.armSubsystem);
         addRequirements(Robot.instance.drivetrain);
@@ -71,14 +71,14 @@ public class DropCoralCommand extends Command {
                 System.out.println("premove: " + translatedPremove);
                 break;
             case MovePeriodic: // Check target
-                if (Robot.instance.drivetrain.getIsPointReached(0.05)) {
+                if (Robot.instance.drivetrain.getIsPointReached(0.04)) {
                    state = DropState.Move2Init;
                 }
                 break;
             case Move2Init:
                 double d = -Robot.instance.armSubsystem.getPrevLimitSwitchOffset();
                 Pose2d translateMove = PositionTools.getPoseTranslated(PositionTools.closestScorePose(false, 
-                    d + (isRight ? ArmConstants.coralPipeDistance / 2: -ArmConstants.coralPipeDistance / 2)),
+                    d + offset.getOffset()),
                     pose);
                 Robot.instance.drivetrain.setTargetPos(translateMove.getX(), translateMove.getY());
                 Robot.instance.drivetrain.setTargetPosRot(translateMove.getRotation().getRadians());
@@ -112,7 +112,13 @@ public class DropCoralCommand extends Command {
     }
     @Override
     public void end(boolean interrupted) {
-        Robot.instance.armSubsystem.setHeightState(ArmConstants.HeightState.Ground);
+        if(!interrupted && shouldNotShoot != null && shouldNotShoot.get()) {
+            
+        }
+        else {
+            Robot.instance.armSubsystem.setHeightState(ArmConstants.HeightState.Ground);
+        }
+
         Robot.instance.armSubsystem.setIntakeState(ArmConstants.IntakeState.Rest);
         Robot.instance.drivetrain.setVelocity(0,0);
         Robot.instance.drivetrain.setVelocityRot(0);
