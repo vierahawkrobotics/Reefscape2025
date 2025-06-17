@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Components.*;
 import frc.robot.Components.PositionComponent.PositionComponent;
-import frc.robot.Drivetrain.Drivetrain;
+// import frc.robot.Drivetrain.old.Drivetrain;
 import frc.robot.Match.*;
 import frc.robot.subsystemExample.ExampleSubsystem;
 import frc.robot.Testing.*;
@@ -21,7 +21,7 @@ public class Robot extends TimedRobot {
   public static Robot instance;
   public ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
   public XboxController controller = new XboxController(0);
-  public Drivetrain drivetrain = new Drivetrain();
+  // public Drivetrain drivetrain = new Drivetrain();
   public PositionComponent positionComponent = PositionComponent.getInstance();
   @Override
   public void robotInit() {
@@ -63,9 +63,9 @@ public class Robot extends TimedRobot {
   private Command autoCommand;
   @Override
   public void autonomousInit() {
-    autoCommand = AutonomousState.getAutoCommand();
-    if (autoCommand != null) autoCommand.schedule();
-    AutonomousState.initialize();
+    // autoCommand = AutonomousState.getAutoCommand();
+    // if (autoCommand != null) autoCommand.schedule();
+    // AutonomousState.initialize();
   }
 
   @Override

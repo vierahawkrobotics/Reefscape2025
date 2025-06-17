@@ -1,83 +1,68 @@
+
 package frc.robot.Drivetrain;
 
+import com.ctre.phoenix6.swerve.SwerveModuleConstants.DriveMotorArrangement;
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
-import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.SwerveModulePosition;
-
-import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
-import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
-
-
-
-public class MAXSwerveModule{
-    private SparkFlex drivingMotorController;
-    private SparkMax turningMotorController;
-    public SparkClosedLoopController drivingPIDController;
-    public SparkClosedLoopController turningPIDController;
-    public RelativeEncoder drivingEncoder;
+public class MaxSwerveModule{
+    public SparkMax turningMotor;
+    public SparkFlex drivingMotor;
     public AbsoluteEncoder turningEncoder;
-    private double chassisAngularOffset;
+    public RelativeEncoder drivingEncoder;
+    public SparkClosedLoopController turningPIDController;
+    public SparkClosedLoopController drivingPIDFController;
 
-    public MAXSwerveModule(int drivingMotorID,int turningMotorID,double chassisAngularOffset){
+    public MaxSwerveModule(int drivingMotorControllerID, int turningMotorControllerID){
+        SparkMaxConfig turningConfig = new SparkMaxConfig();
+        turningConfig
+         .inverted(DrivetrainConstants.invertTurningMotors)
+         .smartCurrentLimit(DrivetrainConstants.turningCurrentLimit)
+         .idleMode(DrivetrainConstants.turningIdleMode);
+        turningConfig.absoluteEncoder
+         .inverted(DrivetrainConstants.invertTurningEncoders)
+         .positionConversionFactor(2*Math.PI)
+         .velocityConversionFactor(2*Math.PI/60);
+        turningConfig.closedLoop
+         .positionWrappingEnabled(true)
+         .positionWrappingInputRange(0, 2*Math.PI)
+         .minOutput(-1)
+         .maxOutput(1)
+         .pid(DrivetrainConstants.turningVelocityP, DrivetrainConstants.turningVelocityP, DrivetrainConstants.turningVelocityD);
 
-      drivingMotorController = new SparkFlex(drivingMotorID, MotorType.kBrushless);
-      turningMotorController = new SparkMax(turningMotorID, MotorType.kBrushless);
-      drivingPIDController = drivingMotorController.getClosedLoopController();
-      turningPIDController = turningMotorController.getClosedLoopController();
-      drivingEncoder = drivingMotorController.getEncoder();
-      turningEncoder = turningMotorController.getAbsoluteEncoder();
-      this.chassisAngularOffset = chassisAngularOffset;
+         SparkFlexConfig drivingConfig = new SparkFlexConfig();
+         drivingConfig
+          .inverted(DrivetrainConstants.invertDrivingMotors)
+          .smartCurrentLimit(DrivetrainConstants.drivingCurrentLimit)
+          .idleMode(DrivetrainConstants.drivingIdleMode);
+        drivingConfig.encoder
+         .inverted(DrivetrainConstants.invertDrivingEncoders)
+         .positionConversionFactor(DrivetrainConstants.drivingEncoderPositionFactor)
+         .velocityConversionFactor(DrivetrainConstants.drivingEncoderVelocityFactor);
+        drivingConfig.closedLoop
+         .pidf(DrivetrainConstants.drivingVelocityP, DrivetrainConstants.drivingVelocityI, DrivetrainConstants.drivingVelocityD, DrivetrainConstants.drivingVelocityF)
+         .minOutput(-1)
+         .maxOutput(1)
+         .positionWrappingEnabled(false);
+        
+        turningMotor = new SparkMax(turningMotorControllerID, MotorType.kBrushless);
+        drivingMotor = new SparkFlex(drivingMotorControllerID, MotorType.kBrushless);
 
-      SparkMaxConfig turningConfig = new SparkMaxConfig();
-      turningConfig
-      .idleMode(IdleMode.kBrake)
-      .smartCurrentLimit(DrivetrainConstants.turningMotorCurrentLimit);
-      turningConfig.absoluteEncoder
-      //.zeroOffset(chassisAngularOffset / (2 * Math.PI))
-      .inverted(true)
-      .positionConversionFactor(DrivetrainConstants.turningEncoderPositionFactor)
-      .velocityConversionFactor(DrivetrainConstants.turningEncoderVelocityFactor);
-      turningConfig.closedLoop
-      .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
-      .positionWrappingEnabled(true)
-      .positionWrappingInputRange(DrivetrainConstants.turningPIDMinInput, DrivetrainConstants.turningPIDMaxInput)
-      .outputRange(DrivetrainConstants.turningMinOutput, DrivetrainConstants.turningMaxOutput)
-      .pid(DrivetrainConstants.turningP, DrivetrainConstants.turningI, DrivetrainConstants.turningD);
-
-      SparkMaxConfig drivingConfig = new SparkMaxConfig();
-      drivingConfig
-      .inverted(true)
-      .idleMode(IdleMode.kBrake)
-      .smartCurrentLimit(DrivetrainConstants.drivingMotorCurrentLimit);
-      drivingConfig.encoder
-      .positionConversionFactor(DrivetrainConstants.drivingEncoderPositionFactor)
-      .velocityConversionFactor(DrivetrainConstants.drivingEncoderVelocityFactor);
-      drivingConfig.closedLoop
-      .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-      .outputRange(DrivetrainConstants.drivingMinOutput, DrivetrainConstants.drivingMaxOutput)
-      .pid(DrivetrainConstants.drivingP, DrivetrainConstants.drivingI, DrivetrainConstants.drivingD);
-      
-      drivingMotorController.configure(drivingConfig, DrivetrainConstants.drivingReset, DrivetrainConstants.drivingPersist);
-      turningMotorController.configure(turningConfig, DrivetrainConstants.turningReset, DrivetrainConstants.turningPersist);
+        //TODO: SWITCH THE PERSIST MODE ONCE TESTING IS DONE!!
+        turningMotor.configure(turningConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
+        drivingMotor.configure(drivingConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
+        turningEncoder = turningMotor.getAbsoluteEncoder();
+        drivingEncoder = drivingMotor.getEncoder();
+        turningPIDController = turningMotor.getClosedLoopController();
+        drivingPIDFController = drivingMotor.getClosedLoopController();
     }
-    public SwerveModulePosition getPosition() {
-      // Apply chassis angular offset to the encoder position to get the position
-      // relative to the chassis.
-      return new SwerveModulePosition(
-          drivingEncoder.getPosition(),
-          new Rotation2d(turningEncoder.getPosition()));
-    }
-    public void set(double metersPerSec, double targetRat) {
 
-    }
-  
-  }
-
-
+}

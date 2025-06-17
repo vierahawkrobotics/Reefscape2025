@@ -15,7 +15,7 @@ import frc.robot.Components.LimelightComponent;
 import frc.robot.Components.LimelightComponent.PoseWithTimestamp;
 import frc.robot.Components.PositionComponent.PositionComponentSettings.*;
 import frc.robot.Components.PositionTools.PositionTools;
-import frc.robot.Drivetrain.Drivetrain;
+// import frc.robot.Drivetrain.old.Drivetrain;
 
 /**
  * The component of the robot that controls positioning using 
@@ -37,7 +37,7 @@ public class PositionComponent {
         gryoObject = new AHRS(NavXComType.kMXP_SPI);
         gryoObject.reset();
         Rotation2d initialRot = Rotation2d.fromDegrees(gryoObject.getAngle());
-        poseEstimator = new SwerveDrivePoseEstimator(Drivetrain.kinematics, initialRot, Drivetrain.getSwerveModulePositions(), initialPose); // Fix kinematics and modulePositions parameter
+        // poseEstimator = new SwerveDrivePoseEstimator(Drivetrain.kinematics, initialRot, Drivetrain.getSwerveModulePositions(), initialPose); // Fix kinematics and modulePositions parameter
         lastPose[0] = poseEstimator.getEstimatedPosition();
         lastPose[1] = poseEstimator.getEstimatedPosition();
 
@@ -116,7 +116,7 @@ public class PositionComponent {
 
     public static void periodic(){
         currentRad = -Math.toRadians(gryoObject.getAngle());
-        poseEstimator.update(Rotation2d.fromRadians(getOffsetGyroRotationRad()), Drivetrain.getSwerveModulePositions());
+        // poseEstimator.update(Rotation2d.fromRadians(getOffsetGyroRotationRad()), Drivetrain.getSwerveModulePositions());
         if(LimelightComponent.active() && LimelightComponent.calcAprilTag() != null) updatePose(LimelightComponent.calcAprilTag());
         lastTimestamp[1] = lastTimestamp[0];
         lastTimestamp[0] = edu.wpi.first.wpilibj.RobotController.getFPGATime();
