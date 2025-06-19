@@ -1,7 +1,6 @@
 
 package frc.robot.Drivetrain;
 
-import com.ctre.phoenix6.swerve.SwerveModuleConstants.DriveMotorArrangement;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;

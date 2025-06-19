@@ -7,70 +7,20 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 
 public class DrivetrainConstants {
+//--------------------------------------------------------------DEFAULT SPEEDS-----------------------------------------------------------------------------------
+    public static final double defaultDriveSpeed = 5;
+    public static final double defaultRotSpeed = Math.PI*2;
+//-----------------------------------------------------------MECHANICAL KNOWLEDGE-----------------------------------------------------------------------------------
+    //swerve module locations relative to the robot's center in meters
     public static final Translation2d frontLeftLocation = new Translation2d(0.29845, 0.29845);
     public static final Translation2d frontRightLocation = new Translation2d(0.29845, -0.29845);
     public static final Translation2d backLeftLocation = new Translation2d(-0.29845, 0.29845);
     public static final Translation2d backRightLocation = new Translation2d(-0.29845, -0.29845);
-    public static final SwerveDriveKinematics kinematics = new SwerveDriveKinematics(
-        frontLeftLocation, 
-        frontRightLocation, 
-        backLeftLocation, 
-        backRightLocation
-    );
-
-    public static final double xPositionP = 0.1; // Proportional gain for position control
-    public static final double xPositionI = 0.0; // Integral gain for position control
-    public static final double xPositionD = 0.0; // Derivative gain for position control
-    public static final double yPositionP = 0.1; // Proportional gain for position control
-    public static final double yPositionI = 0.0; // Integral gain for position control
-    public static final double yPositionD = 0.0; // Derivative gain for position control
-    public static final double rotationP = 0.1; // Proportional gain for rotation control
-    public static final double rotationI = 0.0; // Integral gain for rotation control
-    public static final double rotationD = 0.0; // Derivative gain for rotation control
-
-    public static final double maxDriveSpeed = 3.0; // Maximum drive speed in meters per second
-    public static final double maxRotSpeed = 2.0; // Maximum rotation speed in radians per second
-    public static final double maxDriveAcceleration = 2.0; // Maximum drive acceleration in meters per second squared
-    public static final double maxRotAcceleration = 1.0; // Maximum rotation acceleration in radians per second squared
-
-    public static final TrapezoidProfile xProfile= new TrapezoidProfile(
-        new TrapezoidProfile.Constraints(DrivetrainConstants.maxDriveSpeed, DrivetrainConstants.maxDriveAcceleration)
-    );
-    public static final TrapezoidProfile yProfile= new TrapezoidProfile(
-        new TrapezoidProfile.Constraints(DrivetrainConstants.maxDriveSpeed, DrivetrainConstants.maxDriveAcceleration)
-    );
-    public static final TrapezoidProfile rotProfile = new TrapezoidProfile(
-        new TrapezoidProfile.Constraints(DrivetrainConstants.maxRotSpeed, DrivetrainConstants.maxRotAcceleration)
-    );
-    public static final double atPointTarget = 0.05;
-    public static final double atRotTarget = 0.14;
-    public static final double stoppedVelocity = 0.02;//velocity considered stopped, will be tested on each individual module
-    public static final boolean invertTurningMotors = true;
-    public static final boolean invertDrivingMotors = false;
-    public static final boolean invertTurningEncoders = false;
-    public static final boolean invertDrivingEncoders = false;
-    public static final int drivingCurrentLimit = 80;
-    public static final int turningCurrentLimit = 40;
-
-    public static final IdleMode turningIdleMode = IdleMode.kBrake;
-    public static final IdleMode drivingIdleMode = IdleMode.kBrake;
-
-    public static final double turningVelocityP = 0.1;
-    public static final double turningVelocityI = 0;
-    public static final double turningVelocityD = 0;
-    public static final double drivingVelocityP = 0.1;
-    public static final double drivingVelocityI = 0;
-    public static final double drivingVelocityD = 0;
-    public static final double drivingVelocityF = 0;
-
+    //wheel stuff
     public static final double wheelDiameterMeters = 0.0762;
     public static final int drivingMotorPinionTeeth = 5;
     public static final int drivingMotorSpurTeeth = 50;
-    public static final double wheelCircumferenceMeters = wheelDiameterMeters * Math.PI;
-    public static final double drivingMotorReduction = (45.0 * drivingMotorSpurTeeth) / (drivingMotorPinionTeeth * 15);
-    public static final double drivingEncoderPositionFactor = (wheelDiameterMeters * Math.PI) / drivingMotorReduction; // meters
-    public static final double drivingEncoderVelocityFactor = drivingEncoderPositionFactor / 60.0; // meters per second
-
+    //IDs
     public static final int flDrivingID = 1;
     public static final int flTurningID = 2;
     public static final int frDrivingID = 3;
@@ -80,8 +30,75 @@ public class DrivetrainConstants {
     public static final int brDrivingID = 7;
     public static final int brTurningID = 8;
 
-    public static final double defaultDriveSpeed = 5;
-    public static final double defaultRotSpeed = Math.PI*2;
+//-----------------------------------------------------------------PIDS-----------------------------------------------------------------------------------
+    //PIDs for the x axis during position control
+    public static final double xPositionP = 0.1; 
+    public static final double xPositionI = 0.0;  
+    public static final double xPositionD = 0.0;  
+    //PIDs for the y axis during position control
+    public static final double yPositionP = 0.1;  
+    public static final double yPositionI = 0.0;  
+    public static final double yPositionD = 0.0; 
+    //PIDs for rotation during position control
+    public static final double rotationP = 0.1;  
+    public static final double rotationI = 0.0; 
+    public static final double rotationD = 0.0; 
+    //PIDs for turning during velocity control
+    public static final double turningVelocityP = 0.1;
+    public static final double turningVelocityI = 0;
+    public static final double turningVelocityD = 0;
+    //PIDs for driving during velocity control + ff control
+    public static final double drivingVelocityP = 0.1;
+    public static final double drivingVelocityI = 0;
+    public static final double drivingVelocityD = 0;
+    public static final double drivingVelocityF = 0;
 
+//-----------------------------------------------------STUFF TO TEST/ MESS WITH-----------------------------------------------------------------------------------
+    //motion profiling
+    public static final double maxDriveSpeed = 3.0; // Maximum drive speed in meters/second
+    public static final double maxRotSpeed = 2.0; // Maximum rotation speed in radians per second
+    public static final double maxDriveAcceleration = 2.0; // Maximum drive acceleration in meters per second squared
+    public static final double maxRotAcceleration = 1.0; // Maximum rotation acceleration in radians per second squared
+    //go to a point stuff
+    public static final double atPointTarget = 0.05;
+    public static final double atRotTarget = 0.14;
+    public static final double stoppedVelocity = 0.02;//velocity considered stopped, will be tested on each individual module
+    //current limits
+    public static final int drivingCurrentLimit = 80;//in amps
+    public static final int turningCurrentLimit = 40;//in amps
+    //deadband for joystick control
     public static final double inputDeadband = 0.12;
+   
+//-----------------------------------------------------INVERSION, VERY IMPORTANT-----------------------------------------------------------------------------------
+    //test these to avoid rexy-ing
+    public static final boolean invertTurningMotors = true;
+    public static final boolean invertDrivingMotors = false;
+    public static final boolean invertTurningEncoders = false;
+    public static final boolean invertDrivingEncoders = false;
+
+//----------------------------------------------------------------MISC.-----------------------------------------------------------------------------------
+    //behavior when the robot is not moving
+    public static final IdleMode turningIdleMode = IdleMode.kBrake;
+    public static final IdleMode drivingIdleMode = IdleMode.kBrake;
+    //calculations for encoders
+    public static final double wheelCircumferenceMeters = wheelDiameterMeters * Math.PI;
+    public static final double drivingMotorReduction = (45.0 * drivingMotorSpurTeeth) / (drivingMotorPinionTeeth * 15);
+    public static final double drivingEncoderPositionFactor = (wheelDiameterMeters * Math.PI) / drivingMotorReduction; // meters
+    public static final double drivingEncoderVelocityFactor = drivingEncoderPositionFactor / 60.0; // meters per second
+    //useful stuff for drivetrain calculations
+    public static final SwerveDriveKinematics kinematics = new SwerveDriveKinematics(
+        frontLeftLocation, 
+        frontRightLocation, 
+        backLeftLocation, 
+        backRightLocation
+    );
+    public static final TrapezoidProfile xProfile= new TrapezoidProfile(
+        new TrapezoidProfile.Constraints(DrivetrainConstants.maxDriveSpeed, DrivetrainConstants.maxDriveAcceleration)
+    );
+    public static final TrapezoidProfile yProfile= new TrapezoidProfile(
+        new TrapezoidProfile.Constraints(DrivetrainConstants.maxDriveSpeed, DrivetrainConstants.maxDriveAcceleration)
+    );
+    public static final TrapezoidProfile rotProfile = new TrapezoidProfile(
+        new TrapezoidProfile.Constraints(DrivetrainConstants.maxRotSpeed, DrivetrainConstants.maxRotAcceleration)
+    );
 }

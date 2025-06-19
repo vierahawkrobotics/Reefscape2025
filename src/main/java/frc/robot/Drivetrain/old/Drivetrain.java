@@ -103,7 +103,7 @@
 //     public void periodic(){
 //         switch(translateState){
 //             case path:
-//                 //TODO: drivePath();
+//                 //drivePath();, wip
 //                 break;
 //             case velocity:
 //                 driveVelocity();

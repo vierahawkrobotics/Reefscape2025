@@ -1,12 +1,10 @@
+//----------------------------------------------------------------IMPORTS-----------------------------------------------------------------------------------
 package frc.robot.Drivetrain;
-
-import java.util.function.Supplier;
 
 import com.revrobotics.spark.SparkBase.ControlType;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.estimator.PoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -16,9 +14,9 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Components.AreaEffects.AreaEffectsHandler;
 import frc.robot.Components.PositionComponent.PositionComponent;
-import frc.robot.Drivetrain.MaxSwerveModule;
 
 public class Drivetrain extends SubsystemBase {
+//---------------------------------------------------------------VARIABLES-----------------------------------------------------------------------------------
     private static Drivetrain instance;
     private SwerveDriveKinematics kinematics = DrivetrainConstants.kinematics;
     private PIDController xPositionPidController = new PIDController(DrivetrainConstants.xPositionP, DrivetrainConstants.xPositionI, DrivetrainConstants.xPositionD);
@@ -32,8 +30,14 @@ public class Drivetrain extends SubsystemBase {
     };
     private double driveSpeed = DrivetrainConstants.defaultDriveSpeed;
     private double rotSpeed = DrivetrainConstants.defaultRotSpeed;
-
+//------------------------------------------------------CONSTRUCTOR, SINGLETON, & PERIODIC-----------------------------------------------------------------------------------
+    
     private Drivetrain() {}
+    /**
+    * getInstance method for the drivetrain. Follows the singleton design pattern
+    * @author Giahna C.
+    * @return The instance of the drivetrain
+    */
 
     public static Drivetrain getInstance(){
         if(instance == null){
@@ -44,44 +48,83 @@ public class Drivetrain extends SubsystemBase {
     
     @Override 
     public void periodic(){}
-
-    public void setVelocityPIDs(double vx, double vy, double rot, boolean useNormalizedVectors){
+//-----------------------------------------------------------------SETTING PIDS-----------------------------------------------------------------------------------
+    /**
+    * Sets the PIDs for the drivetrain motor controllers based on velocity. setDrivePositionPIDs automatically calls this method.
+    * @author Giahna C.
+    * @param vx The velocity for the bot along the x axis according to NWU
+    * @param vy The velocity for the bot along the y axis according to NWU
+    * @param rot The velocity for the bot along the z axis (rotation)
+    * @param DriveUsingNormalizedVectors If vx and vy are in the interval [-1,1], this should likely be true. The program will apply the speed before setting
+    * the PIDs. If vx and vy are in meters/ second, set this to false.
+    * @param TurnUsingNormalizedVectors If rot is in the interval [-1,1], this should likely be true. The program will apply the rotation speed before settings
+    * this PID. If rot is in radians/ second, set this to false.
+    * @return The instance of the drivetrain
+    */
+    public void setVelocityPIDs(double vx, double vy, double rot, boolean DriveUsingNormalizedVectors, boolean TurnUsingNormalizedVectors){
         double speed;
         double rSpeed;
-        if (useNormalizedVectors){
-            updateSpeed();
+        if (DriveUsingNormalizedVectors){
+            updateDriveSpeed();
             speed = driveSpeed;
-            rSpeed = rotSpeed;
-        }
-        else{
-            speed = 1;
-            rSpeed = 1;
-        }
-        ChassisSpeeds chassisSpeeds = new ChassisSpeeds(vx * speed, vy * speed, rot * rSpeed);
+        } 
+        else speed = 1;
+
+        if (TurnUsingNormalizedVectors) rSpeed = rotSpeed;
+        else rSpeed = 1;
+
+        ChassisSpeeds chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(vx * speed, vy * speed, rot * rSpeed, PositionComponent.getRobotPose().getRotation());
         SwerveModuleState[] swerveStates = kinematics.toSwerveModuleStates(chassisSpeeds);
         for(int i = 0; i < swerveStates.length; i++){
             Rotation2d currentAngle = new Rotation2d(maxSwerveModules[i].turningEncoder.getPosition());
             swerveStates[i].optimize(currentAngle);
-            swerveStates[i].speedMetersPerSecond *= swerveStates[i].angle.minus(currentAngle).getCos();
+            // cosine compensation, optional
+            // swerveStates[i].speedMetersPerSecond *= swerveStates[i].angle.minus(currentAngle).getCos();
             maxSwerveModules[i].turningPIDController.setReference(swerveStates[i].angle.getRadians(), ControlType.kPosition);
             maxSwerveModules[i].drivingPIDFController.setReference(swerveStates[i].speedMetersPerSecond, ControlType.kVelocity);
         }
     }
-
-    public void setPositionPIDs(TrapezoidProfile.State xSetpoint, TrapezoidProfile.State ySetpoint, TrapezoidProfile.State rotSetpoint){ 
+    /**
+     * Sets the Drivetrain to a specified point by getting velocities from position PIDs. Calls setVelocityPIDs automatically using these velocities
+     * 
+     * @author Giahna C.
+     * @param xSetpoint The x position to set the drivetrain to that's given by a TrapezoidProfile object (uses NWU)
+     * @param ySetpoint The y position to set the drivetrain to that's given by a TrapezoidProfile object (uses NWU)
+     * @param rotSetpoint The rotation to set the drivetrain to that's given by a TrapezoidProfile object (uses NWU)
+     * @return void
+     */
+    public void setDrivePositionPIDs(TrapezoidProfile.State xSetpoint, TrapezoidProfile.State ySetpoint, TrapezoidProfile.State rotSetpoint){ 
         Pose2d currentPose = PositionComponent.getRobotPose();
         double vx = xPositionPidController.calculate(currentPose.getX(), xSetpoint.position);
         double vy = yPositionPidController.calculate(currentPose.getY(), ySetpoint.position);
         double vr = rotationPidController.calculate(currentPose.getRotation().getRadians(), rotSetpoint.position);
 
-        setVelocityPIDs(vx, vy, vr, false);
+        setVelocityPIDs(vx, vy, vr, false, false);
     }
-    public void updateSpeed(){
+    /**
+     * Uses positional PIDs to get the velocity needed to reach the specified rotation. setVelocityPIDs should be set using this method.
+     * @param targetAngle The angle the bot should be at
+     * @return The velocity to reach the targetAngle in radians/ sec
+     */
+    public double getVelocityToSetTargetAngle(double targetAngle){
+        targetAngle = MathUtil.angleModulus(targetAngle); //wrap the angle
+        return rotationPidController.calculate(PositionComponent.getRobotPose().getRotation().getRadians(), targetAngle);
+    }
+//----------------------------------------------------------SPEED RELATED METHODS-----------------------------------------------------------------------------------
+    /**
+     * Updataes the driveSpeed variable used for setting the setVelocityPids method when DriveUsingNormalizedVectors is set to true.
+     * @author Giahna C.
+     */
+    public void updateDriveSpeed(){
         if(AreaEffectsHandler.isAreaEffect() == false || AreaEffectsHandler.getMaxSpeed() == null)
             driveSpeed = DrivetrainConstants.defaultDriveSpeed;
         else 
             driveSpeed = AreaEffectsHandler.getMaxSpeed();
     }
+    /**
+     * Checks each MaxSwerveModule to see if it's moving or not. If one of them is moving it returns false.
+     * @return whether or not the robot's driving motors all have a negligable velocity
+     */
     public boolean isRobotStopped(){
         for(int i =0; i<4; i++){
             if(maxSwerveModules[i].drivingEncoder.getVelocity() > DrivetrainConstants.stoppedVelocity) return false;
