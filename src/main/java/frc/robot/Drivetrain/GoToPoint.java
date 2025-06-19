@@ -5,12 +5,13 @@ import java.util.function.Supplier;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Components.PositionComponent.PositionComponent;
 
 public class GoToPoint extends Command{
     Pose2d targetPosition;
-    double timeElapsed;
+    double startTime = 0;
     Supplier<Boolean> stopButton;
     boolean checkIsRobotStopped;
 
@@ -82,8 +83,7 @@ public class GoToPoint extends Command{
 
     @Override
     public void initialize(){
-        //TODO: should timeElapsed be replaced by something that's more accurate(incases of loop overrun) but takes longer to compute?
-        timeElapsed = 0;
+        startTime = Timer.getFPGATimestamp();
         //sets the overall states for the profiles
         xStartState = new TrapezoidProfile.State(PositionComponent.getRobotPose().getX(), PositionComponent.getChassisSpeeds().vxMetersPerSecond);
         xEndState = new TrapezoidProfile.State(targetPosition.getX(), 0);
@@ -96,10 +96,9 @@ public class GoToPoint extends Command{
     @Override
     public void execute(){
         //get the current setpoints for the profiles
-        TrapezoidProfile.State xSetpoint = DrivetrainConstants.xProfile.calculate(timeElapsed, xStartState, xEndState);
-        TrapezoidProfile.State ySetpoint = DrivetrainConstants.yProfile.calculate(timeElapsed, yStartState, yEndState);
-        TrapezoidProfile.State rotSetpoint = DrivetrainConstants.rotProfile.calculate(timeElapsed, rotationStartState, rotationEndState);
-        timeElapsed += 0.02; // Assuming this command is run every 20ms
+        TrapezoidProfile.State xSetpoint = DrivetrainConstants.xProfile.calculate((Timer.getFPGATimestamp() - startTime), xStartState, xEndState);
+        TrapezoidProfile.State ySetpoint = DrivetrainConstants.yProfile.calculate((Timer.getFPGATimestamp() - startTime), yStartState, yEndState);
+        TrapezoidProfile.State rotSetpoint = DrivetrainConstants.rotProfile.calculate((Timer.getFPGATimestamp() - startTime), rotationStartState, rotationEndState);
         Drivetrain.getInstance().setDrivePositionPIDs(xSetpoint, ySetpoint, rotSetpoint);
     }
 
@@ -136,5 +135,14 @@ public class GoToPoint extends Command{
     public double getDifferenceFromAngle(){
         double currentAngle = PositionComponent.getRobotPose().getRotation().getRadians()*-1;
         return MiscMathFunctions.mod(targetPosition.getRotation().getRadians() - currentAngle -Math.PI, 2*Math.PI) - Math.PI;
+    }
+
+    /**
+     * Gets the position this command is set to go to
+     * @author Giahna C. 
+     * @return the target position
+     */
+    public Pose2d getTargetPosition(){
+        return targetPosition;
     }
 }

@@ -68,14 +68,21 @@ public class Drivetrain extends SubsystemBase {
             updateDriveSpeed();
             speed = driveSpeed;
         } 
-        else speed = 1;
+        else {
+            vx = MathUtil.clamp(vx, -DrivetrainConstants.maxDriveSpeed, DrivetrainConstants.maxDriveSpeed);
+            vy = MathUtil.clamp(vy, -DrivetrainConstants.maxDriveSpeed, DrivetrainConstants.maxDriveSpeed);
+            speed = 1;
+        }
 
         if (TurnUsingNormalizedVectors) rSpeed = rotSpeed;
-        else rSpeed = 1;
+        else {
+            rot = MathUtil.clamp(rot, -DrivetrainConstants.maxRotSpeed, DrivetrainConstants.maxRotSpeed);
+            rSpeed = 1;
+        }
 
         ChassisSpeeds chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(vx * speed, vy * speed, rot * rSpeed, PositionComponent.getRobotPose().getRotation());
         SwerveModuleState[] swerveStates = kinematics.toSwerveModuleStates(chassisSpeeds);
-        for(int i = 0; i < swerveStates.length; i++){
+        for(int i = 0; i < 4; i++){
             Rotation2d currentAngle = new Rotation2d(maxSwerveModules[i].turningEncoder.getPosition());
             swerveStates[i].optimize(currentAngle);
             // cosine compensation, optional
@@ -110,6 +117,20 @@ public class Drivetrain extends SubsystemBase {
         targetAngle = MathUtil.angleModulus(targetAngle); //wrap the angle
         return rotationPidController.calculate(PositionComponent.getRobotPose().getRotation().getRadians(), targetAngle);
     }
+    /**
+     * Sets the PIDs for the driving and turning motor controllers to be in a "hold position." Here, the wheels form an X which makes it harder
+     * to move the bot.
+     * @author Giahna C.
+     */
+    public void holdPosition(){
+        for (int i=0; i< 4; i++){
+            Rotation2d currentAngle = new Rotation2d(maxSwerveModules[i].turningEncoder.getPosition());
+            DrivetrainConstants.holdSwerveStates[i].optimize(currentAngle);
+            maxSwerveModules[i].turningPIDController.setReference(DrivetrainConstants.holdSwerveStates[i].angle.getRadians(), ControlType.kPosition);
+            maxSwerveModules[i].drivingPIDFController.setReference(DrivetrainConstants.holdSwerveStates[i].speedMetersPerSecond, ControlType.kVelocity);
+        }
+    }
+
 //----------------------------------------------------------SPEED RELATED METHODS-----------------------------------------------------------------------------------
     /**
      * Updataes the driveSpeed variable used for setting the setVelocityPids method when DriveUsingNormalizedVectors is set to true.
@@ -119,7 +140,7 @@ public class Drivetrain extends SubsystemBase {
         if(AreaEffectsHandler.isAreaEffect() == false || AreaEffectsHandler.getMaxSpeed() == null)
             driveSpeed = DrivetrainConstants.defaultDriveSpeed;
         else 
-            driveSpeed = AreaEffectsHandler.getMaxSpeed();
+            driveSpeed = MathUtil.clamp(AreaEffectsHandler.getMaxSpeed(), -DrivetrainConstants.maxDriveSpeed, DrivetrainConstants.maxDriveSpeed);
     }
     /**
      * Checks each MaxSwerveModule to see if it's moving or not. If one of them is moving it returns false.

@@ -2,14 +2,20 @@ package frc.robot.Drivetrain;
 
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 
 public class DrivetrainConstants {
-//--------------------------------------------------------------DEFAULT SPEEDS-----------------------------------------------------------------------------------
-    public static final double defaultDriveSpeed = 5;
-    public static final double defaultRotSpeed = Math.PI*2;
+//-------------------------------------------------------------------SPEEDS-----------------------------------------------------------------------------------
+    public static final double defaultDriveSpeed = 5; //default speed that will be used in meters/second
+    public static final double defaultRotSpeed = Math.PI*2; //default speed that will be used for rotation in radians/second
+    public static final double maxDriveSpeed = 3.0; // Maximum drive speed in meters/second
+    public static final double maxRotSpeed = 2.0; // Maximum rotation speed in radians per second
+    public static final double maxDriveAcceleration = 2.0; // Maximum drive acceleration in meters per second squared
+    public static final double maxRotAcceleration = 1.0; // Maximum rotation acceleration in radians per second squared
 //-----------------------------------------------------------MECHANICAL KNOWLEDGE-----------------------------------------------------------------------------------
     //swerve module locations relative to the robot's center in meters
     public static final Translation2d frontLeftLocation = new Translation2d(0.29845, 0.29845);
@@ -54,11 +60,6 @@ public class DrivetrainConstants {
     public static final double drivingVelocityF = 0;
 
 //-----------------------------------------------------STUFF TO TEST/ MESS WITH-----------------------------------------------------------------------------------
-    //motion profiling
-    public static final double maxDriveSpeed = 3.0; // Maximum drive speed in meters/second
-    public static final double maxRotSpeed = 2.0; // Maximum rotation speed in radians per second
-    public static final double maxDriveAcceleration = 2.0; // Maximum drive acceleration in meters per second squared
-    public static final double maxRotAcceleration = 1.0; // Maximum rotation acceleration in radians per second squared
     //go to a point stuff
     public static final double atPointTarget = 0.05;
     public static final double atRotTarget = 0.14;
@@ -85,7 +86,7 @@ public class DrivetrainConstants {
     public static final double drivingMotorReduction = (45.0 * drivingMotorSpurTeeth) / (drivingMotorPinionTeeth * 15);
     public static final double drivingEncoderPositionFactor = (wheelDiameterMeters * Math.PI) / drivingMotorReduction; // meters
     public static final double drivingEncoderVelocityFactor = drivingEncoderPositionFactor / 60.0; // meters per second
-    //useful stuff for drivetrain calculations
+    //Objects that are reused and never change
     public static final SwerveDriveKinematics kinematics = new SwerveDriveKinematics(
         frontLeftLocation, 
         frontRightLocation, 
@@ -101,4 +102,10 @@ public class DrivetrainConstants {
     public static final TrapezoidProfile rotProfile = new TrapezoidProfile(
         new TrapezoidProfile.Constraints(DrivetrainConstants.maxRotSpeed, DrivetrainConstants.maxRotAcceleration)
     );
+    public static final SwerveModuleState[] holdSwerveStates = {
+            new SwerveModuleState(0.0, new Rotation2d(Math.PI/4)), //fl
+            new SwerveModuleState(0.0, new Rotation2d(-Math.PI/4)),//fr
+            new SwerveModuleState(0.0, new Rotation2d(Math.PI/4)),//bl
+            new SwerveModuleState(0.0, new Rotation2d(-Math.PI/4)) //br
+        }; //Swerve states for the holdPosition command.
 }

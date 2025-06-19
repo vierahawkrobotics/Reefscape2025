@@ -1,6 +1,12 @@
 package frc.robot.Drivetrain;
 
 public class MiscMathFunctions {
+    /**
+     * @author Darren R.
+     * @param a
+     * @param b
+     * @return
+     */
     public static double mod(double a, double b){
         return (a%b + b)%b;
     }
