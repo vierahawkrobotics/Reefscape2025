@@ -20,7 +20,7 @@ import frc.robot.Testing.*;
 public class Robot extends TimedRobot {
   public static Robot instance;
   public ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
-  public XboxController controller = new XboxController(0);
+  public static XboxController controller = new XboxController(0);
   // public Drivetrain drivetrain = new Drivetrain();
   public PositionComponent positionComponent = PositionComponent.getInstance();
   @Override
