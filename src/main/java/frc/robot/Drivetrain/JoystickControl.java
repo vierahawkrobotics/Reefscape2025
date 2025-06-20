@@ -1,6 +1,8 @@
 package frc.robot.Drivetrain;
 
 import java.util.function.Supplier;
+
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Components.PositionComponent.PositionComponent;
 
@@ -38,10 +40,10 @@ public class JoystickControl extends Command{
     public void execute(){
         lastAngle = PositionComponent.getRobotPose().getRotation().getRadians();
         //input squaring
-        velX = Math.signum(vx.get())*Math.pow(vx.get(), 2);
-        velY = Math.signum(vy.get())*Math.pow(vy.get(), 2);
-        rotX = Math.signum(rX.get())*Math.pow(rX.get(),2);
-        rotY = Math.signum(rY.get())*Math.pow(rY.get(),2);
+        velX = Math.signum(vx.get())*Math.pow(MathUtil.clamp(vx.get(), -1, 1), 2);
+        velY = Math.signum(vy.get())*Math.pow(MathUtil.clamp(vy.get(), -1, 1), 2);
+        rotX = Math.signum(rX.get())*Math.pow(MathUtil.clamp(rX.get(), -1, 1),2);
+        rotY = Math.signum(rY.get())*Math.pow(MathUtil.clamp(rY.get(), -1, 1),2);
         //input deadband
         if (Math.hypot(velX,velY) < DrivetrainConstants.inputDeadband){
             velX = 0;
