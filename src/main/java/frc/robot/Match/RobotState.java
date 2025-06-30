@@ -2,21 +2,26 @@ package frc.robot.Match;
 
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.Robot;
-// import frc.robot.Drivetrain.old.Drive3D;
+import frc.robot.Drivetrain.Drivetrain;
+import frc.robot.Drivetrain.JoystickControl;
 
 public class RobotState {
     public static XboxController controller;
     public static void Initialize() {
         controller = new XboxController(0);
-        //new JoystickButton(controller, XboxController.Button.kA.value).onTrue(null);
+        // new JoystickButton(controller, XboxController.Button.kA.value).onTrue(null);
 
-        // Robot.instance.drivetrain.setDefaultCommand(new Drive3D(() -> {
-        //     return -1* controller.getLeftY();
-        // }, () -> {
-        //     return  -1 * controller.getLeftX();
-        // }, () -> {
-        //     return -1*controller.getRightX();
-        // }));
+        Drivetrain.getInstance().setDefaultCommand(new JoystickControl(() -> {
+            return -1* controller.getLeftY();
+        }, () -> {
+            return  -1 * controller.getLeftX();
+        }, () -> {
+            return controller.getRightX();
+        }, () -> {
+            return -controller.getRightY();
+        }
+        ));
+
     }
     public static void Periodic() {}
 }

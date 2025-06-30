@@ -12,6 +12,9 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
+
 public class MaxSwerveModule{
     public SparkMax turningMotor;
     public SparkFlex drivingMotor;
@@ -63,5 +66,7 @@ public class MaxSwerveModule{
         turningPIDController = turningMotor.getClosedLoopController();
         drivingPIDFController = drivingMotor.getClosedLoopController();
     }
-
+    public SwerveModulePosition getSwerveModulePosition(){
+        return new SwerveModulePosition(drivingEncoder.getPosition(), new Rotation2d(turningEncoder.getPosition()));
+    }
 }

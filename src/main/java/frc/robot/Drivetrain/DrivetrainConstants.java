@@ -22,6 +22,7 @@ public class DrivetrainConstants {
     public static final Translation2d frontRightLocation = new Translation2d(0.29845, -0.29845);
     public static final Translation2d backLeftLocation = new Translation2d(-0.29845, 0.29845);
     public static final Translation2d backRightLocation = new Translation2d(-0.29845, -0.29845);
+    public static final Translation2d[] SwerveModulePositions = {frontLeftLocation, frontRightLocation, backLeftLocation, backRightLocation};
     //wheel stuff
     public static final double wheelDiameterMeters = 0.0762;
     public static final int drivingMotorPinionTeeth = 5;
