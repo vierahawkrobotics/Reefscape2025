@@ -1,4 +1,4 @@
-package frc.robot.Components;
+package frc.robot.ComponentsOld;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,8 +15,8 @@ import edu.wpi.first.math.spline.Spline;
 import edu.wpi.first.math.spline.SplineHelper;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
-import frc.robot.Components.AreaEffects.AreaEffectShapes.Point;
-import frc.robot.Components.PositionTools.PositionConstants;
+import frc.robot.ComponentsOld.AreaEffects.AreaEffectShapes.Point;
+import frc.robot.ComponentsOld.PositionTools.PositionConstants;
 import frc.robot.Drivetrain.Vector;
 import edu.wpi.first.math.spline.Spline.ControlVector;
 

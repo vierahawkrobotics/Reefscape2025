@@ -1,4 +1,4 @@
-package frc.robot.Components.PositionComponent;
+package frc.robot.ComponentsOld.PositionComponent;
 
 public class PositionComponentSettings {
     public enum rotType{

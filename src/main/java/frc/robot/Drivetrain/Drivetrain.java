@@ -13,8 +13,8 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Components.AreaEffects.AreaEffectsHandler;
-import frc.robot.Components.PositionComponent.PositionComponent;
+import frc.robot.ComponentsOld.AreaEffects.AreaEffectsHandler;
+import frc.robot.ComponentsOld.PositionComponent.PositionComponent;
 
 public class Drivetrain extends SubsystemBase {
 //---------------------------------------------------------------VARIABLES-----------------------------------------------------------------------------------
@@ -157,7 +157,7 @@ public class Drivetrain extends SubsystemBase {
     public SwerveModulePosition[] getSwerveModulePositions(){
         SwerveModulePosition[] returnArray = new SwerveModulePosition[4];
         for(int i=0; i<4; i++){
-            // returnArray[i] = maxSwerveModules[i].getSwerveModulePosition(); 
+            returnArray[i] = maxSwerveModules[i].getSwerveModulePosition(); 
         }
         return returnArray;
     }

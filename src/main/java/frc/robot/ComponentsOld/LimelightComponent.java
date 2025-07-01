@@ -1,14 +1,14 @@
-package frc.robot.Components;
+package frc.robot.ComponentsOld;
 
 import frc.robot.LimelightHelpers;
-import frc.robot.Components.PositionComponent;
+import frc.robot.ComponentsOld.PositionComponent.PositionComponent;
 import frc.robot.LimelightHelpers.RawFiducial;
 
 import java.util.Optional;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
@@ -28,6 +28,8 @@ public class LimelightComponent {
     public static final double limelightFOVX = 82;      // In degrees, the horizontal FOV of the limelight
     public static final double limelightFOVY = 56.2;    // In degrees, the vertical FOV of the limelight
     public static final double detectionBuffer = 0;     // In degrees, the angular buffer
+    public static final Pose2d redOffset = new Pose2d();    // The offset to map position to red-centric field
+    public static final Pose2d blueOffset = new Pose2d();   // The offset to map position to blue-centric field
         
     //-------------------------------------------Last Data--------------------------------------------//
     public static double dist;
@@ -67,16 +69,17 @@ public class LimelightComponent {
         return !(Math.abs(getTX()) > limelightFOVX/2-tagAngularSize-detectionBuffer || Math.abs(getTY()) > limelightFOVY/2-tagAngularSize-detectionBuffer);
     }
 
-    //TODO: fix possible crash condition where 
+
     public static PoseWithTimestamp calcAprilTag() {
         boolean mt2 = false;
         LimelightHelpers.PoseEstimate limelightMeasurement = null;
         Optional<Alliance> ally = DriverStation.getAlliance();
+        //double tx = NetworkTableInstance.getDefault().getEntry("").getDoubleArray()[0];
         if(!tagIsValid() || !active() || ally.isEmpty()) return null;
 
         if (ally.get() == Alliance.Red) {
             limelightMeasurement = LimelightHelpers.getBotPoseEstimate_wpiRed("");
-            LimelightHelpers.SetRobotOrientation("", PositionComponent.getPose2d().getRotation().getDegrees() + 180, 0, 0, 0, 0, 0);
+            LimelightHelpers.SetRobotOrientation("", PositionComponent.getOffsetGyroRotation() + 180, 0, 0, 0, 0, 0);
                 
             if(!(limelightMeasurement.rawFiducials.length > 0)){
                 return null;
@@ -92,7 +95,7 @@ public class LimelightComponent {
             }
         } else if(ally.get() == Alliance.Blue){
             limelightMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue("");
-            LimelightHelpers.SetRobotOrientation("", PositionComponent.getPose2d().getRotation().getDegrees(), 0, 0, 0, 0, 0);
+            LimelightHelpers.SetRobotOrientation("", PositionComponent.getOffsetGyroRotation(), 0, 0, 0, 0, 0);
                 
             if(!(limelightMeasurement.rawFiducials.length > 0)){
                 return null;
