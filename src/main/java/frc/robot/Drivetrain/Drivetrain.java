@@ -28,13 +28,13 @@ public class Drivetrain extends SubsystemBase{
     //physical parts
     public static MAXSwerveModule[] maxSwerveModules = {
         new MAXSwerveModule(DrivetrainConstants.flDrivingID,DrivetrainConstants
-        .flTurningID,DrivetrainConstants.flChassisAngularOffset, true),
+        .flTurningID,DrivetrainConstants.flChassisAngularOffset, false),
         new MAXSwerveModule(DrivetrainConstants.frDrivingID,DrivetrainConstants
-        .frTurningID,DrivetrainConstants.frChassisAngularOffset, false),
+        .frTurningID,DrivetrainConstants.frChassisAngularOffset, true),
         new MAXSwerveModule(DrivetrainConstants.blDrivingID,DrivetrainConstants
-        .blTurningID,DrivetrainConstants.blChassisAngularOffset, true),
+        .blTurningID,DrivetrainConstants.blChassisAngularOffset, false),
         new MAXSwerveModule(DrivetrainConstants.brDrivingID,DrivetrainConstants
-        .brTurningID,DrivetrainConstants.brChassisAngularOffset, true)
+        .brTurningID,DrivetrainConstants.brChassisAngularOffset, false)
       };
     /*states for translation and rotation
     roatation state path doesn't do anything 
@@ -196,7 +196,7 @@ public class Drivetrain extends SubsystemBase{
 //-------------------------------------------Apply Set Values------------------------------------
     private void applyDrivetrain(){
 
-        Rotation2d currentRotation = PositionComponent.getRobotPose().getRotation();
+        Rotation2d currentRotation = PositionComponent.getRobotPose().getRotation().times(-1);
         ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(appliedX,  appliedY, appliedR, currentRotation);
         SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(speeds);
         

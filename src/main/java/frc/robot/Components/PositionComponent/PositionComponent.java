@@ -130,6 +130,10 @@ public class PositionComponent {
         poseEstimator.addVisionMeasurement(new Pose2d(limelightPos.pose.minus(new Pose2d(8.774176,4.0259,Rotation2d.kZero)).getTranslation(), limelightPos.pose.getRotation()), limelightPos.timestamp);
     }
 
+    public static double getRawGyroR(){
+        return gyroObject.getAngle();
+    }
+
     public static void periodic(){
         if(instance.initPose == null) {
             Pose2d p = PositionTools.getPoseFromAlliance();

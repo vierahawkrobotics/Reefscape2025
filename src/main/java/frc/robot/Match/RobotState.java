@@ -32,11 +32,11 @@ public class RobotState {
         // Controller 1 (Update?)
         //   Left Joystick - Movement, Right Joystick - Rotation
         Robot.instance.drivetrain.setDefaultCommand(new Drive2D(() -> {
-            return 1*controller1.getLeftY()*(controller1.getRawButton(XboxController.Button.kLeftBumper.value) ? DrivetrainConstants.driveSlowingFactor : 1);
+            return -1*controller1.getLeftY()*(controller1.getRawButton(XboxController.Button.kLeftBumper.value) ? DrivetrainConstants.driveSlowingFactor : 1);
         }, () -> {
-            return 1*controller1.getLeftX()*(controller1.getRawButton(XboxController.Button.kLeftBumper.value) ? DrivetrainConstants.driveSlowingFactor : 1);
+            return -1*controller1.getLeftX()*(controller1.getRawButton(XboxController.Button.kLeftBumper.value) ? DrivetrainConstants.driveSlowingFactor : 1);
         }, () -> { 
-            return -1 *controller1.getRightX()*(controller1.getRawButton(XboxController.Button.kLeftBumper.value) ? DrivetrainConstants.rotSlowingFactor : 1);
+            return 1 *controller1.getRightX()*(controller1.getRawButton(XboxController.Button.kLeftBumper.value) ? DrivetrainConstants.rotSlowingFactor : 1);
         }));
 
         // Controller 2

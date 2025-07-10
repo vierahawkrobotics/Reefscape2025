@@ -59,6 +59,7 @@ public class MAXSwerveModule{
       .idleMode(IdleMode.kBrake)
       .smartCurrentLimit(DrivetrainConstants.drivingMotorCurrentLimit);
       drivingConfig.encoder
+      // .inverted(inverted)
       .positionConversionFactor(DrivetrainConstants.drivingEncoderPositionFactor)
       .velocityConversionFactor(DrivetrainConstants.drivingEncoderVelocityFactor);
       drivingConfig.closedLoop
