@@ -9,7 +9,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.ArmSubsystem.*;
+// import frc.robot.ArmSubsystem.*;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Components.*;
@@ -21,7 +21,7 @@ import frc.robot.Testing.*;
 public class Robot extends TimedRobot {
   ///use a to climb
   public static Robot instance;
-  public ArmSubsystem armSubsystem = new ArmSubsystem();
+  // public ArmSubsystem armSubsystem = new ArmSubsystem();
   public Drivetrain drivetrain = new Drivetrain();
   @Override
   public void robotInit() {

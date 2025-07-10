@@ -9,7 +9,7 @@ public class DrivetrainConstants {
     public static double smoothTransitionRate = 0.04; // 0.5 s decay rate
 //speed setting- this is just default if no areaEffects are being
     public static double defaultMaxSpeed = 1;// 0.25;
-    public static double defaultRotSpeed = Math.PI * 1;
+    public static double defaultRotSpeed = Math.PI /2 ;
 //-------------------------------------------Limits and Deadband-------------------------------------------
     public static double inputDeadband = 0.09;
     public static double physicalSpeedLimit = 20; // meters per second
@@ -34,6 +34,33 @@ public class DrivetrainConstants {
     
 //-------------------------------------Mechanical Information, Reefscaoe Bot-----------------------------
 
+    // // Locations for the swerve drive modules relative to the robot center.
+    // public static Translation2d frontLeftLocation = new Translation2d(0.29845, 0.29845);
+    // public static Translation2d frontRightLocation = new Translation2d(0.29845, -0.29845);
+    // public static Translation2d backLeftLocation = new Translation2d(-0.29845, 0.29845);
+    // public static Translation2d backRightLocation = new Translation2d(-0.29845, -0.29845);
+
+    // //IDs for the driving and turning motors
+    // public static int flDrivingID = 1;
+    // public static int flTurningID = 2;
+    // public static int frDrivingID = 3;
+    // public static int frTurningID = 4;
+    // public static int blDrivingID = 5;
+    // public static int blTurningID = 6;
+    // public static int brDrivingID = 7;
+    // public static int brTurningID = 8;
+
+    // public static final double wheelDiameterMeters = 0.0762;
+    // public static final double wheelCircumferenceMeters = wheelDiameterMeters * Math.PI;
+    // public static final double drivingMotorReduction = 5.5;
+
+    // public static final double turningEncoderPositionFactor = (2 * Math.PI); // radians
+    // public static final double turningEncoderVelocityFactor = (2 * Math.PI) / 60.0; // radians per second
+    // public static final double drivingEncoderPositionFactor = (wheelDiameterMeters * Math.PI) / drivingMotorReduction; // meters
+    // public static final double drivingEncoderVelocityFactor = ((wheelDiameterMeters * Math.PI) / drivingMotorReduction) / 60.0; // meters per second
+    
+    //-------------------------------------Mechanical Information, Crescendo Bot-----------------------------
+
     // Locations for the swerve drive modules relative to the robot center.
     public static Translation2d frontLeftLocation = new Translation2d(0.29845, 0.29845);
     public static Translation2d frontRightLocation = new Translation2d(0.29845, -0.29845);
@@ -41,18 +68,20 @@ public class DrivetrainConstants {
     public static Translation2d backRightLocation = new Translation2d(-0.29845, -0.29845);
 
     //IDs for the driving and turning motors
-    public static int flDrivingID = 1;
-    public static int flTurningID = 2;
-    public static int frDrivingID = 3;
-    public static int frTurningID = 4;
-    public static int blDrivingID = 5;
-    public static int blTurningID = 6;
-    public static int brDrivingID = 7;
-    public static int brTurningID = 8;
+    public static int flDrivingID = 3;
+    public static int flTurningID = 7;
+    public static int frDrivingID = 2;
+    public static int frTurningID = 6;
+    public static int blDrivingID = 4;
+    public static int blTurningID = 8;
+    public static int brDrivingID = 1;
+    public static int brTurningID = 5;
 
-    public static final double wheelDiameterMeters = 0.0762;
+    public static final double wheelDiameterMeters = 0.074;
+    public static final int drivingMotorPinionTeeth = 14;
+    public static final int drivingMotorSpurTeeth = 21;
     public static final double wheelCircumferenceMeters = wheelDiameterMeters * Math.PI;
-    public static final double drivingMotorReduction = 5.5;
+    public static final double drivingMotorReduction = (45.0 * drivingMotorSpurTeeth) / (drivingMotorPinionTeeth * 15);
 
     public static final double turningEncoderPositionFactor = (2 * Math.PI); // radians
     public static final double turningEncoderVelocityFactor = (2 * Math.PI) / 60.0; // radians per second
@@ -60,7 +89,7 @@ public class DrivetrainConstants {
     public static final double drivingEncoderVelocityFactor = ((wheelDiameterMeters * Math.PI) / drivingMotorReduction) / 60.0; // meters per second
 
     //------------------------------------------------PIDs-------------------------------------------------
-    public static double drivingP = 0.4;
+    public static double drivingP = 0.2;
     public static double drivingI = 0;
     public static double drivingD = 0.02;
     public static double drivingMinOutput = -1;
@@ -86,34 +115,6 @@ public class DrivetrainConstants {
     public static final double blChassisAngularOffset = 0;
     public static final double brChassisAngularOffset = 0;
 
-    //-------------------------------------Mechanical Information, Crescendo Bot-----------------------------
-
-    // // Locations for the swerve drive modules relative to the robot center.
-    // public static Translation2d frontLeftLocation = new Translation2d(0.29845, 0.29845);
-    // public static Translation2d frontRightLocation = new Translation2d(0.29845, -0.29845);
-    // public static Translation2d backLeftLocation = new Translation2d(-0.29845, 0.29845);
-    // public static Translation2d backRightLocation = new Translation2d(-0.29845, -0.29845);
-
-    // //IDs for the driving and turning motors
-    // public static int flDrivingID = 3;
-    // public static int flTurningID = 7;
-    // public static int frDrivingID = 2;
-    // public static int frTurningID = 6;
-    // public static int blDrivingID = 4;
-    // public static int blTurningID = 8;
-    // public static int brDrivingID = 1;
-    // public static int brTurningID = 5;
-
-    // public static final double wheelDiameterMeters = 0.074;
-    // public static final int drivingMotorPinionTeeth = 14;
-    // public static final int drivingMotorSpurTeeth = 21;
-    // public static final double wheelCircumferenceMeters = wheelDiameterMeters * Math.PI;
-    // public static final double drivingMotorReduction = (45.0 * drivingMotorSpurTeeth) / (drivingMotorPinionTeeth * 15);
-
-    // public static final double turningEncoderPositionFactor = (2 * Math.PI); // radians
-    // public static final double turningEncoderVelocityFactor = (2 * Math.PI) / 60.0; // radians per second
-    // public static final double drivingEncoderPositionFactor = (wheelDiameterMeters * Math.PI) / drivingMotorReduction; // meters
-    // public static final double drivingEncoderVelocityFactor = ((wheelDiameterMeters * Math.PI) / drivingMotorReduction) / 60.0; // meters per second
 
 }
 
