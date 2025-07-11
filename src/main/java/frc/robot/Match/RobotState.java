@@ -32,9 +32,9 @@ public class RobotState {
         // Controller 1 (Update?)
         //   Left Joystick - Movement, Right Joystick - Rotation
         Robot.instance.drivetrain.setDefaultCommand(new Drive2D(() -> {
-            return -1*controller1.getLeftY()*(controller1.getRawButton(XboxController.Button.kLeftBumper.value) ? DrivetrainConstants.driveSlowingFactor : 1);
+            return 1*controller1.getLeftY()*(controller1.getRawButton(XboxController.Button.kLeftBumper.value) ? DrivetrainConstants.driveSlowingFactor : 1);
         }, () -> {
-            return -1*controller1.getLeftX()*(controller1.getRawButton(XboxController.Button.kLeftBumper.value) ? DrivetrainConstants.driveSlowingFactor : 1);
+            return 1*controller1.getLeftX()*(controller1.getRawButton(XboxController.Button.kLeftBumper.value) ? DrivetrainConstants.driveSlowingFactor : 1);
         }, () -> { 
             return -1 *controller1.getRightX()*(controller1.getRawButton(XboxController.Button.kLeftBumper.value) ? DrivetrainConstants.rotSlowingFactor : 1);
         }));
@@ -64,7 +64,7 @@ public class RobotState {
         new Trigger(()->{return controller2.getPOV() == 90;}).onTrue(new ElevatorSetHeightCommand(ArmConstants.HeightState.CoralLow)); // Right - mid
         // new Trigger(()->{return controller2.getPOV() == 270;}).onTrue(new ElevatorMovementCommand(0,true,false))
         //                                                       .onFalse(new RemoveAlgaeCommand(()->{return true;})); // Algae Cycle
-        new Trigger(()->{return controller2.getPOV() == 180;}).onTrue(new ElevatorSetHeightCommand(ArmConstants.HeightState.Ground)); // Down - bo'om
+        new Trigger(()->{return controller2.getPOV() == 180;}).onTrue(new ElevatorSetHeightCommand(ArmConstants.HeightState.Ground)); // Down - bottom
         //   Algae
         //new JoystickButton(controller2, XboxController.Button.kX.value).onTrue(new RemoveAlgaeCommand(()->{return false;}));
         //   Climber

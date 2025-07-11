@@ -46,7 +46,6 @@ public class DropCoralCommand extends Command {
     @Override
     public void initialize() {
         state = DropState.MoveInit;
-        System.out.println("Drop");
     
         Pose2d origin = new Pose2d(0, 0, Rotation2d.kZero);
         Double limit = Robot.instance.armSubsystem.getLimitSwitchOffset();

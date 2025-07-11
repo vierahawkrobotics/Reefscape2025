@@ -126,6 +126,7 @@ public class ArmSubsystem extends SubsystemBase {
      * @author Andrew S
      */
     public void setHeightState(ArmConstants.HeightState height) {
+        System.out.println(height.getHeight());
         SetTargetHeight(height.getHeight());
     }
 

@@ -23,7 +23,7 @@ public class ArmConstants { // All heights in meters
                     return collectHeight;
                 case Ground:
                 default:
-                    return ground;
+                    return minHeight;
             }
         }
     }
