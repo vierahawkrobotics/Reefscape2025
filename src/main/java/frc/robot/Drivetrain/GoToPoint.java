@@ -7,7 +7,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Components.PositionComponent.PositionComponent;
+import frc.robot.Components.PositionComponent;
 
 public class GoToPoint extends Command{
     Pose2d targetPosition;
@@ -85,11 +85,11 @@ public class GoToPoint extends Command{
     public void initialize(){
         startTime = Timer.getFPGATimestamp();
         //sets the overall states for the profiles
-        xStartState = new TrapezoidProfile.State(PositionComponent.getRobotPose().getX(), PositionComponent.getChassisSpeeds().vxMetersPerSecond);
+        xStartState = new TrapezoidProfile.State(PositionComponent.getPose2d().getX(), PositionComponent.getChassisSpeeds().vxMetersPerSecond);
         xEndState = new TrapezoidProfile.State(targetPosition.getX(), 0);
-        yStartState = new TrapezoidProfile.State(PositionComponent.getRobotPose().getY(), PositionComponent.getChassisSpeeds().vyMetersPerSecond);
+        yStartState = new TrapezoidProfile.State(PositionComponent.getPose2d().getY(), PositionComponent.getChassisSpeeds().vyMetersPerSecond);
         yEndState = new TrapezoidProfile.State(targetPosition.getY(), 0);
-        rotationStartState = new TrapezoidProfile.State(PositionComponent.getRobotPose().getRotation().getRadians(), PositionComponent.getChassisSpeeds().omegaRadiansPerSecond);
+        rotationStartState = new TrapezoidProfile.State(PositionComponent.getPose2d().getRotation().getRadians(), PositionComponent.getChassisSpeeds().omegaRadiansPerSecond);
         rotationEndState = new TrapezoidProfile.State(targetPosition.getRotation().getRadians(), 0);
     }
 
@@ -123,7 +123,7 @@ public class GoToPoint extends Command{
      * @return the distance
      */
     public double getDistanceFromPoint(){
-        Pose2d curPos = PositionComponent.getRobotPose();
+        Pose2d curPos = PositionComponent.getPose2d();
         return MiscMathFunctions.distance(curPos.getX(), targetPosition.getX(), curPos.getX(), targetPosition.getY());
     }
 
@@ -133,7 +133,7 @@ public class GoToPoint extends Command{
      * @return the differnce
      */
     public double getDifferenceFromAngle(){
-        double currentAngle = PositionComponent.getRobotPose().getRotation().getRadians()*-1;
+        double currentAngle = PositionComponent.getPose2d().getRotation().getRadians()*-1;
         return MiscMathFunctions.mod(targetPosition.getRotation().getRadians() - currentAngle -Math.PI, 2*Math.PI) - Math.PI;
     }
 

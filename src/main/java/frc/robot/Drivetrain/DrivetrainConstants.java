@@ -76,7 +76,7 @@ public class DrivetrainConstants {
     public static final boolean invertTurningMotors = true;
     public static final boolean invertDrivingMotors = false;
     public static final boolean invertTurningEncoders = false;
-    public static final boolean invertDrivingEncoders = false;
+    // public static final boolean invertDrivingEncoders = false; inversion can't be set for driving encoders
 
 //----------------------------------------------------------------MISC.-----------------------------------------------------------------------------------
     //behavior when the robot is not moving

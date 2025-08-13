@@ -4,8 +4,8 @@ import java.util.function.Supplier;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Components.AreaEffects.AreaEffectsHandler;
-import frc.robot.Components.PositionComponent.PositionComponent;
+// import frc.robot.Components.AreaEffects.AreaEffectsHandler;
+import frc.robot.Components.PositionComponent;
 
 public class AutoTurning extends Command{
     //make sure this is the default command for drivetrain.
@@ -39,7 +39,7 @@ public class AutoTurning extends Command{
     }
     @Override
     public void execute(){
-        lastAngle = PositionComponent.getRobotPose().getRotation().getRadians();
+        lastAngle = PositionComponent.getPose2d().getRotation().getRadians();
         //input squaring
         velX = Math.signum(vx.get())*Math.pow(vx.get(), 2);
         velY = Math.signum(vy.get())*Math.pow(vy.get(), 2);
@@ -51,7 +51,8 @@ public class AutoTurning extends Command{
             velY = 0;
         }
         //check for area pose and apply that if there's one
-        Pose2d areaPose = AreaEffectsHandler.getTargetPose();
+        // Pose2d areaPose = AreaEffectsHandler.getTargetPose();
+        Pose2d areaPose = null;
         if (areaPose != null){
             targetAngle = areaPose.getRotation().getRadians();
         }

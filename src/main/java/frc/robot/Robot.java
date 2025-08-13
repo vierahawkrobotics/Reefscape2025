@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Components.*;
-import frc.robot.Components.PositionComponent.PositionComponent;
+import frc.robot.Components.PositionComponent;
 // import frc.robot.Drivetrain.old.Drivetrain;
 import frc.robot.Match.*;
 import frc.robot.subsystemExample.ExampleSubsystem;
@@ -22,11 +22,10 @@ public class Robot extends TimedRobot {
   public ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
   public static XboxController controller = new XboxController(0);
   // public Drivetrain drivetrain = new Drivetrain();
-  public PositionComponent positionComponent = PositionComponent.getInstance();
   @Override
   public void robotInit() {
     GUI.initialize();
-    ComponentManager.Initialize();
+    ComponentManager.initialize();
     PositionComponent.zeroPos();
     instance = this;
 
@@ -40,7 +39,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     GUI.periodic();
-    ComponentManager.Periodic();
+    ComponentManager.periodic();
     CommandScheduler.getInstance().run();
     RobotState.Periodic();
   }

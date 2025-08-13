@@ -13,8 +13,8 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.ComponentsOld.AreaEffects.AreaEffectsHandler;
-import frc.robot.ComponentsOld.PositionComponent.PositionComponent;
+// import frc.robot.ComponentsOld.AreaEffects.AreaEffectsHandler;
+import frc.robot.Components.PositionComponent;
 
 public class Drivetrain extends SubsystemBase {
 //---------------------------------------------------------------VARIABLES-----------------------------------------------------------------------------------
@@ -81,7 +81,7 @@ public class Drivetrain extends SubsystemBase {
             rSpeed = 1;
         }
 
-        ChassisSpeeds chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(vx * speed, vy * speed, rot * rSpeed, PositionComponent.getRobotPose().getRotation());
+        ChassisSpeeds chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(vx * speed, vy * speed, rot * rSpeed, PositionComponent.getPose2d().getRotation());
         SwerveModuleState[] swerveStates = kinematics.toSwerveModuleStates(chassisSpeeds);
         for(int i = 0; i < 4; i++){
             Rotation2d currentAngle = new Rotation2d(maxSwerveModules[i].turningEncoder.getPosition());
@@ -102,7 +102,7 @@ public class Drivetrain extends SubsystemBase {
      * @return void
      */
     public void setDrivePositionPIDs(TrapezoidProfile.State xSetpoint, TrapezoidProfile.State ySetpoint, TrapezoidProfile.State rotSetpoint){ 
-        Pose2d currentPose = PositionComponent.getRobotPose();
+        Pose2d currentPose = PositionComponent.getPose2d();
         double vx = xPositionPidController.calculate(currentPose.getX(), xSetpoint.position);
         double vy = yPositionPidController.calculate(currentPose.getY(), ySetpoint.position);
         double vr = rotationPidController.calculate(currentPose.getRotation().getRadians(), rotSetpoint.position);
@@ -116,7 +116,7 @@ public class Drivetrain extends SubsystemBase {
      */
     public double getVelocityToSetTargetAngle(double targetAngle){
         targetAngle = MathUtil.angleModulus(targetAngle); //wrap the angle
-        return rotationPidController.calculate(PositionComponent.getRobotPose().getRotation().getRadians(), targetAngle);
+        return rotationPidController.calculate(PositionComponent.getPose2d().getRotation().getRadians(), targetAngle);
     }
     /**
      * Sets the PIDs for the driving and turning motor controllers to be in a "hold position." Here, the wheels form an X which makes it harder
@@ -138,10 +138,11 @@ public class Drivetrain extends SubsystemBase {
      * @author Giahna C.
      */
     public void updateDriveSpeed(){
-        if(AreaEffectsHandler.isAreaEffect() == false || AreaEffectsHandler.getMaxSpeed() == null)
-            driveSpeed = DrivetrainConstants.defaultDriveSpeed;
-        else 
-            driveSpeed = MathUtil.clamp(AreaEffectsHandler.getMaxSpeed(), -DrivetrainConstants.maxDriveSpeed, DrivetrainConstants.maxDriveSpeed);
+        // if(AreaEffectsHandler.isAreaEffect() == false || AreaEffectsHandler.getMaxSpeed() == null)
+        //     driveSpeed = DrivetrainConstants.defaultDriveSpeed;
+        // else 
+        //     driveSpeed = MathUtil.clamp(AreaEffectsHandler.getMaxSpeed(), -DrivetrainConstants.maxDriveSpeed, DrivetrainConstants.maxDriveSpeed);
+        driveSpeed = DrivetrainConstants.defaultDriveSpeed;
     }
     /**
      * Checks each MaxSwerveModule to see if it's moving or not. If one of them is moving it returns false.
@@ -158,6 +159,17 @@ public class Drivetrain extends SubsystemBase {
         SwerveModulePosition[] returnArray = new SwerveModulePosition[4];
         for(int i=0; i<4; i++){
             returnArray[i] = maxSwerveModules[i].getSwerveModulePosition(); 
+        }
+        return returnArray;
+    }
+
+    public SwerveModuleState[] getSwerveModuleStates(){
+        SwerveModuleState[] returnArray = new SwerveModuleState[4];
+        for(int i=0; i<4; i++){
+            returnArray[i] = new SwerveModuleState(
+                maxSwerveModules[i].drivingEncoder.getVelocity(),
+                new Rotation2d(maxSwerveModules[i].turningEncoder.getPosition())
+            ); 
         }
         return returnArray;
     }

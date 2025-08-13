@@ -46,7 +46,7 @@ public class MaxSwerveModule{
           .smartCurrentLimit(DrivetrainConstants.drivingCurrentLimit)
           .idleMode(DrivetrainConstants.drivingIdleMode);
         drivingConfig.encoder
-         .inverted(DrivetrainConstants.invertDrivingEncoders)
+        //  .inverted(DrivetrainConstants.invertDrivingEncoders) Inversion can't be set for driving encoder
          .positionConversionFactor(DrivetrainConstants.drivingEncoderPositionFactor)
          .velocityConversionFactor(DrivetrainConstants.drivingEncoderVelocityFactor);
         drivingConfig.closedLoop

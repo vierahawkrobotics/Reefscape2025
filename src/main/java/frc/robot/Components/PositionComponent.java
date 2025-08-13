@@ -2,13 +2,18 @@ package frc.robot.Components;
 
 import java.util.function.Supplier;
 
+import com.ctre.phoenix6.swerve.SwerveModule;
 import com.studica.frc.AHRS;
 
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.Kinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
+import frc.robot.Drivetrain.Drivetrain;
 import frc.robot.Utilities.PositionMath;
 
 /**
@@ -16,7 +21,7 @@ import frc.robot.Utilities.PositionMath;
  * to give positions from limelight and odometry.
  * @author Darren Ringer
  */
-class PositionComponent{
+public class PositionComponent{
     //-------------------------------------------Constants--------------------------------------------//
     private static final double limelightUncertianty = 1.0;
 
@@ -27,17 +32,20 @@ class PositionComponent{
     private static PositionComponent instance;
     private static SwerveDrivePoseEstimator poseEstimator;
     private static Supplier<SwerveModulePosition[]> swerveModulePositionSupplier; 
+    private static SwerveDriveKinematics kinematics;
     private static AHRS gyro;
     private static Pose2d lastCache;
 
     private PositionComponent(SwerveDriveKinematics kinematics, Supplier<SwerveModulePosition[]> swerveModulePositionsSupplier, Pose2d initialPose){
         gyro = new AHRS(AHRS.NavXComType.kMXP_SPI);
+        gyro.setAngleAdjustment(0);
         
         //TODO: figure out resetting shenanegains
         // gyro.reset();
 
         poseEstimator = new SwerveDrivePoseEstimator(kinematics, gyro.getRotation2d(), swerveModulePositionsSupplier.get(), initialPose);
         lastCache = initialPose;
+        this.kinematics = kinematics;
         this.swerveModulePositionSupplier = swerveModulePositionsSupplier;
 
     }
@@ -73,6 +81,16 @@ class PositionComponent{
         return lastCache;
     }
 
+    public static ChassisSpeeds getChassisSpeeds(){
+        SwerveModuleState[] swerveModuleStates = Drivetrain.getInstance().getSwerveModuleStates();
+        return kinematics.toChassisSpeeds(
+            swerveModuleStates[0],
+            swerveModuleStates[1],
+            swerveModuleStates[2],
+            swerveModuleStates[3]
+        );
+    }
+
     public static void periodic(){
         poseEstimator.update(gyro.getRotation2d(), swerveModulePositionSupplier.get());
         LimelightComponent.PoseWithTimestamp limelightEstimate = LimelightComponent.calcAprilTag();
@@ -82,6 +100,12 @@ class PositionComponent{
             }
             poseEstimator.addVisionMeasurement(limelightEstimate.pose, limelightEstimate.timestamp);
         }
+    }
+
+    public static void zeroPos(){
+        poseEstimator.resetPose(Pose2d.kZero);
+        gyro.setAngleAdjustment(-gyro.getAngle());
+        lastCache = Pose2d.kZero;
     }
 
 }

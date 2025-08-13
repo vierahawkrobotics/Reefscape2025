@@ -4,7 +4,7 @@ import java.util.function.Supplier;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Components.PositionComponent.PositionComponent;
+import frc.robot.Components.PositionComponent;
 
 public class JoystickControl extends Command{
     //make sure this is the default command for drivetrain.
@@ -38,7 +38,7 @@ public class JoystickControl extends Command{
     }
     @Override
     public void execute(){
-        lastAngle = PositionComponent.getRobotPose().getRotation().getRadians();
+        lastAngle = PositionComponent.getPose2d().getRotation().getRadians();
         //input squaring
         velX = Math.signum(vx.get())*Math.pow(MathUtil.clamp(vx.get(), -1, 1), 2);
         velY = Math.signum(vy.get())*Math.pow(MathUtil.clamp(vy.get(), -1, 1), 2);
