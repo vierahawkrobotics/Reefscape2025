@@ -16,27 +16,49 @@ public class DrivetrainConstants {
     public static final double maxRotSpeed = 2.0; // Maximum rotation speed in radians per second
     public static final double maxDriveAcceleration = 2.0; // Maximum drive acceleration in meters per second squared
     public static final double maxRotAcceleration = 1.0; // Maximum rotation acceleration in radians per second squared
-//-----------------------------------------------------------MECHANICAL KNOWLEDGE-----------------------------------------------------------------------------------
-    //swerve module locations relative to the robot's center in meters
-    public static final Translation2d frontLeftLocation = new Translation2d(0.29845, 0.29845);
-    public static final Translation2d frontRightLocation = new Translation2d(0.29845, -0.29845);
-    public static final Translation2d backLeftLocation = new Translation2d(-0.29845, 0.29845);
-    public static final Translation2d backRightLocation = new Translation2d(-0.29845, -0.29845);
-    public static final Translation2d[] SwerveModulePositions = {frontLeftLocation, frontRightLocation, backLeftLocation, backRightLocation};
-    //wheel stuff
-    public static final double wheelDiameterMeters = 0.0762;
-    public static final int drivingMotorPinionTeeth = 5;
-    public static final int drivingMotorSpurTeeth = 50;
-    //IDs
-    public static final int flDrivingID = 1;
-    public static final int flTurningID = 2;
-    public static final int frDrivingID = 3;
-    public static final int frTurningID = 4;
-    public static final int blDrivingID = 5;
-    public static final int blTurningID = 6;
-    public static final int brDrivingID = 7;
-    public static final int brTurningID = 8;
+//-----------------------------------------------------------MECHANICAL KNOWLEDGE: Spike-----------------------------------------------------------------------------------
+    // //swerve module locations relative to the robot's center in meters
+    // public static final Translation2d frontLeftLocation = new Translation2d(0.29845, 0.29845);
+    // public static final Translation2d frontRightLocation = new Translation2d(0.29845, -0.29845);
+    // public static final Translation2d backLeftLocation = new Translation2d(-0.29845, 0.29845);
+    // public static final Translation2d backRightLocation = new Translation2d(-0.29845, -0.29845);
+    // public static final Translation2d[] SwerveModulePositions = {frontLeftLocation, frontRightLocation, backLeftLocation, backRightLocation};
+    // //wheel stuff
+    // public static final double wheelDiameterMeters = 0.0762;
+    // public static final int drivingMotorPinionTeeth = 5;
+    // public static final int drivingMotorSpurTeeth = 50;
+    // //IDs
+    // public static final int flDrivingID = 1;
+    // public static final int flTurningID = 2;
+    // public static final int frDrivingID = 3;
+    // public static final int frTurningID = 4;
+    // public static final int blDrivingID = 5;
+    // public static final int blTurningID = 6;
+    // public static final int brDrivingID = 7;
+    // public static final int brTurningID = 8;
 
+
+//-----------------------------------------------------------MECHANICAL KNOWLEDGE: Rexy-----------------------------------------------------------------------------------
+     //swerve module locations relative to the robot's center in meters
+     public static final Translation2d frontLeftLocation = new Translation2d(0.29845, 0.29845);
+     public static final Translation2d frontRightLocation = new Translation2d(0.29845, -0.29845);
+     public static final Translation2d backLeftLocation = new Translation2d(-0.29845, 0.29845);
+     public static final Translation2d backRightLocation = new Translation2d(-0.29845, -0.29845);
+     public static final Translation2d[] SwerveModulePositions = {frontLeftLocation, frontRightLocation, backLeftLocation, backRightLocation};
+     //wheel stuff
+     public static final double wheelDiameterMeters = 0.074;
+     public static final int drivingMotorPinionTeeth = 14;
+     public static final int drivingMotorSpurTeeth = 21;
+     //IDs
+     public static final int flDrivingID = 3;
+     public static final int flTurningID = 7;
+     public static final int frDrivingID = 2;
+     public static final int frTurningID = 6;
+     public static final int blDrivingID = 4;
+     public static final int blTurningID = 8;
+     public static final int brDrivingID = 1;
+     public static final int brTurningID = 5;
+  
 //-----------------------------------------------------------------PIDS-----------------------------------------------------------------------------------
     //PIDs for the x axis during position control
     public static final double xPositionP = 0.1; 
@@ -51,11 +73,11 @@ public class DrivetrainConstants {
     public static final double rotationI = 0.0; 
     public static final double rotationD = 0.0; 
     //PIDs for turning during velocity control
-    public static final double turningVelocityP = 0.1;
+    public static final double turningVelocityP = 0.01;
     public static final double turningVelocityI = 0;
     public static final double turningVelocityD = 0;
     //PIDs for driving during velocity control + ff control
-    public static final double drivingVelocityP = 0.1;
+    public static final double drivingVelocityP = 0.01;
     public static final double drivingVelocityI = 0;
     public static final double drivingVelocityD = 0;
     public static final double drivingVelocityF = 0;
@@ -109,4 +131,5 @@ public class DrivetrainConstants {
             new SwerveModuleState(0.0, new Rotation2d(Math.PI/4)),//bl
             new SwerveModuleState(0.0, new Rotation2d(-Math.PI/4)) //br
         }; //Swerve states for the holdPosition command.
+ 
 }
