@@ -11,6 +11,7 @@ import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -34,11 +35,13 @@ public class MaxSwerveModule{
          .positionConversionFactor(2*Math.PI)
          .velocityConversionFactor(2*Math.PI/60);
         turningConfig.closedLoop
+         .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
          .positionWrappingEnabled(true)
          .positionWrappingInputRange(0, 2*Math.PI)
+        //  .allowedClosedLoopError(0.05)
          .minOutput(-1)
          .maxOutput(1)
-         .pid(DrivetrainConstants.turningVelocityP, DrivetrainConstants.turningVelocityP, DrivetrainConstants.turningVelocityD);
+         .pid(DrivetrainConstants.turningVelocityP, DrivetrainConstants.turningVelocityI, DrivetrainConstants.turningVelocityD);
 
          SparkFlexConfig drivingConfig = new SparkFlexConfig();
          drivingConfig
@@ -50,6 +53,7 @@ public class MaxSwerveModule{
          .positionConversionFactor(DrivetrainConstants.drivingEncoderPositionFactor)
          .velocityConversionFactor(DrivetrainConstants.drivingEncoderVelocityFactor);
         drivingConfig.closedLoop
+         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
          .pidf(DrivetrainConstants.drivingVelocityP, DrivetrainConstants.drivingVelocityI, DrivetrainConstants.drivingVelocityD, DrivetrainConstants.drivingVelocityF)
          .minOutput(-1)
          .maxOutput(1)

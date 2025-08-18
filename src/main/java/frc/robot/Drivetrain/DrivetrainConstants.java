@@ -10,8 +10,8 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 
 public class DrivetrainConstants {
 //-------------------------------------------------------------------SPEEDS-----------------------------------------------------------------------------------
-    public static final double defaultDriveSpeed = 5; //default speed that will be used in meters/second
-    public static final double defaultRotSpeed = Math.PI*2; //default speed that will be used for rotation in radians/second
+    public static final double defaultDriveSpeed = 1; //default speed that will be used in meters/second
+    public static final double defaultRotSpeed = Math.PI; //default speed that will be used for rotation in radians/second
     public static final double maxDriveSpeed = 3.0; // Maximum drive speed in meters/second
     public static final double maxRotSpeed = 2.0; // Maximum rotation speed in radians per second
     public static final double maxDriveAcceleration = 2.0; // Maximum drive acceleration in meters per second squared
@@ -73,13 +73,13 @@ public class DrivetrainConstants {
     public static final double rotationI = 0.0; 
     public static final double rotationD = 0.0; 
     //PIDs for turning during velocity control
-    public static final double turningVelocityP = 0.01;
+    public static final double turningVelocityP = 0.3;
     public static final double turningVelocityI = 0;
-    public static final double turningVelocityD = 0;
+    public static final double turningVelocityD = 0.02;
     //PIDs for driving during velocity control + ff control
-    public static final double drivingVelocityP = 0.01;
+    public static final double drivingVelocityP = 0.2;
     public static final double drivingVelocityI = 0;
-    public static final double drivingVelocityD = 0;
+    public static final double drivingVelocityD = 0.02;
     public static final double drivingVelocityF = 0;
 
 //-----------------------------------------------------STUFF TO TEST/ MESS WITH-----------------------------------------------------------------------------------
@@ -95,9 +95,9 @@ public class DrivetrainConstants {
    
 //-----------------------------------------------------INVERSION, VERY IMPORTANT-----------------------------------------------------------------------------------
     //test these to avoid rexy-ing
-    public static final boolean invertTurningMotors = true;
+    public static final boolean invertTurningMotors = false;
     public static final boolean invertDrivingMotors = false;
-    public static final boolean invertTurningEncoders = false;
+    public static final boolean invertTurningEncoders = true;
     // public static final boolean invertDrivingEncoders = false; inversion can't be set for driving encoders
 
 //----------------------------------------------------------------MISC.-----------------------------------------------------------------------------------

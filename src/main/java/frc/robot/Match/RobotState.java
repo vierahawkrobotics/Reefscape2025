@@ -17,8 +17,6 @@ public class RobotState {
             return  -1 * controller.getLeftX();
         }, () -> {
             return controller.getRightX();
-        }, () -> {
-            return -controller.getRightY();
         }
         ));
 

@@ -92,7 +92,8 @@ public class PositionComponent{
     }
 
     public static void periodic(){
-        poseEstimator.update(gyro.getRotation2d(), swerveModulePositionSupplier.get());
+        lastCache = poseEstimator.update(gyro.getRotation2d(), swerveModulePositionSupplier.get());
+        System.out.printf("Gyro: %f, Pos Compoent: %f\n",gyro.getRotation2d().getRadians(),lastCache.getRotation().getRadians());
         LimelightComponent.PoseWithTimestamp limelightEstimate = LimelightComponent.calcAprilTag();
         if(limelightEstimate != null && PositionMath.distance(lastCache, limelightEstimate.pose) < limelightUncertianty){
             if(limelightEstimate.megaTag2){

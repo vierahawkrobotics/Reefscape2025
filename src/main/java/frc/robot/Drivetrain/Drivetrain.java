@@ -88,11 +88,12 @@ public class Drivetrain extends SubsystemBase {
             swerveStates[i].optimize(currentAngle);
             // cosine compensation, optional
             // swerveStates[i].speedMetersPerSecond *= swerveStates[i].angle.minus(currentAngle).getCos();
+            // System.out.println(swerveStates[i].angle.getRadians());
             maxSwerveModules[i].turningPIDController.setReference(swerveStates[i].angle.getRadians(), ControlType.kPosition);
             // maxSwerveModules[i].turningPIDController.setReference(0, ControlType.kPosition);
             maxSwerveModules[i].drivingPIDFController.setReference(swerveStates[i].speedMetersPerSecond, ControlType.kVelocity);
 
-            System.out.println(i + ": " + maxSwerveModules[i].turningEncoder.getPosition());
+            // System.out.println(i + ": " + maxSwerveModules[i].turningEncoder.getPosition());
         }
     }
     /**

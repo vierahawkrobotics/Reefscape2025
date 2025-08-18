@@ -99,7 +99,7 @@ public class Scratchbot {
      * @param yVelocity Supplier for the Y velocity of the robot. [-1,1]
      */
     public static void sb_setRobotMovement(Supplier<Double> xVelocity, Supplier<Double> yVelocity){
-        CommandScheduler.getInstance().schedule(new JoystickControl(xVelocity,yVelocity, () -> {return 0.0;}, () -> {return 0.0;}));
+        CommandScheduler.getInstance().schedule(new JoystickControl(xVelocity,yVelocity, () -> {return 0.0;}));
     }
     /**
      * Creates a configured CANdle object with default settings.
