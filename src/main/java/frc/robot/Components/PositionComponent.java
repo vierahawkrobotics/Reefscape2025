@@ -75,6 +75,7 @@ public class PositionComponent{
 
     public static void resetPose(Pose2d newPose){
         poseEstimator.resetPose(newPose);
+        gyro.setAngleAdjustment(newPose.getRotation().getDegrees()-gyro.getYaw());
     }
 
     public static Pose2d getPose2d(){
@@ -105,8 +106,7 @@ public class PositionComponent{
 
     public static void zeroPos(){
         poseEstimator.resetPose(Pose2d.kZero);
-        gyro.setAngleAdjustment(-gyro.getAngle());
+        gyro.zeroYaw();
         lastCache = Pose2d.kZero;
     }
-
 }

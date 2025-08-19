@@ -1,7 +1,10 @@
 package frc.robot.Match;
 
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Robot;
+import frc.robot.Components.PositionComponent;
 import frc.robot.Drivetrain.Drivetrain;
 import frc.robot.Drivetrain.JoystickControl;
 
@@ -20,6 +23,7 @@ public class RobotState {
         }
         ));
 
+        new JoystickButton(controller, XboxController.Button.kA.value).onTrue(new InstantCommand(PositionComponent::zeroPos));
     }
     public static void Periodic() {}
 }
