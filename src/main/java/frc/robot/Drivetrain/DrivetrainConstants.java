@@ -94,9 +94,8 @@ public class DrivetrainConstants {
     public static final double inputDeadband = 0.12;
    
 //-----------------------------------------------------INVERSION, VERY IMPORTANT-----------------------------------------------------------------------------------
-    //test these to avoid rexy-ing
     public static final boolean invertTurningMotors = false;
-    public static final boolean invertDrivingMotors = false;
+    // public static final boolean invertDrivingMotors = false; Use firmware client instead.
     public static final boolean invertTurningEncoders = true;
     // public static final boolean invertDrivingEncoders = false; inversion can't be set for driving encoders
 
@@ -128,8 +127,8 @@ public class DrivetrainConstants {
     public static final SwerveModuleState[] holdSwerveStates = {
             new SwerveModuleState(0.0, new Rotation2d(Math.PI/4)), //fl
             new SwerveModuleState(0.0, new Rotation2d(-Math.PI/4)),//fr
-            new SwerveModuleState(0.0, new Rotation2d(Math.PI/4)),//bl
-            new SwerveModuleState(0.0, new Rotation2d(-Math.PI/4)) //br
-        }; //Swerve states for the holdPosition command.
+            new SwerveModuleState(0.0, new Rotation2d(-Math.PI/4)),//bl
+            new SwerveModuleState(0.0, new Rotation2d(Math.PI/4)) //br
+    }; //Swerve states for the holdPosition command.
  
 }

@@ -45,7 +45,7 @@ public class MaxSwerveModule{
 
          SparkFlexConfig drivingConfig = new SparkFlexConfig();
          drivingConfig
-          .inverted(DrivetrainConstants.invertDrivingMotors)
+        //   .inverted(DrivetrainConstants.invertDrivingMotors)
           .smartCurrentLimit(DrivetrainConstants.drivingCurrentLimit)
           .idleMode(DrivetrainConstants.drivingIdleMode);
         drivingConfig.encoder
