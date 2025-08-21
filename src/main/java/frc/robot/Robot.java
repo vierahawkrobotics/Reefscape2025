@@ -12,8 +12,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Components.*;
 import frc.robot.Components.PositionComponent;
-// import frc.robot.Drivetrain.old.Drivetrain;
-import frc.robot.Match.*;
+import frc.robot.RobotStates.*;
 import frc.robot.subsystemExample.ExampleSubsystem;
 import frc.robot.Testing.*;
 
@@ -31,9 +30,6 @@ public class Robot extends TimedRobot {
 
 
     RobotState.Initialize();
-
-    //Reset Pose
-    new JoystickButton(controller, 8).onTrue(new InstantCommand(PositionComponent::zeroPos));
   }
 
   @Override
@@ -62,20 +58,20 @@ public class Robot extends TimedRobot {
   private Command autoCommand;
   @Override
   public void autonomousInit() {
-    // autoCommand = AutonomousState.getAutoCommand();
-    // if (autoCommand != null) autoCommand.schedule();
-    // AutonomousState.initialize();
+    autoCommand = AutonomousState.getAutoCommand();
+    if (autoCommand != null) autoCommand.schedule();
+    AutonomousState.initialize();
   }
 
   @Override
   public void autonomousPeriodic() {
-    //AutonomousState.periodic();
+    AutonomousState.periodic();
   }
 
   @Override
   public void autonomousExit() {
-    //if (autoCommand != null) autoCommand.cancel();
-    //AutonomousState.exit();
+    if (autoCommand != null) autoCommand.cancel();
+    AutonomousState.exit();
   }
 
   @Override
