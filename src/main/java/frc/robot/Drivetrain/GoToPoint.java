@@ -8,6 +8,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Components.PositionComponent;
+import frc.robot.Utilities.MiscMathFunctions;
 
 public class GoToPoint extends Command{
     Pose2d targetPosition;
@@ -124,7 +125,7 @@ public class GoToPoint extends Command{
      */
     public double getDistanceFromPoint(){
         Pose2d curPos = PositionComponent.getPose2d();
-        return MiscMathFunctions.distance(curPos.getX(), targetPosition.getX(), curPos.getX(), targetPosition.getY());
+        return MiscMathFunctions.distance(curPos.getX(), targetPosition.getX(), curPos.getY(), targetPosition.getY());
     }
 
     /**

@@ -1,4 +1,4 @@
-package frc.robot.Drivetrain;
+package frc.robot.Utilities;
 
 public class MiscMathFunctions {
     /**

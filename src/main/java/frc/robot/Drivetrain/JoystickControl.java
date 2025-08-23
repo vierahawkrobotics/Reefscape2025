@@ -34,7 +34,6 @@ public class JoystickControl extends Command{
     }
     @Override
     public void execute(){
-        lastAngle = PositionComponent.getPose2d().getRotation().getRadians();
         //input squaring
         velX = Math.signum(vx.get())*Math.pow(MathUtil.clamp(vx.get(), -1, 1), 2);
         velY = Math.signum(vy.get())*Math.pow(MathUtil.clamp(vy.get(), -1, 1), 2);
@@ -48,7 +47,7 @@ public class JoystickControl extends Command{
         if (Math.abs(velR) < DrivetrainConstants.inputDeadband){
             velR = 0;
         }
-        Drivetrain.getInstance().setVelocityPIDs(velX, velY, velR, true, false);
+        Drivetrain.getInstance().setVelocityPIDs(velX, velY, velR, true, true);
     }
     @Override
     public void end(boolean interrupted) {

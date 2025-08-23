@@ -80,7 +80,6 @@ public class Drivetrain extends SubsystemBase {
             rot = MathUtil.clamp(rot, -DrivetrainConstants.maxRotSpeed, DrivetrainConstants.maxRotSpeed);
             rSpeed = 1;
         }
-        System.out.println("Rotation" + rot);
         ChassisSpeeds chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(vx * speed, vy * speed, rot * rSpeed, PositionComponent.getPose2d().getRotation());
         SwerveModuleState[] swerveStates = kinematics.toSwerveModuleStates(chassisSpeeds);
         for(int i = 0; i < 4; i++){
@@ -91,8 +90,6 @@ public class Drivetrain extends SubsystemBase {
             // System.out.println(swerveStates[i].angle.getRadians());
             maxSwerveModules[i].turningPIDController.setReference(swerveStates[i].angle.getRadians(), ControlType.kPosition);
             maxSwerveModules[i].drivingPIDFController.setReference(swerveStates[i].speedMetersPerSecond, ControlType.kVelocity);
-
-            // System.out.println(i + ": " + maxSwerveModules[i].turningEncoder.getPosition());
         }
     }
     /**
