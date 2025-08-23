@@ -19,11 +19,9 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
  */
 public class LimelightComponent {    
     //-------------------------------------------Constants--------------------------------------------//
-    public static final double[] defaultArray = {};
-    public static final Double[] defaultFiducials = new Double[10];
-    public static final double minDist = 0;
+    public static final double minDist = 0;         // In meters, the minimum acceptable distance for an april tag
     public static final double maxDistMT1 = 1.0;    // In meters, the maximum acceptable distance for an MT1 april tag
-    public static final double maxDistMT2 = 6.0;    // In meters, the maximum acceptable distance for an MT1 april tag
+    public static final double maxDistMT2 = 6.0;    // In meters, the maximum acceptable distance for an MT2 april tag
     public static final double aprilTagHeight = Units.inchesToMeters(10.5); // In meters, the height of the april tag
     public static final double limelightFOVX = 82;      // In degrees, the horizontal FOV of the limelight
     public static final double limelightFOVY = 56.2;    // In degrees, the vertical FOV of the limelight
@@ -67,7 +65,6 @@ public class LimelightComponent {
         return !(Math.abs(getTX()) > limelightFOVX/2-tagAngularSize-detectionBuffer || Math.abs(getTY()) > limelightFOVY/2-tagAngularSize-detectionBuffer);
     }
 
-    //TODO: fix possible crash condition where 
     public static PoseWithTimestamp calcAprilTag() {
         boolean mt2 = false;
         LimelightHelpers.PoseEstimate limelightMeasurement = null;
@@ -91,6 +88,7 @@ public class LimelightComponent {
                 limelightMeasurement = null;
             }
         } else if(ally.get() == Alliance.Blue){
+            //TODO: field relative compensation
             limelightMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue("");
             LimelightHelpers.SetRobotOrientation("", PositionComponent.getPose2d().getRotation().getDegrees(), 0, 0, 0, 0, 0);
                 

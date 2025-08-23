@@ -39,9 +39,6 @@ public class PositionComponent{
     private PositionComponent(SwerveDriveKinematics kinematics, Supplier<SwerveModulePosition[]> swerveModulePositionsSupplier, Pose2d initialPose){
         gyro = new AHRS(AHRS.NavXComType.kMXP_SPI);
         gyro.setAngleAdjustment(0);
-        
-        //TODO: figure out resetting shenanegains
-        // gyro.reset();
 
         poseEstimator = new SwerveDrivePoseEstimator(kinematics, gyro.getRotation2d(), swerveModulePositionsSupplier.get(), initialPose);
         lastCache = initialPose;
@@ -74,6 +71,7 @@ public class PositionComponent{
     }
 
     public static void resetPose(Pose2d newPose){
+        // TODO: Rezero limelight as well
         poseEstimator.resetPose(newPose);
         gyro.setAngleAdjustment(newPose.getRotation().getDegrees()-gyro.getYaw());
     }
@@ -82,6 +80,7 @@ public class PositionComponent{
         return lastCache;
     }
 
+    // TODO: Rewrite for no dependence of drivetrain
     public static ChassisSpeeds getChassisSpeeds(){
         SwerveModuleState[] swerveModuleStates = Drivetrain.getInstance().getSwerveModuleStates();
         return kinematics.toChassisSpeeds(
@@ -98,7 +97,7 @@ public class PositionComponent{
         LimelightComponent.PoseWithTimestamp limelightEstimate = LimelightComponent.calcAprilTag();
         if(limelightEstimate != null && PositionMath.distance(lastCache, limelightEstimate.pose) < limelightUncertianty){
             if(limelightEstimate.megaTag2){
-                limelightEstimate.pose = new Pose2d(limelightEstimate.pose.getTranslation(),lastCache.getRotation());
+                limelightEstimate.pose = new Pose2d(limelightEstimate.pose.getTranslation(),gyro.getRotation2d());
             }
             poseEstimator.addVisionMeasurement(limelightEstimate.pose, limelightEstimate.timestamp);
         }
