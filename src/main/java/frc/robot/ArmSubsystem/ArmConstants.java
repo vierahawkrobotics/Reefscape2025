@@ -47,7 +47,7 @@ public class ArmConstants { // All heights in meters
 
     // Arm Constants
     final public static double autoResetHeight = 0.1; // Max difference between curHeight and minHeight to auto reset to 0
-    final public static double minHeight = 999999999; // Container bottom distance from floor
+    final public static double minHeight = 0; // Container bottom distance from floor
     final public static double armForwardOffset = 999999999; // Arm distance from center of robot
     final public static double maxHeight = 999999999; // Arm max extension length from floor
     final public static double ground = 0.33; // L1
