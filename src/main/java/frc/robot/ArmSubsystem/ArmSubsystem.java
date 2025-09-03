@@ -20,19 +20,16 @@ enum ArmState {
 public class ArmSubsystem extends SubsystemBase {
     private ShuffleboardTab armTab;
     private ArmState state = ArmState.ResetHeight; // Immediately reset height
-    private ArmConstants.AlgaeMotorState algaeState = ArmConstants.AlgaeMotorState.Inactive;
     private ArmConstants.IntakeState intakeState = ArmConstants.IntakeState.Rest;
     private SparkFlex elevator;
     private SparkFlex elevatorFollower;
     public SparkFlex container;
     public SparkFlex containerFollower;
-    public SparkFlex algaeMotor; 
     private double targetHeight = ArmConstants.minHeight;
     private double curHeight = 0;
     PIDController elevatorPID = new PIDController(ArmConstants.elevatorP, ArmConstants.elevatorI, ArmConstants.elevatorD);
     public double limitSwitchOffset;
     public double startTime;
-    public double algaeStartTime;
 
     public ArmSubsystem() {
         // Shuffleboard Setup
@@ -42,7 +39,6 @@ public class ArmSubsystem extends SubsystemBase {
         armTab.addDouble("Elevator Height Radians", () -> {return elevatorFollower.getExternalEncoder().getPosition();});
         armTab.addNumber("Target Height", () -> {return targetHeight;});
         armTab.addString("Collector State", () -> {return intakeState.toString();});
-        armTab.addString("Algae State", () -> {return algaeState.toString();});
         armTab.addBoolean("Limit Switch", () -> {return elevator.getReverseLimitSwitch().isPressed();});
         
         // Elevator Motors Setup
@@ -85,35 +81,8 @@ public class ArmSubsystem extends SubsystemBase {
             .idleMode(IdleMode.kBrake)
             .smartCurrentLimit(ArmConstants.maxAmp);
         containerFollower.configure(containerFollowerConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kNoPersistParameters);
-
-        // Algae Motor Setup
-        // algaeMotor = new SparkFlex(ArmConstants.algaeMotorID, MotorType.kBrushless);
-        // SparkFlexConfig algaeConfig = new SparkFlexConfig();
-        // algaeConfig.idleMode(IdleMode.kBrake);
-        // algaeMotor.configure(algaeConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kNoPersistParameters);
     }
     
-    /**
-     * Change algae motor rotation speed based on motorState
-     * @param motorState new algae motorState (Active or Inactive)
-     * @author Christian M
-     * @author Andrew S
-     */
-    public void setAlgaeMotorSpeed(ArmConstants.AlgaeMotorState motorState){
-        if (motorState == ArmConstants.AlgaeMotorState.ActiveTemp && algaeState != motorState) {
-            algaeStartTime = Timer.getFPGATimestamp();
-        }
-        algaeState = motorState;
-    }
-
-    /**
-     * @return current algae state
-     * @author Andrew S
-     */
-    public ArmConstants.AlgaeMotorState getAlgaeState() {
-        return algaeState;
-    }
-
     /**
      * Move elevator arm to height registered with HeightState
      * @param height target HeightState
@@ -124,48 +93,12 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     /**
-     * @return left/right offset in meters based on limit switch pressed (0 if none pressed)
-     * @author Andrew S
-     */
-    public double isLimitSwitchPressed() {
-        int pressed = 0;
-        if (!container.getForwardLimitSwitch().isPressed()) {
-            pressed = 1;
-        }
-        if (!container.getReverseLimitSwitch().isPressed()) {
-            if(pressed != 0) System.out.println("ArmSubsystem.isLimitSwitchPressed - multiple limit switches pressed");
-            pressed = 2;
-        }
-        if (!containerFollower.getForwardLimitSwitch().isPressed()) {
-            if(pressed != 0) System.out.println("ArmSubsystem.isLimitSwitchPressed - multiple limit switches pressed");
-            pressed = 3;
-        }
-        if (!containerFollower.getReverseLimitSwitch().isPressed()) {
-            if(pressed != 0) System.out.println("ArmSubsystem.isLimitSwitchPressed - multiple limit switches pressed");
-            pressed = 4;
-        }
-        if (pressed == 1) { // Far left channel pressed
-            return ArmConstants.farLeftIntakeChannel;
-        } else if (pressed == 2) { // Middle left channel pressed
-            return ArmConstants.middleLeftIntakeChannel;
-        } else if (pressed == 3) { // Middle right channel pressed
-            return ArmConstants.middleRightIntakeChannel;
-        } else if (pressed == 4) { // Far right channel pressed
-            return ArmConstants.farRightIntakeChannel;
-        } else { // none pressed
-            return 0;
-        }
-    }
-
-    /**
      * Change current IntakeState and start timer if changing to Drop state
      * @param state new intake state
      * @author Andrew S
      */
     public void setIntakeState(ArmConstants.IntakeState state) {
         if (state == ArmConstants.IntakeState.Drop && intakeState != ArmConstants.IntakeState.Drop) {
-            startTime = Timer.getFPGATimestamp();
-        } else if (state == ArmConstants.IntakeState.Collect && intakeState != ArmConstants.IntakeState.Collect) {
             startTime = Timer.getFPGATimestamp();
         }
         intakeState = state;
@@ -235,18 +168,6 @@ public class ArmSubsystem extends SubsystemBase {
                 container.set(0);
                 containerFollower.set(0);
                 break;
-            case Collect:
-                limitSwitchOffset = isLimitSwitchPressed();
-                if (limitSwitchOffset != 0) {
-                    intakeState = ArmConstants.IntakeState.Rest;
-                    container.set(0);
-                    containerFollower.set(0);
-                }
-                else {
-                    container.set(ArmConstants.containerMotorSpeedBottomCollect);
-                    containerFollower.set(ArmConstants.containerMotorSpeedTopCollect);
-                }
-                break;
             case Drop:
                 if (Timer.getFPGATimestamp()-startTime >= ArmConstants.containerDropTime) {
                     intakeState = ArmConstants.IntakeState.Rest;
@@ -273,20 +194,6 @@ public class ArmSubsystem extends SubsystemBase {
                 elevator.set(v);
                 break;
         }
-
-        // switch(algaeState) { // Algae
-        //     case Inactive:
-        //         algaeMotor.set(0);
-        //         break; 
-        //     case Active:
-        //     case ActiveTemp:
-        //         if (Timer.getFPGATimestamp()-algaeStartTime >= ArmConstants.algaeEjectTime) {
-        //             algaeState = ArmConstants.AlgaeMotorState.Inactive;
-        //         } else {
-        //             algaeMotor.set(ArmConstants.algaeMotorSpeed);
-        //         }
-        //         break;
-        // }
     }
     @Override
     public void simulationPeriodic() {}
