@@ -18,6 +18,9 @@ enum DropState {
     End
 }
 
+/**
+ * @author Andrew S
+ */
 public class DropCoralCommand extends Command {
     private DropState state = DropState.MoveInit;
     // private SequentialCommandGroup moveCommand;

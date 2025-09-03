@@ -3,6 +3,9 @@ package frc.robot.ArmSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 
+/**
+ * @author Andrew S
+ */
 public class ElevatorMovementCommand extends Command {
     private int move;
     private boolean reset;

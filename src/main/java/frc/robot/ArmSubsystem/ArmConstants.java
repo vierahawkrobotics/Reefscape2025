@@ -1,5 +1,8 @@
 package frc.robot.ArmSubsystem;
 
+/**
+ * @author Andrew S
+ */
 public class ArmConstants { // All heights in meters
     public enum HeightState {
         Coral,

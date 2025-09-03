@@ -16,7 +16,9 @@ enum ArmState {
     ResetHeight,
     NormalOper
 }
-
+ /**
+  * @author Andrew S
+  */
 public class ArmSubsystem extends SubsystemBase {
     private ShuffleboardTab armTab;
     private ArmState state = ArmState.ResetHeight; // Immediately reset height
@@ -159,6 +161,9 @@ public class ArmSubsystem extends SubsystemBase {
         }
     }
     
+    /**
+     * @author Andrew S
+     */
     @Override
     public void periodic() {
         curHeight = elevatorFollower.getExternalEncoder().getPosition()*ArmConstants.gearRadius + ArmConstants.minHeight;
